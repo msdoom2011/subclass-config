@@ -32,14 +32,14 @@ module.exports = function(config) {
       "src/**/*.js",
 
       // Tests
-      "tests/plugs/app-first-plugin.js",
-      "tests/plugs/app-forth-plugin.js",
-      "tests/plugs/app-third-plugin.js",
-      "tests/plugs/app-second-plugin.js",
-      "tests/app/app.js",
-      "tests/app/**/*.js",
+      //"tests/plugs/app-first-plugin.js",
+      //"tests/plugs/app-forth-plugin.js",
+      //"tests/plugs/app-third-plugin.js",
+      //"tests/plugs/app-second-plugin.js",
+      //"tests/app/app.js",
+      //"tests/app/**/*.js",
       "tests/main.js",
-      "tests/test.js"
+      //"tests/test.js"
     ],
 
 
