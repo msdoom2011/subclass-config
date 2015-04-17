@@ -14,6 +14,26 @@ Subclass.Property.Error = {};
 Subclass.Property.Type = {};
 
 /**
+ * @namespace
+ */
+Subclass.Property.Extension = {};
+
+/**
+ * @namespace
+ */
+Subclass.Property.Extension.Class = {};
+
+/**
+ * @namespace
+ */
+Subclass.Property.Extension.Class.Type = {};
+
+/**
+ * @namespace
+ */
+Subclass.Property.Extension.Class.Type.AbstractClass = {};
+
+/**
  * @class
  */
 Subclass.Property.PropertyManager = (function()
