@@ -1,0 +1,11 @@
+{
+  "name": "SubclassProperty",
+  "version": "0.1.0",
+  "authors": [
+    "Dmitriy Osipishin | <msdoom2011@gmail.com>"
+  ],
+  "description": "The plugin for SubclassJS framework which brings ability to define strict typed properties in your classes, automatically generates accessors for them if needed and provides the new class type Config which is convenient use for configuration of your SubclassJS project.",
+  "main": "Gruntfile.js",
+  "license": "MIT",
+  "private": true
+}

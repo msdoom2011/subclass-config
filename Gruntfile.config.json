@@ -1,0 +1,39 @@
+{
+  "name": "subclass-property",
+  "src_dir": "src",
+  "release_dir": "release",
+  "lib": {
+    "dir": {
+      "src": "<%= config.src_dir %>",
+      "release": "<%= config.release_dir %>"
+    },
+    "files": [
+      "<%= config.lib.dir.src %>/PropertyManager.js",
+      "<%= config.lib.dir.src %>/DataTypeManager.js",
+      "<%= config.lib.dir.src %>/PropertyType.js",
+      "<%= config.lib.dir.src %>/PropertyDefinition.js",
+      "<%= config.lib.dir.src %>/PropertyAPI.js",
+      "<%= config.lib.dir.src %>/Type/Collection/CollectionType.js",
+      "<%= config.lib.dir.src %>/Type/Collection/CollectionManager.js",
+      "<%= config.lib.dir.src %>/Type/Collection/*.js",
+      "<%= config.lib.dir.src %>/Type/Collection/*Collection/*Type.js",
+      "<%= config.lib.dir.src %>/Type/Collection/*Collection/*.js",
+      "<%= config.lib.dir.src %>/Type/**/*.js",
+      "<%= config.lib.dir.src %>/**/*.js"
+    ],
+    "files_release": {
+      "normal": "<%= config.lib.dir.release %>/<%= config.name %>.js",
+      "minimized": "<%= config.lib.dir.release %>/<%= config.name %>.min.js"
+    }
+  },
+  "doc": {
+    "dir": "doc/api",
+    "files": [
+      "<%= config.lib.dir.src %>/**/*.js"
+    ]
+  },
+  "vendors": {
+    "dir": "vendors",
+    "files": "**/*.js"
+  }
+}
