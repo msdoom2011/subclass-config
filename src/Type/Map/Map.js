@@ -326,7 +326,9 @@ Subclass.Property.Type.Map.Map = (function()
         } else {
             propName = $this.getName();
         }
-
+        if (context[propName] === null) {
+            context[propName] = {};
+        }
         Object.defineProperty(context[propName], 'getData', {
             configurable: true,
             value: function() {

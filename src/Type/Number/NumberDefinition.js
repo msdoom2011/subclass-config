@@ -180,6 +180,11 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
          */
         baseDefinition.minValue = null;
 
+        /**
+         * @inheritDoc
+         */
+        baseDefinition.nullable = false;
+
         return baseDefinition;
     };
 

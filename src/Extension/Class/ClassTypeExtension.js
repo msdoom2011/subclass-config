@@ -11,7 +11,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
 
     ClassTypeExtension.$parent = Subclass.Class.ClassExtension;
 
-    ClassDefinitionExtension.$config = {
+    ClassTypeExtension.$config = {
         classes: ["Class", "Config"]
     };
 

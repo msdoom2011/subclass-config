@@ -28,5 +28,5 @@ Subclass.Property.Extension.Class.Type.Interface.InterfaceExtension = function()
         }
     });
 
-    return InterfaceBuilderExtension;
+    return InterfaceExtension;
 }();

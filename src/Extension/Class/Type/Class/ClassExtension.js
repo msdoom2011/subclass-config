@@ -15,6 +15,10 @@ Subclass.Property.Extension.Class.Type.Class.ClassExtension = function()
     {
         ClassExtension.$parent.initialize.apply(this, arguments);
 
+        if (!classInst.issetEvent('onAddTrait')) {
+            classInst.registerEvent('onAddTrait');
+        }
+
         classInst.getEvent('onAddTrait').addListener(function(evt, traitClass)
         {
             var traitClassProperties = traitClass.getProperties();
@@ -41,5 +45,5 @@ Subclass.Property.Extension.Class.Type.Class.ClassExtension = function()
         }
     });
 
-    return InterfaceBuilderExtension;
+    return ClassExtension;
 }();

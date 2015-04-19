@@ -440,7 +440,7 @@ Subclass.Property.PropertyDefinition = (function()
     PropertyDefinition.prototype.processData = function()
     {
         var definition = Subclass.Tools.copy(this.getData());
-        var emptyValue = !definition.hasOwnProperty('default');
+        var emptyDefaultValue = !definition.hasOwnProperty('default');
 
         this._data = this.getBaseData();
 
@@ -461,7 +461,7 @@ Subclass.Property.PropertyDefinition = (function()
 
         // Setting default value
 
-        if (emptyValue) {
+        if (emptyDefaultValue) {
             this.setDefault(this.getEmptyValue());
 
         } else {
@@ -476,5 +476,4 @@ Subclass.Property.PropertyDefinition = (function()
     };
 
     return PropertyDefinition;
-
 })();

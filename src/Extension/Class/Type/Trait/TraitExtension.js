@@ -38,5 +38,5 @@ Subclass.Property.Extension.Class.Type.Trait.TraitExtension = function()
         }
     });
 
-    return InterfaceBuilderExtension;
+    return TraitExtension;
 }();

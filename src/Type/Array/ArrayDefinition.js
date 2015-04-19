@@ -42,6 +42,17 @@ Subclass.Property.Type.Array.ArrayDefinition = (function()
         return true;
     };
 
+    /**
+     * @inheritDoc
+     */
+    ArrayDefinition.prototype.getBaseData = function()
+    {
+        var basePropertyDefinition = ArrayDefinition.$parent.prototype.getBaseData.call(this);
+        basePropertyDefinition.nullable = false;
+
+        return basePropertyDefinition;
+    };
+
     return ArrayDefinition;
 
 })();

@@ -41,6 +41,17 @@ Subclass.Property.Type.Object.ObjectDefinition = (function()
         }
     };
 
+    /**
+     * @inheritDoc
+     */
+    ObjectDefinition.prototype.getBaseData = function()
+    {
+        var basePropertyDefinition = ObjectDefinition.$parent.prototype.getBaseData.call(this);
+        basePropertyDefinition.nullable = false;
+
+        return basePropertyDefinition;
+    };
+
     return ObjectDefinition;
 
 })();

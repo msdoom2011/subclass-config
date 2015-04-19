@@ -31,7 +31,22 @@ Subclass.Property.Extension.Class.Type = {};
 /**
  * @namespace
  */
+Subclass.Property.Extension.Class.Type.Class = {};
+
+/**
+ * @namespace
+ */
 Subclass.Property.Extension.Class.Type.AbstractClass = {};
+
+/**
+ * @namespace
+ */
+Subclass.Property.Extension.Class.Type.Interface = {};
+
+/**
+ * @namespace
+ */
+Subclass.Property.Extension.Class.Type.Trait = {};
 
 /**
  * @class

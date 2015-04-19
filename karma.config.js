@@ -23,23 +23,25 @@ module.exports = function(config) {
       "src/PropertyType.js",
       "src/PropertyDefinition.js",
       "src/PropertyAPI.js",
+      "src/Error/**/*.js",
+      "src/Extension/**/*.js",
       "src/Type/Collection/CollectionType.js",
       "src/Type/Collection/CollectionManager.js",
       "src/Type/Collection/*.js",
       "src/Type/Collection/*Collection/*Type.js",
       "src/Type/Collection/*Collection/*.js",
       "src/Type/**/*.js",
-      "src/**/*.js",
+      "src/*.js",
 
       // Tests
       //"tests/plugs/app-first-plugin.js",
       //"tests/plugs/app-forth-plugin.js",
       //"tests/plugs/app-third-plugin.js",
       //"tests/plugs/app-second-plugin.js",
-      //"tests/app/app.js",
-      //"tests/app/**/*.js",
+      "tests/app/app.js",
+      "tests/app/**/*.js",
       "tests/main.js",
-      //"tests/test.js"
+      "tests/test.js"
     ],
 
 

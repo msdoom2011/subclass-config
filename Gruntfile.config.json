@@ -13,6 +13,8 @@
       "<%= config.lib.dir.src %>/PropertyType.js",
       "<%= config.lib.dir.src %>/PropertyDefinition.js",
       "<%= config.lib.dir.src %>/PropertyAPI.js",
+      "<%= config.lib.dir.src %>/Error/**/*.js",
+      "<%= config.lib.dir.src %>/Extension/**/*.js",
       "<%= config.lib.dir.src %>/Type/Collection/CollectionType.js",
       "<%= config.lib.dir.src %>/Type/Collection/CollectionManager.js",
       "<%= config.lib.dir.src %>/Type/Collection/*.js",

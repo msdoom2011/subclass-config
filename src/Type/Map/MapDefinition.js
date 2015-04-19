@@ -21,7 +21,8 @@ Subclass.Property.Type.Map.MapDefinition = (function()
      */
     MapDefinition.prototype.getEmptyValue = function()
     {
-        return null;
+        return this.isNullable() ? null : {};
+        //return null;
     };
 
     /**
@@ -110,7 +111,7 @@ Subclass.Property.Type.Map.MapDefinition = (function()
 
         var propertyManager = this.getProperty().getPropertyManager();
         var property = this.getProperty();
-        var defaultValue = {};
+        //var defaultValue = {};
 
         for (var propName in schema) {
             if (!schema.hasOwnProperty(propName)) {
@@ -124,13 +125,14 @@ Subclass.Property.Type.Map.MapDefinition = (function()
             }
             property.addChild(propName, schema[propName]);
 
-            defaultValue[propName] = property
-                .getChild(propName)
-                .getDefinition()
-                .getDefault()
-            ;
+            //defaultValue[propName] = property
+            //    .getChild(propName)
+            //    .getDefinition()
+            //    .getDefault()
+            //;
         }
-        this._setDefaultValues(defaultValue);
+
+        //this._setDefaultValues(defaultValue);
     };
 
     /**
@@ -164,7 +166,8 @@ Subclass.Property.Type.Map.MapDefinition = (function()
         * @inheritDoc
         * @type {{}}
         */
-        baseDefinition.default = {};
+        //baseDefinition.default = {};
+        baseDefinition.default = null;
 
         /**
          * Defines available properties in value
@@ -201,41 +204,53 @@ Subclass.Property.Type.Map.MapDefinition = (function()
         }
     };
 
-    /**
-     * Sets default values for inner properties
-     *
-     * @param {*|Object} defaultValue
-     * @private
-     */
-    MapDefinition.prototype._setDefaultValues = function(defaultValue)
-    {
-        if (defaultValue !== null && Subclass.Tools.isPlainObject(defaultValue)) {
-            var property = this.getProperty();
-            property.setIsNull(false);
+    ///**
+    // * Sets default values for inner properties
+    // *
+    // * @param {*|Object} defaultValue
+    // * @private
+    // */
+    //MapDefinition.prototype._setDefaultValues = function(defaultValue)
+    //{
+    //    if (defaultValue !== null && Subclass.Tools.isPlainObject(defaultValue)) {
+    //        var property = this.getProperty();
+    //
+    //        for (var propName in defaultValue) {
+    //            if (!defaultValue.hasOwnProperty(propName)) {
+    //                continue;
+    //            }
+    //            if (
+    //                defaultValue[propName]
+    //                && Subclass.Tools.isPlainObject(defaultValue[propName])
+    //                && property.hasChild(propName)
+    //                && property.getChild(propName).constructor.getPropertyTypeName() == "map"
+    //            ) {
+    //                property.getChild(propName)
+    //                    .getDefinition()
+    //                    ._setDefaultValues(defaultValue[propName])
+    //                ;
+    //            } else if (property.hasChild(propName)) {
+    //                property.getChild(propName)
+    //                    .getDefinition()
+    //                    .setDefault(defaultValue[propName])
+    //                ;
+    //            }
+    //        }
+    //    }
+    //};
 
-            for (var propName in defaultValue) {
-                if (!defaultValue.hasOwnProperty(propName)) {
-                    continue;
-                }
-                if (
-                    defaultValue[propName]
-                    && Subclass.Tools.isPlainObject(defaultValue[propName])
-                    && property.hasChild(propName)
-                    && property.getChild(propName).constructor.getPropertyTypeName() == "map"
-                ) {
-                    property.getChild(propName)
-                        .getDefinition()
-                        ._setDefaultValues(defaultValue[propName])
-                    ;
-                } else if (property.hasChild(propName)) {
-                    property.getChild(propName)
-                        .getDefinition()
-                        .setDefault(defaultValue[propName])
-                    ;
-                }
-            }
+    /**
+     * @inheritDoc
+     */
+    MapDefinition.prototype.processData = function()
+    {
+        MapDefinition.$parent.prototype.processData.call(this);
+
+        if (this.getValue() != undefined || this.getDefault() !== null) {
+            this.getProperty().setIsNull(false);
         }
     };
+
 
     return MapDefinition;
 

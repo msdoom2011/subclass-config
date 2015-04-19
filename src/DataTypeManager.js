@@ -204,7 +204,7 @@ Subclass.Property.DataTypeManager = (function()
     DataTypeManager.prototype.getTypeDefinitions = function(privateDefinitions)
     {
         var mainModule = this.getPropertyManager().getModule();
-        var moduleManager = mainModule.getModuleManager();
+        var moduleStorage = mainModule.getModuleStorage();
         var typeDefinitions = {};
         var $this = this;
 
@@ -215,7 +215,7 @@ Subclass.Property.DataTypeManager = (function()
             return this._typeDefinitions;
         }
 
-        moduleManager.eachModule(function(module) {
+        moduleStorage.eachModule(function(module) {
             if (module == mainModule) {
                 Subclass.Tools.extend(typeDefinitions, $this._typeDefinitions);
                 return;
@@ -256,7 +256,7 @@ Subclass.Property.DataTypeManager = (function()
     DataTypeManager.prototype.getTypes = function(privateTypes)
     {
         var mainModule = this.getPropertyManager().getModule();
-        var moduleManager = mainModule.getModuleManager();
+        var moduleStorage = mainModule.getModuleStorage();
         var dataTypes = {};
         var $this = this;
 
@@ -267,7 +267,7 @@ Subclass.Property.DataTypeManager = (function()
             return this._types;
         }
 
-        moduleManager.eachModule(function(module) {
+        moduleStorage.eachModule(function(module) {
             if (module == mainModule) {
                 Subclass.Tools.extend(dataTypes, $this._types);
                 return;
