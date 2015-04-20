@@ -329,10 +329,18 @@ Subclass.Property.Type.Map.Map = (function()
         if (context[propName] === null) {
             context[propName] = {};
         }
-        Object.defineProperty(context[propName], 'getData', {
-            configurable: true,
-            value: function() {
-                return $this.getValue(context, true);
+        Object.defineProperties(context[propName], {
+            getData: {
+                configurable: true,
+                value: function() {
+                    return $this.getValue(context, true);
+                }
+            },
+            getProperty: {
+                configurable: true,
+                value: function(propertyName) {
+                    return $this.getChild(propertyName);
+                }
             }
         });
     };

@@ -78,6 +78,28 @@ Subclass.Property.Type.Map.MapDefinition = (function()
     };
 
     /**
+     * @inheritDoc
+     */
+    MapDefinition.prototype.setDefault = function(defaultValue)
+    {
+        MapDefinition.$parent.prototype.setDefault.call(this, defaultValue);
+
+        if (defaultValue !== null) {
+            var property = this.getProperty();
+
+            for (var propName in defaultValue) {
+                if (!defaultValue.hasOwnProperty(propName)) {
+                    continue;
+                }
+                property.getChild(propName)
+                    .getDefinition()
+                    .setDefault(defaultValue[propName])
+                ;
+            }
+        }
+    };
+
+    /**
      * Validates "schema" attribute value
      *
      * @param {*} schema
@@ -117,9 +139,8 @@ Subclass.Property.Type.Map.MapDefinition = (function()
             if (!schema.hasOwnProperty(propName)) {
                 continue;
             }
-            schema[propName] = propertyManager.normalizePropertyDefinition(
-                schema[propName]
-            );
+            schema[propName] = propertyManager.normalizePropertyDefinition(schema[propName]);
+
             if (!this.isWritable()) {
                 schema[propName].writable = false;
             }
@@ -163,17 +184,15 @@ Subclass.Property.Type.Map.MapDefinition = (function()
         var baseDefinition = MapDefinition.$parent.prototype.getBaseData.call(this);
 
         /**
-        * @inheritDoc
-        * @type {{}}
-        */
-        //baseDefinition.default = {};
-        baseDefinition.default = null;
-
-        /**
          * Defines available properties in value
          * @type {null}
          */
         baseDefinition.schema = null;
+
+        /**
+         * @inheritDoc
+         */
+        baseDefinition.nullable = false;
 
         return baseDefinition;
     };

@@ -25,9 +25,10 @@ app.registerClass('Class/SimpleDefinition',
             { type: "string" }
         ]},
 
-        propMap: { type: "map", default: { mapNumber: 10 }, schema: {
+        //propMap: { type: "map", default: { mapNumber: 10 }, schema: {
+        propMap: { type: "map", schema: {
 
-            mapNumber: { type: "number" },
+            mapNumber: { type: "number", default: 10 },
 
             mapString: { type: "string" },
 
