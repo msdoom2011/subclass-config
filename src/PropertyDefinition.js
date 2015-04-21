@@ -385,7 +385,16 @@ Subclass.Property.PropertyDefinition = (function()
              * @type {(function|null)}
              *
              * Callback that triggers when trying to set property value.
-             * It takes two arguments: the new value and the old value of property.
+             *
+             * It takes three arguments:
+             * - the new value;
+             * - the old value of property;
+             * - the current property object instance
+             *
+             * Pay attention, that you may access current property context
+             * directly in watcher function (it may be the class instance
+             * or the map type property etc.) where this one is defined
+             * using by "this" property.
              */
             watcher: null,
 

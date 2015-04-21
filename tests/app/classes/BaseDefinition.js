@@ -1,6 +1,6 @@
 app.registerClass('Class/AppClass', {});
 
-app.registerClass('Class/SimpleDefinition',
+app.registerClass('Class/BaseDefinition',
 {
     $_properties: {
 
@@ -25,10 +25,9 @@ app.registerClass('Class/SimpleDefinition',
             { type: "string" }
         ]},
 
-        //propMap: { type: "map", default: { mapNumber: 10 }, schema: {
         propMap: { type: "map", schema: {
 
-            mapNumber: { type: "number", default: 10 },
+            mapNumber: { type: "number" },
 
             mapString: { type: "string" },
 

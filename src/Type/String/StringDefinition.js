@@ -216,6 +216,11 @@ Subclass.Property.Type.String.StringDefinition = (function()
         var baseDefinition = StringDefinition.$parent.prototype.getBaseData.call(this);
 
         /**
+         * @inheritDoc
+         */
+        baseDefinition.nullable = false;
+
+        /**
          * Regular expression that property value will match
          * @type {(RegExp|null)}
          */

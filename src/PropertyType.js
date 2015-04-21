@@ -526,7 +526,7 @@ Subclass.Property.PropertyType = (function()
         var watchers = this.getWatchers();
 
         for (var i = 0; i < watchers.length; i++) {
-            newValue = watchers[i].call(context, newValue, oldValue);
+            newValue = watchers[i].call(context, newValue, oldValue, this);
         }
 
         return newValue;
