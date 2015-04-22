@@ -444,7 +444,13 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.getWatchers = function()
     {
-        return this._watchers;
+        var watcher = this.getDefinition().getWatcher();
+        var watchers = [];
+
+        if (watcher) {
+            watchers.push(watcher);
+        }
+        return Subclass.Tools.extend(watchers, this._watchers);
     };
 
     /**
@@ -481,6 +487,9 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.issetWatcher = function(callback)
     {
+        if (this.getDefinition().getWatcher() == callback) {
+            return true;
+        }
         return this._watchers.indexOf(callback) >= 0;
     };
 
@@ -496,6 +505,9 @@ Subclass.Property.PropertyType = (function()
         if ((watcherIndex = this._watchers.indexOf(callback)) >= 0) {
             this._watchers.splice(watcherIndex, 1);
         }
+        if (this.getDefinition().getWatcher() == callback) {
+            this.getDefinition().setWatcher(null);
+        }
     };
 
     /**
@@ -503,6 +515,7 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.removeWatchers = function()
     {
+        this.getDefinition().setWatcher(null);
         this._watchers = [];
     };
 
@@ -526,10 +539,34 @@ Subclass.Property.PropertyType = (function()
         var watchers = this.getWatchers();
 
         for (var i = 0; i < watchers.length; i++) {
-            newValue = watchers[i].call(context, newValue, oldValue, this);
+            watchers[i].call(context, newValue, oldValue, this);
         }
+    };
 
-        return newValue;
+    /**
+     * Makes current property locked
+     */
+    PropertyType.prototype.lock = function()
+    {
+        this.getDefinition().setLocked(true);
+    };
+
+    /**
+     * Makes current property unlocked
+     */
+    PropertyType.prototype.unlock = function()
+    {
+        this.getDefinition().setLocked(false);
+    };
+
+    /**
+     * Reports whether current property is locked
+     *
+     * @returns {boolean}
+     */
+    PropertyType.prototype.isLocked = function()
+    {
+        return this.getDefinition().isLocked();
     };
 
     /**
@@ -581,10 +618,10 @@ Subclass.Property.PropertyType = (function()
     /**
      * Returns value of current property
      *
-     * @param {Object} context An object to which current property belongs to.
-     * @param {boolean} [dataOnly] Returns only data without hashed fields and accessor functions
+     * @param {Object} context
+     *      The object to which current property belongs to.
      */
-    PropertyType.prototype.getValue = function(context, dataOnly)
+    PropertyType.prototype.getValue = function(context)
     {
         if (this.getDefinition().isAccessors()) {
             var getterName = Subclass.Tools.generateGetterName(this.getName());
@@ -592,6 +629,19 @@ Subclass.Property.PropertyType = (function()
         }
         var propName = this.getName();
         return context[propName];
+    };
+
+    /**
+     * Resets the value of current property to default
+     *
+     * @param {Object} context
+     *      The object to which current property belongs to.
+     */
+    PropertyType.prototype.resetValue = function(context)
+    {
+        var defaultValue = this.getDefaultValue();
+
+        this.setValue(context, defaultValue);
     };
 
     /**
@@ -688,12 +738,21 @@ Subclass.Property.PropertyType = (function()
                 Subclass.Error.create('Property ' + $this + ' is not writable.');
             }
         }
-
         return function(value) {
-            value = $this.invokeWatchers(this, value, $this.getValue(this));
+            if ($this.isLocked()) {
+                return console.warn(
+                    'Trying to set new value for the ' +
+                    'property ' + $this + ' that is locked for write.'
+                );
+            }
+            var oldValue = $this.getValue(this);
+            var newValue = value;
+
             $this.validateValue(value);
             $this.setIsModified(true);
             this[$this.getNameHashed()] = value;
+
+            $this.invokeWatchers(this, newValue, oldValue);
         };
     };
 
@@ -830,12 +889,11 @@ Subclass.Property.PropertyType = (function()
     {
         var propertyName = this.getNameFull();
         var contextClassName = this.getContextClass()
-            ? (' in class "' + this.getContextClass().getName() + '"')
+            ? (' in the class "' + this.getContextClass().getName() + '"')
             : "";
 
         return '"' + propertyName + '"' + contextClassName;
     };
 
     return PropertyType;
-
 })();

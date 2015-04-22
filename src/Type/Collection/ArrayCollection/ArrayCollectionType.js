@@ -144,6 +144,12 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         var $this = this;
 
         return function(value) {
+            if ($this.isLocked()) {
+                return console.warn(
+                    'Trying to set new value for the ' +
+                    'property ' + $this + ' that is locked for write.'
+                );
+            }
             $this.validateValue(value);
             $this.setIsModified(true);
 

@@ -1,42 +1,6 @@
-app.registerClass('Class/DefaultDefinition',
+app.registerClass('Class/AdvancedDefinition',
 {
-    $_extends: "Class/BaseDefinition",
-
-    changedPropNumber: false,
-    propNumberOld: false,
-    propNumberNew: false,
-
-    changedPropString: false,
-    propStringOld: false,
-    propStringNew: false,
-
-    changedPropBoolean: false,
-    propBooleanOld: false,
-    propBooleanNew: false,
-
-    changedPropArray: false,
-    propArrayOld: false,
-    propArrayNew: false,
-
-    changedPropObject: false,
-    propObjectOld: false,
-    propObjectNew: false,
-
-    changedPropClass: false,
-    propClassOld: false,
-    propClassNew: false,
-
-    changedPropEnum: false,
-    propEnumOld: false,
-    propEnumNew: false,
-
-    changedPropFunction: false,
-    propFunctionOld: false,
-    propFunctionNew: false,
-
-    changedPropMixed: false,
-    propMixedOld: false,
-    propMixedNew: false,
+    $_extends: "Class/StandardDefinition",
 
     $_properties: {
 
@@ -46,6 +10,9 @@ app.registerClass('Class/DefaultDefinition',
             writable: true,
             accessors: true,
             nullable: true,
+            minValue: 0,
+            maxValue: 100,
+            value: 50,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropNumber = true;
                 this.propNumberOld = oldValue;
@@ -55,10 +22,14 @@ app.registerClass('Class/DefaultDefinition',
 
         propString: {
             type: 'string',
-            default: "default string",
+            default: "0%",
             writable: true,
             accessors: true,
             nullable: true,
+            pattern: /^[0-9]*%$/i,
+            minLength: 2,
+            maxLength: 3,
+            value: "10%",
             watcher: function(newValue, oldValue, property) {
                 this.changedPropString = true;
                 this.propStringOld = oldValue;
@@ -68,10 +39,11 @@ app.registerClass('Class/DefaultDefinition',
 
         propBoolean: {
             type: 'boolean',
-            default: true,
+            default: false,
             writable: true,
             accessors: true,
             nullable: true,
+            value: true,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropBoolean = true;
                 this.propBooleanOld = oldValue;
@@ -85,6 +57,7 @@ app.registerClass('Class/DefaultDefinition',
             writable: true,
             accessors: true,
             nullable: true,
+            value: [ 40, 50, 60 ],
             watcher: function(newValue, oldValue, property) {
                 this.changedPropArray = true;
                 this.propArrayOld = oldValue;
@@ -98,6 +71,7 @@ app.registerClass('Class/DefaultDefinition',
             writable: true,
             accessors: true,
             nullable: true,
+            value: { prop1: 30 },
             watcher: function(newValue, oldValue, property) {
                 this.changedPropArray = true;
                 this.propArrayOld = oldValue;
@@ -112,6 +86,7 @@ app.registerClass('Class/DefaultDefinition',
             writable: true,
             accessors: true,
             nullable: true,
+            value: null,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropClass = true;
                 this.propClassOld = oldValue;
@@ -122,9 +97,10 @@ app.registerClass('Class/DefaultDefinition',
         propEnum: {
             type: "enum",
             allows: [ "male", "female", null ],
-            default: "female",
+            default: "male",
             writable: true,
             accessors: true,
+            value: "female",
             watcher: function(newValue, oldValue, property) {
                 this.changedPropEnum = true;
                 this.propEnumOld = oldValue;
@@ -134,10 +110,11 @@ app.registerClass('Class/DefaultDefinition',
 
         propFunction: {
             type: "function",
-            "default": function () { return true },
+            "default": function () { return true; },
             writable: true,
             accessors: true,
             nullable: true,
+            value: function() { return false; },
             watcher: function(newValue, oldValue, property) {
                 this.changedPropFunction = true;
                 this.propFunctionOld = oldValue;
@@ -149,12 +126,13 @@ app.registerClass('Class/DefaultDefinition',
             type: "mixed",
             allows: [
                 { type: "number" },
-                { type: "string" }
+                { type: "string", pattern: /^[0-9]+px$/i }
             ],
-            default: "string value",
+            default: 10,
             writable: true,
             accessors: true,
             nullable: true,
+            value: "100px",
             watcher: function(newValue, oldValue, property) {
                 this.changedPropMixed = true;
                 this.propMixedOld = oldValue;
@@ -162,52 +140,66 @@ app.registerClass('Class/DefaultDefinition',
             }
         },
 
-        propMap: { type: "map", schema: {
+        propMap: {
+            type: "map",
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropMap = true;
+                this.propMapOld = oldValue;
+                this.propMapNew = newValue;
+            },
+            default: {
+                mapNumber: 10
+            },
+            value: {
+                mapString: "init string value"
+            },
+            schema: {
 
-            mapNumber: { type: "number" },
+                mapNumber: { type: "number" },
 
-            mapString: { type: "string" },
+                mapString: { type: "string" },
 
-            mapBoolean: { type: "boolean" },
+                mapBoolean: { type: "boolean" },
 
-            mapArray: { type: "array" },
+                mapArray: { type: "array" },
 
-            mapObject: { type: "object" },
+                mapObject: { type: "object" },
 
-            mapClass: { type: "class", className: "Class/AppClass" },
+                mapClass: { type: "class", className: "Class/AppClass" },
 
-            mapEnum: { type: "enum", allows: [ "male", "female" ] },
+                mapEnum: { type: "enum", allows: [ "male", "female" ] },
 
-            mapFunction: { type: "function" },
+                mapFunction: { type: "function" },
 
-            mapMixed: {type: "mixed", allows: [
-                { type: "number" },
-                { type: "string" }
-            ]},
-
-            mapMap: { type: "map", schema: {
-
-                mapMapNumber: { type: "number" },
-
-                mapMapString: { type: "string" },
-
-                mapMapBoolean: { type: "boolean" },
-
-                mapMapArray: { type: "array" },
-
-                mapMapObject: { type: "object" },
-
-                mapMapClass: { type: "class", className: "Class/AppClass" },
-
-                mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
-
-                mapMapFunction: { type: "function" },
-
-                mapMapMixed: {type: "mixed", allows: [
+                mapMixed: {type: "mixed", allows: [
                     { type: "number" },
                     { type: "string" }
-                ]}
-            }}
-        }}
+                ]},
+
+                mapMap: { type: "map", schema: {
+
+                    mapMapNumber: { type: "number" },
+
+                    mapMapString: { type: "string" },
+
+                    mapMapBoolean: { type: "boolean" },
+
+                    mapMapArray: { type: "array" },
+
+                    mapMapObject: { type: "object" },
+
+                    mapMapClass: { type: "class", className: "Class/AppClass" },
+
+                    mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
+
+                    mapMapFunction: { type: "function" },
+
+                    mapMapMixed: {type: "mixed", allows: [
+                        { type: "number" },
+                        { type: "string" }
+                    ]}
+                }}
+            }
+        }
     }
 });

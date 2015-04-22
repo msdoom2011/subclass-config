@@ -57,11 +57,23 @@ Subclass.Property.PropertyAPI = (function()
      * Sets class typed property
      *
      * @param {*} value
+     *      The new value of current property
+     *
      * @returns {PropertyType}
      */
     PropertyAPI.prototype.setValue = function(value)
     {
         return this._property.setValue(this._context, value);
+    };
+
+    /**
+     * Resets the value of current property to default
+     */
+    PropertyAPI.prototype.resetValue = function()
+    {
+        var defaultValue = this.getDefaultValue();
+
+        this._property.setValue(this._context, defaultValue);
     };
 
     /**
@@ -212,6 +224,35 @@ Subclass.Property.PropertyAPI = (function()
         return this._property.removeWatchers();
     };
 
+    /**
+     * Makes current property locked
+     */
+    PropertyAPI.prototype.lock = function()
+    {
+        return this._property.lock();
+    };
+
+    /**
+     * Makes current property unlocked
+     */
+    PropertyAPI.prototype.unlock = function()
+    {
+        return this._property.unlock();
+    };
+
+    /**
+     * Reports whether current property is locked
+     *
+     * @returns {boolean}
+     */
+    PropertyAPI.prototype.isLocked = function()
+    {
+        return this._property.isLocked();
+    };
+
+    /**
+     * @inheritDoc
+     */
     PropertyAPI.prototype.toString = function()
     {
         return this._property.toString();

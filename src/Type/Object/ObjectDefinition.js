@@ -44,6 +44,11 @@ Subclass.Property.Type.Object.ObjectDefinition = (function()
     /**
      * @inheritDoc
      */
+    ObjectDefinition.prototype.validateDefault = ObjectDefinition.prototype.validateValue;
+
+    /**
+     * @inheritDoc
+     */
     ObjectDefinition.prototype.getBaseData = function()
     {
         var basePropertyDefinition = ObjectDefinition.$parent.prototype.getBaseData.call(this);

@@ -65,6 +65,11 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
     };
 
     /**
+     * @inheritDoc
+     */
+    NumberDefinition.prototype.validateDefault = NumberDefinition.prototype.validateValue;
+
+    /**
      * Validates "maxValue" attribute value
      *
      * @param {*} maxValue

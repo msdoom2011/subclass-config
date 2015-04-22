@@ -41,6 +41,11 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionDefinition = 
     /**
      * @inheritDoc
      */
+    ObjectCollectionDefinition.prototype.validateDefault = ObjectCollectionDefinition.prototype.validateValue;
+
+    /**
+     * @inheritDoc
+     */
     ObjectCollectionDefinition.prototype.processData = function()
     {
         var propertyManager = this.getProperty().getPropertyManager();

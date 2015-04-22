@@ -23,6 +23,7 @@ module.exports = function(config) {
       "src/PropertyType.js",
       "src/PropertyDefinition.js",
       "src/PropertyAPI.js",
+      "src/Error/Option/*.js",
       "src/Error/**/*.js",
       "src/Extension/**/*.js",
       "src/Type/Collection/CollectionType.js",
@@ -41,8 +42,10 @@ module.exports = function(config) {
       "tests/app/app.js",
       "tests/app/**/*.js",
       "tests/main.js",
-      "tests/base_definition.js",
-      "tests/default_definition.js"
+      "tests/def_base.js",
+      "tests/def_standard.js",
+      "tests/def_advanced.js",
+      "tests/types/**/*.js"
     ],
 
 

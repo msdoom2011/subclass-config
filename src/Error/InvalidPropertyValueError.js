@@ -7,8 +7,16 @@ Subclass.Property.Error.InvalidPropertyValueError = (function()
 {
     function InvalidPropertyValueError(message)
     {
-        Subclass.Error.call(this, message);
+        InvalidPropertyValueError.$parent.call(this, message);
     }
+
+    InvalidPropertyValueError.$parent = Subclass.Error.ErrorBase;
+
+    InvalidPropertyValueError.$mixins = [
+        Subclass.Error.Option.Property,
+        Subclass.Error.Option.Expected,
+        Subclass.Error.Option.Received
+    ];
 
     /**
      * Returns the name of the error type
@@ -24,23 +32,9 @@ Subclass.Property.Error.InvalidPropertyValueError = (function()
     /**
      * @inheritDoc
      */
-    InvalidPropertyValueError.getOptions = function()
-    {
-        var options = Subclass.Error.getOptions();
-
-        return options.concat([
-            'property',
-            'expected',
-            'received'
-        ]);
-    };
-
-    /**
-     * @inheritDoc
-     */
     InvalidPropertyValueError.getRequiredOptions = function()
     {
-        var required = Subclass.Error.getRequiredOptions();
+        var required = InvalidPropertyValueError.$parent.getRequiredOptions();
 
         return required.concat([
             'property'
@@ -52,12 +46,12 @@ Subclass.Property.Error.InvalidPropertyValueError = (function()
      */
     InvalidPropertyValueError.prototype.buildMessage = function()
     {
-        var message = Subclass.Error.prototype.buildMessage.call(this);
+        var message = InvalidPropertyValueError.$parent.prototype.buildMessage.call(this);
 
         if (!message) {
             message += 'Specified invalid value of property ' + this.property() + '. ';
             message += this.hasExpected() ? ('It must be ' + this.expected() + '. ') : "";
-            message += this.hasReceived() ? this.received() : ""
+            message += this.hasReceived() ? this.received() : "";
         }
 
         return message;

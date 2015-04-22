@@ -294,6 +294,52 @@ Subclass.Property.PropertyDefinition = (function()
     PropertyDefinition.prototype.isWritable = PropertyDefinition.prototype.getWritable;
 
     /**
+     * Validates "locked" option value
+     *
+     * @param {*} isLocked
+     */
+    PropertyDefinition.prototype.validateLocked = function(isLocked)
+    {
+        if (isLocked !== null && typeof isLocked != 'boolean') {
+            Subclass.Error.create('InvalidPropertyOption')
+                .option('locked')
+                .received(isLocked)
+                .property(this.getProperty())
+                .expected('a boolean or null')
+                .apply()
+            ;
+        }
+    };
+
+    /**
+     * Set marker if current property is locked
+     *
+     * @param {(boolean|null)} isLocked
+     */
+    PropertyDefinition.prototype.setLocked = function(isLocked)
+    {
+        this.validateLocked(isLocked);
+        this.getData().locked = isLocked;
+    };
+
+    /**
+     * Checks if current property is locked
+     *
+     * @returns {boolean}
+     */
+    PropertyDefinition.prototype.getLocked = function()
+    {
+        var isLocked = this.getData().locked;
+
+        return isLocked !== null ? isLocked : false;
+    };
+
+    /**
+     * @alias Subclass.Property.PropertyDefinition
+     */
+    PropertyDefinition.prototype.isLocked = PropertyDefinition.prototype.getLocked;
+
+    /**
      * Validates "nullable" attribute value
      *
      * @param {*} isNullable
@@ -354,36 +400,45 @@ Subclass.Property.PropertyDefinition = (function()
         return {
 
             /**
-             * @type {string}
-             *
              * Type of property data
+             *
+             * @type {string}
              */
             type: null,
 
             /**
-             * @type {(*|null)}
-             *
              * Default value of property
+             *
+             * @type {(*|null)}
              */
             default: null,
 
             /**
-             * @type {(*|undefined)}
-             *
              * Value of property
+             *
+             * @type {(*|undefined)}
              */
             value: undefined,
 
             /**
-             * @type {boolean}
-             *
              * It's true if current parameter is changeable and vice-versa
+             *
+             * @type {boolean}
              */
             writable: true,
 
             /**
-             * @type {(function|null)}
+             * Allows to lock ability to write the new value to property.
              *
+             * The difference from "writable" option is in ability
+             * to unlock ability to write new value to property during
+             * application working whenever you need.
+             *
+             * @type {boolean}
+             */
+            locked: false,
+
+            /**
              * Callback that triggers when trying to set property value.
              *
              * It takes three arguments:
@@ -395,22 +450,26 @@ Subclass.Property.PropertyDefinition = (function()
              * directly in watcher function (it may be the class instance
              * or the map type property etc.) where this one is defined
              * using by "this" property.
+             *
+             * @type {(function|null)}
              */
             watcher: null,
 
             /**
-             * @type {(boolean|null)}
-             *
              * Indicates that accessor functions would be generated
+             *
+             * @type {(boolean|null)}
              */
             accessors: null,
 
             /**
-             * @type {(boolean|null)}
-             *
              * Indicates that current property can hold null value or not.
-             * If null as a value of current parameter was specified it means that value of current
-             * parameter will defined in accordance with the default settings of each property type.
+             *
+             * If null as a value of current parameter was specified it means
+             * that value of current parameter will defined in accordance with
+             * the default settings of each property type.
+             *
+             * @type {(boolean|null)}
              */
             nullable: null
         };
@@ -471,7 +530,17 @@ Subclass.Property.PropertyDefinition = (function()
         // Setting default value
 
         if (emptyDefaultValue) {
-            this.setDefault(this.getEmptyValue());
+            try {
+                this.setDefault(this.getEmptyValue());
+
+            } catch (e) {
+                console.error(
+                    'The default value was not specified. \n' +
+                    'The standard default value "' + this.getEmptyValue() + '" was used but it is not relevant. \n' +
+                    'You should specify appropriate default value or mark this property as nullable.'
+                );
+                Subclass.Error.create(e.message);
+            }
 
         } else {
             this.setDefault(definition.default);

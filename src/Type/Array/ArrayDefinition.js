@@ -45,6 +45,11 @@ Subclass.Property.Type.Array.ArrayDefinition = (function()
     /**
      * @inheritDoc
      */
+    ArrayDefinition.prototype.validateDefault = ArrayDefinition.prototype.validateValue;
+
+    /**
+     * @inheritDoc
+     */
     ArrayDefinition.prototype.getBaseData = function()
     {
         var basePropertyDefinition = ArrayDefinition.$parent.prototype.getBaseData.call(this);

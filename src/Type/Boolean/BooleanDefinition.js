@@ -53,6 +53,11 @@ Subclass.Property.Type.Boolean.BooleanDefinition = (function()
         return true;
     };
 
+    /**
+     * @inheritDoc
+     */
+    BooleanDefinition.prototype.validateDefault = BooleanDefinition.prototype.validateValue;
+
     return BooleanDefinition;
 
 })();

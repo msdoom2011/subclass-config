@@ -306,11 +306,12 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
     * where "<setterOrGetterName>" is name of redefined setter or getter name.
     *
     * These methods allows to interact with private properties through redefined getters and setters.
-    *
-    * @returns {Function}
     */
     ClassDefinition.prototype.processPropertyAccessors = function()
     {
+        if (!this.getClass().getProperties) {
+            return;
+        }
         var classProperties = this.getClass().getProperties();
         var classDefinition = this.getData();
 

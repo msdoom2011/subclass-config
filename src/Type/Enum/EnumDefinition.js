@@ -57,6 +57,11 @@ Subclass.Property.Type.Enum.EnumDefinition = (function()
     };
 
     /**
+     * @inheritDoc
+     */
+    EnumDefinition.prototype.validateDefault = EnumDefinition.prototype.validateValue;
+
+    /**
      * Validates "allows" attribute value
      *
      * @param {*} allows
@@ -131,6 +136,10 @@ Subclass.Property.Type.Enum.EnumDefinition = (function()
          * @type {Array}
          */
         basePropertyDefinition.allows = null;
+
+        /**
+         * @inheritDoc
+         */
         basePropertyDefinition.nullable = false;
 
         return basePropertyDefinition;

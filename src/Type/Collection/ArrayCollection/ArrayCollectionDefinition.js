@@ -49,6 +49,11 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionDefinition = (f
     /**
      * @inheritDoc
      */
+    ArrayCollectionDefinition.prototype.validateDefault = ArrayCollectionDefinition.prototype.validateValue;
+
+    /**
+     * @inheritDoc
+     */
     ArrayCollectionDefinition.prototype.getBaseData = function()
     {
         var baseDefinition = ArrayCollectionDefinition.$parent.prototype.getBaseData.call(this);

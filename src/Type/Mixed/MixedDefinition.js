@@ -50,6 +50,7 @@ Subclass.Property.Type.Mixed.MixedDefinition = (function()
                 // Do nothing
             }
         }
+
         if (error) {
             Subclass.Error.create('InvalidPropertyValue')
                 .property(this.getProperty())
@@ -59,6 +60,11 @@ Subclass.Property.Type.Mixed.MixedDefinition = (function()
             ;
         }
     };
+
+    /**
+     * @inheritDoc
+     */
+    MixedDefinition.prototype.validateDefault = MixedDefinition.prototype.validateValue;
 
     /**
      * Validates "allows" attribute value

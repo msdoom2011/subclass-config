@@ -42,6 +42,11 @@ Subclass.Property.Type.Function.FunctionDefinition = (function()
         return true;
     };
 
+    /**
+     * @inheritDoc
+     */
+    FunctionDefinition.prototype.validateDefault = FunctionDefinition.prototype.validateValue;
+
     return FunctionDefinition;
 
 })();

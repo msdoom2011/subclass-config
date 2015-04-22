@@ -6,7 +6,7 @@ describe("Checking", function() {
         var classInst = app.getClass('Class/BaseDefinition').createInstance();
 
         expect(classInst.getPropNumber()).toBe(0);
-        expect(classInst.getPropString()).toBe('');
+        expect(classInst.getPropString()).toBe(null);
         expect(classInst.getPropBoolean()).toBe(false);
         expect(classInst.getPropArray().length).toBe(0);
         expect(Object.keys(classInst.getPropObject()).length).toBe(0);
@@ -18,7 +18,7 @@ describe("Checking", function() {
         var propMap = classInst.getPropMap();
         expect(propMap).not.toBe(null);
         expect(propMap.mapNumber).toBe(0);
-        expect(propMap.mapString).toBe('');
+        expect(propMap.mapString).toBe(null);
         expect(propMap.mapBoolean).toBe(false);
         expect(propMap.mapArray.length).toBe(0);
         expect(Object.keys(propMap.mapObject).length).toBe(0);
@@ -30,7 +30,7 @@ describe("Checking", function() {
         var mapMap = propMap.mapMap;
         expect(mapMap).not.toBe(null);
         expect(mapMap.mapMapNumber).toBe(0);
-        expect(mapMap.mapMapString).toBe('');
+        expect(mapMap.mapMapString).toBe(null);
         expect(mapMap.mapMapBoolean).toBe(false);
         expect(mapMap.mapMapArray.length).toBe(0);
         expect(Object.keys(mapMap.mapMapObject).length).toBe(0);

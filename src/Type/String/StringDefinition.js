@@ -34,7 +34,6 @@ Subclass.Property.Type.String.StringDefinition = (function()
         if (value === null) {
             return;
         }
-
         var pattern = this.getPattern();
         var minLength = this.getMinLength();
         var maxLength = this.getMaxLength();
@@ -44,21 +43,22 @@ Subclass.Property.Type.String.StringDefinition = (function()
         if (typeof value != 'string') {
             error = true;
         }
+
         if (!error && pattern && !pattern.test(value)) {
             Subclass.Error.create(
-                'The value of the property ' + property + ' is not valid ' +
-                'and must match regular expression "' + pattern.toString() + '".'
+                'The value "' + value + '" of the property ' + property + ' is not valid ' +
+                'and must match the regular expression "' + pattern.toString() + '".'
             );
         }
         if (!error && minLength !== null && value.length < minLength) {
             Subclass.Error.create(
-                'The value of the property ' + property + ' is too short ' +
+                'The value "' + value + '" of the property ' + property + ' is too short ' +
                 'and must consist of at least ' + minLength + ' symbols.'
             );
         }
         if (!error && maxLength !== null && value.length > maxLength) {
             Subclass.Error.create(
-                'The value of the property "' + property + '" is too long ' +
+                'The value "' + value + '" of the property "' + property + '" is too long ' +
                 'and must be not longer than ' + maxLength + ' symbols.'
             );
         }
@@ -71,6 +71,11 @@ Subclass.Property.Type.String.StringDefinition = (function()
             ;
         }
     };
+
+    /**
+     * @inheritDoc
+     */
+    StringDefinition.prototype.validateDefault = StringDefinition.prototype.validateValue;
 
     /**
      * Validates "pattern" attribute value

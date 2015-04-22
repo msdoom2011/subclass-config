@@ -80,6 +80,11 @@ Subclass.Property.Type.Map.MapDefinition = (function()
     /**
      * @inheritDoc
      */
+    MapDefinition.prototype.validateDefault = MapDefinition.prototype.validateValue;
+
+    /**
+     * @inheritDoc
+     */
     MapDefinition.prototype.setDefault = function(defaultValue)
     {
         MapDefinition.$parent.prototype.setDefault.call(this, defaultValue);

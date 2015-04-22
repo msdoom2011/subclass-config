@@ -83,7 +83,8 @@ Subclass.Property.PropertyManager = (function()
          * @type {Subclass.Property.DataTypeManager}
          * @private
          */
-        this._dataTypeManager = new Subclass.Property.DataTypeManager(this);
+        //this._dataTypeManager = new Subclass.Property.DataTypeManager(this);
+        this._dataTypeManager = Subclass.Tools.createClassInstance(Subclass.Property.DataTypeManager, this);
     }
 
     PropertyManager.prototype.initialize = function()

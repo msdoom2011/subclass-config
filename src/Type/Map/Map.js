@@ -263,7 +263,15 @@ Subclass.Property.Type.Map.Map = (function()
         var $this = this;
 
         return function(value) {
-            value = $this.invokeWatchers(this, value, $this.getValue(this));
+            if ($this.isLocked()) {
+                return console.warn(
+                    'Trying to set new value for the ' +
+                    'property ' + $this + ' that is locked for write.'
+                );
+            }
+            var oldValue = $this.getValue(this);
+            var newValue = value;
+
             $this.validateValue(value);
             $this.setIsModified(true);
 
@@ -279,6 +287,10 @@ Subclass.Property.Type.Map.Map = (function()
             } else {
                 $this.setIsNull(true);
             }
+
+            // Invoking watchers
+
+            $this.invokeWatchers(this, newValue, oldValue);
         };
     };
 

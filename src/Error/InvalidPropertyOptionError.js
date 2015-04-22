@@ -7,8 +7,17 @@ Subclass.Property.Error.InvalidPropertyOptionError = (function()
 {
     function InvalidPropertyOptionError(message)
     {
-        Subclass.Error.call(this, message);
+        InvalidPropertyOptionError.$parent.call(this, message);
     }
+
+    InvalidPropertyOptionError.$parent = Subclass.Error.ErrorBase;
+
+    InvalidPropertyOptionError.$mixins = [
+        Subclass.Error.Option.Option,
+        Subclass.Error.Option.Property,
+        Subclass.Error.Option.Expected,
+        Subclass.Error.Option.Received
+    ];
 
     /**
      * Returns the name of the error type
@@ -24,24 +33,9 @@ Subclass.Property.Error.InvalidPropertyOptionError = (function()
     /**
      * @inheritDoc
      */
-    InvalidPropertyOptionError.getOptions = function()
-    {
-        var options = Subclass.Error.getOptions();
-
-        return options.concat([
-            'property',
-            'expected',
-            'received',
-            'option'
-        ]);
-    };
-
-    /**
-     * @inheritDoc
-     */
     InvalidPropertyOptionError.getRequiredOptions = function()
     {
-        var required = Subclass.Error.getRequiredOptions();
+        var required = InvalidPropertyOptionError.$parent.getRequiredOptions();
 
         return required.concat([
             'property',
@@ -54,7 +48,7 @@ Subclass.Property.Error.InvalidPropertyOptionError = (function()
      */
     InvalidPropertyOptionError.prototype.buildMessage = function()
     {
-        var message = Subclass.Error.prototype.buildMessage.call(this);
+        var message = InvalidPropertyOptionError.$parent.prototype.buildMessage.call(this);
 
         if (!message) {
             message += 'Invalid value of option ' + this.option() + ' ';

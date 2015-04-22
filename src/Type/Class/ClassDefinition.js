@@ -47,6 +47,11 @@ Subclass.Property.Type.Class.ClassDefinition = (function()
     };
 
     /**
+     * @inheritDoc
+     */
+    ClassDefinition.prototype.validateDefault = ClassDefinition.prototype.validateValue;
+
+    /**
      * Validates "className" attribute value
      *
      * @param {*} className
