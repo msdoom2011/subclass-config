@@ -73,9 +73,9 @@ app.registerClass('Class/AdvancedDefinition',
             nullable: true,
             value: { prop1: 30 },
             watcher: function(newValue, oldValue, property) {
-                this.changedPropArray = true;
-                this.propArrayOld = oldValue;
-                this.propArrayNew = newValue;
+                this.changedPropObject = true;
+                this.propObjectOld = oldValue;
+                this.propObjectNew = newValue;
             }
         },
 
@@ -151,7 +151,10 @@ app.registerClass('Class/AdvancedDefinition',
                 mapNumber: 10
             },
             value: {
-                mapString: "init string value"
+                mapString: "init string value",
+                mapMap: {
+                    mapMapArray: [10]
+                }
             },
             schema: {
 

@@ -31,7 +31,7 @@ Subclass.Property.Type.Object.ObjectDefinition = (function()
     {
         ObjectDefinition.$parent.prototype.validateValue.call(this, value);
 
-        if (value && !Subclass.Tools.isPlainObject(value)) {
+        if (value !== null && !Subclass.Tools.isPlainObject(value)) {
             Subclass.Error.create('InvalidPropertyValue')
                 .property(this.getProperty())
                 .received(value)

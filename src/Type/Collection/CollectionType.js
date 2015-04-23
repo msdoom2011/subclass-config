@@ -149,56 +149,58 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     {
         return Subclass.Property.Type.Collection.Collection;
     };
-
-    /**
-     * Returns prepared collection constructor
-     *
-     * @returns {Function}
-     */
-    CollectionType.prototype.getCollectionConstructor = function()
-    {
-        if (!this._collectionConstructor) {
-            this._collectionConstructor = this.createCollectionConstructor();
-        }
-        return this._collectionConstructor;
-    };
-
-    /**
-     * Builds collection class constructor
-     *
-     * @returns {Function}
-     */
-    CollectionType.prototype.createCollectionConstructor = function()
-    {
-        var collectionConstructor = arguments[0];
-
-        if (!arguments[0]) {
-            collectionConstructor = this.getCollectionClass();
-        }
-
-        if (collectionConstructor.$parent) {
-            var parentCollectionConstructor = this.createCollectionConstructor(
-                collectionConstructor.$parent,
-                false
-            );
-
-            var collectionConstructorProto = Object.create(parentCollectionConstructor.prototype);
-
-            collectionConstructorProto = Subclass.Tools.extend(
-                collectionConstructorProto,
-                collectionConstructor.prototype
-            );
-
-            collectionConstructor.prototype = collectionConstructorProto;
-
-            Object.defineProperty(collectionConstructor.prototype, 'constructor', {
-                enumerable: false,
-                value: collectionConstructor
-            });
-        }
-
-        return collectionConstructor;
-    };
+    //
+    ///**
+    // * Returns prepared collection constructor
+    // *
+    // * @returns {Function}
+    // */
+    //CollectionType.prototype.getCollectionConstructor = function()
+    //{
+    //    if (!this._collectionConstructor) {
+    //        //this._collectionConstructor = this.createCollectionConstructor();
+    //        var constructor = this.getCollectionClass();
+    //        this._collectionConstructor = Subclass.Tools.createClassInstance(constructor);
+    //    }
+    //    return this._collectionConstructor;
+    //};
+    //
+    ///**
+    // * Builds collection class constructor
+    // *
+    // * @returns {Function}
+    // */
+    //CollectionType.prototype.createCollectionConstructor = function()
+    //{
+    //    var collectionConstructor = arguments[0];
+    //
+    //    if (!arguments[0]) {
+    //        collectionConstructor = this.getCollectionClass();
+    //    }
+    //
+    //    if (collectionConstructor.$parent) {
+    //        var parentCollectionConstructor = this.createCollectionConstructor(
+    //            collectionConstructor.$parent,
+    //            false
+    //        );
+    //
+    //        var collectionConstructorProto = Object.create(parentCollectionConstructor.prototype);
+    //
+    //        collectionConstructorProto = Subclass.Tools.extend(
+    //            collectionConstructorProto,
+    //            collectionConstructor.prototype
+    //        );
+    //
+    //        collectionConstructor.prototype = collectionConstructorProto;
+    //
+    //        Object.defineProperty(collectionConstructor.prototype, 'constructor', {
+    //            enumerable: false,
+    //            value: collectionConstructor
+    //        });
+    //    }
+    //
+    //    return collectionConstructor;
+    //};
 
     /**
      * Returns collection instance
@@ -208,12 +210,14 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     CollectionType.prototype.getCollection = function(context)
     {
         if (!this._collection) {
-            var collectionConstructor = this.getCollectionConstructor();
+            //var collectionConstructor = this.getCollectionConstructor();
+            var collectionConstructor = this.getCollectionClass();
             var propertyDefinition = this.getDefinition();
             var defaultValue = this.getDefaultValue();
             var proto = this.getProto();
 
-            this._collection = new collectionConstructor(this, context);
+            //this._collection = new collectionConstructor(this, context);
+            this._collection = Subclass.Tools.createClassInstance(collectionConstructor, this, context);
             this.alterCollection();
 
             if (defaultValue !== null) {
@@ -326,7 +330,7 @@ Subclass.Property.Type.Collection.CollectionType = (function()
 
         Object.defineProperty(context, hashedPropName, {
             configurable: true,
-            enumerable: true,
+            //enumerable: true,
             writable: true,
             value: this.getCollection(context)
         });

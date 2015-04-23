@@ -49,7 +49,8 @@ Subclass.Property.Type.Collection.Collection = (function()
          * @type {Subclass.Property.Type.Collection.CollectionManager}
          * @private
          */
-        this._manager = new Subclass.Property.Type.Collection.CollectionManager(this);
+        //this._manager = new Subclass.Property.Type.Collection.CollectionManager(this);
+        this._manager = Subclass.Tools.createClassInstance(Subclass.Property.Type.Collection.CollectionManager, this);
     }
 
     /**

@@ -40,9 +40,19 @@ describe("Testing string property type with its", function() {
         expect(prop.isLocked()).toBe(false);
         prop.lock();
         classInst.setPropString("60%");
-        expect(classInst.getPropString("50%"));
+        expect(classInst.getPropString()).toBe("50%");
         prop.unlock();
         classInst.setPropString("60%");
         expect(classInst.getPropString()).toBe("60%");
+    });
+
+    it ("modifying state after manipulations", function() {
+        expect(prop.isModified()).toBe(true);
+    });
+
+    it ("watchers", function() {
+        expect(classInst.changedPropString).toBe(true);
+        expect(classInst.propStringOld).toBe("50%");
+        expect(classInst.propStringNew).toBe("60%");
     });
 });

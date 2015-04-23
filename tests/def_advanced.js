@@ -34,7 +34,7 @@ describe("Checking", function() {
         expect(mapMap.mapMapNumber).toBe(0);
         expect(mapMap.mapMapString).toBe(null);
         expect(mapMap.mapMapBoolean).toBe(false);
-        expect(mapMap.mapMapArray.length).toBe(0);
+        expect(mapMap.mapMapArray.length).toBe(1);
         expect(Object.keys(mapMap.mapMapObject).length).toBe(0);
         expect(mapMap.mapMapClass).toBe(null);
         expect(mapMap.mapMapEnum).toBe('male');

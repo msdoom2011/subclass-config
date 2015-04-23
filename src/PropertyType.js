@@ -116,6 +116,16 @@ Subclass.Property.PropertyType = (function()
     };
 
     /**
+     * Returns class of property APIs
+     *
+     * @returns {Function}
+     */
+    PropertyType.getAPIClass = function()
+    {
+        return Subclass.Property.PropertyAPI;
+    };
+
+    /**
      * Returns the empty definition of property
      *
      * @returns {(Object|boolean)}
@@ -266,49 +276,13 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.createDefinition = function(propertyDefinition)
     {
-        var construct = null;
-        var createInstance = true;
+        var constructor = this.constructor.getDefinitionClass();
 
-        if (!arguments[1]) {
-            construct = this.constructor.getDefinitionClass();
-        } else {
-            construct = arguments[1];
-        }
-        if (arguments[2] === false) {
-            createInstance = false;
-        }
-
-        if (construct.$parent) {
-            var parentConstruct = this.createDefinition(
-                propertyDefinition,
-                construct.$parent,
-                false
-            );
-
-            var constructProto = Object.create(parentConstruct.prototype);
-
-            constructProto = Subclass.Tools.extend(
-                constructProto,
-                construct.prototype
-            );
-
-            construct.prototype = constructProto;
-            construct.prototype.constructor = construct;
-        }
-
-        if (createInstance) {
-            var inst = new construct(this, propertyDefinition);
-
-            if (!(inst instanceof Subclass.Property.PropertyDefinition)) {
-                Subclass.Error.create(
-                    'Property definition class must be instance of ' +
-                    '"Subclass.Property.PropertyDefinition" class.'
-                );
-            }
-            return inst;
-        }
-
-        return construct;
+        return Subclass.Tools.createClassInstance(
+            constructor,
+            this,
+            propertyDefinition
+        );
     };
 
     /**
@@ -324,14 +298,14 @@ Subclass.Property.PropertyType = (function()
     /**
      * Returns property api
      *
-     * @param {Object} context
+     * @param {Object} [context]
      * @returns {Subclass.Property.PropertyAPI}
      */
     PropertyType.prototype.getAPI = function(context)
     {
         if (!this._api) {
-            var apiClass = Subclass.Property.PropertyAPI;
-            this._api = new apiClass(this, context);
+            var apiClass = this.constructor.getAPIClass();
+            this._api = Subclass.Tools.createClassInstance(apiClass, this, context);
         }
         return this._api;
     };
@@ -860,24 +834,30 @@ Subclass.Property.PropertyType = (function()
         var hashedPropName = this.getNameHashed();
         var defaultValue = this.getDefaultValue();
 
-        if (
-            this.getDefinition().isWritable()
-            && !this.getDefinition().isAccessors()
-        ) {
-            Object.defineProperty(context, hashedPropName, {
-                configurable: true,
-                writable: true,
-                value: defaultValue
-            });
-
-        } else if (this.getDefinition().isAccessors()) {
-            Object.defineProperty(context, hashedPropName, {
-                configurable: true,
-                enumerable: true,
-                writable: this.getDefinition().isWritable(),
-                value: defaultValue
-            });
-        }
+        Object.defineProperty(context, hashedPropName, {
+            writable: this.getDefinition().isWritable(),
+            configurable: true,
+            //enumerable: true,
+            value: defaultValue
+        });
+        //if (
+        //    this.getDefinition().isWritable()
+        //    && !this.getDefinition().isAccessors()
+        //) {
+        //    Object.defineProperty(context, hashedPropName, {
+        //        configurable: true,
+        //        writable: true,
+        //        value: defaultValue
+        //    });
+        //
+        //} else if (this.getDefinition().isAccessors()) {
+        //    Object.defineProperty(context, hashedPropName, {
+        //        configurable: true,
+        //        //enumerable: true,
+        //        writable: this.getDefinition().isWritable(),
+        //        value: defaultValue
+        //    });
+        //}
     };
 
     /**

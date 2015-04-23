@@ -44,7 +44,7 @@ describe("Testing number property type with its", function() {
         expect(prop.isLocked()).toBe(false);
         prop.lock();
         classInst.setPropNumber(60);
-        expect(classInst.getPropNumber());
+        expect(classInst.getPropNumber()).toBe(50);
         prop.unlock();
         classInst.setPropNumber(60);
         expect(classInst.getPropNumber()).toBe(60);

@@ -1,4 +1,12 @@
-app.registerClass('Class/AppClass', {});
+app.registerClass('Class/AppClass', {
+
+    value: null,
+
+    $_constructor: function(value)
+    {
+        this.value = value;
+    }
+});
 
 app.registerClass('Class/BaseDefinition',
 {

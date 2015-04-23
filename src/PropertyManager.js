@@ -133,46 +133,6 @@ Subclass.Property.PropertyManager = (function()
     };
 
     /**
-     * Creates specified type property constructor
-     *
-     * @param {string} propertyName
-     * @param {Object} propertyDefinition
-     * @returns {Function}
-     */
-    PropertyManager.prototype.createPropertyConstructor = function(propertyName, propertyDefinition)
-    {
-        var propertyTypeName = propertyDefinition.type;
-        var classConstructor;
-
-        if (arguments[2]) {
-            classConstructor = arguments[2];
-
-        } else {
-            classConstructor = Subclass.Property.PropertyManager.getPropertyType(propertyTypeName);
-        }
-
-        if (classConstructor.$parent) {
-            var parentClassConstructor = this.createPropertyConstructor(
-                propertyName,
-                propertyDefinition,
-                classConstructor.$parent
-            );
-
-            var classConstructorProto = Object.create(parentClassConstructor.prototype);
-
-            classConstructorProto = Subclass.Tools.extend(
-                classConstructorProto,
-                classConstructor.prototype
-            );
-
-            classConstructor.prototype = classConstructorProto;
-            classConstructor.prototype.constructor = classConstructor;
-        }
-
-        return classConstructor;
-    };
-
-    /**
      * Creates instance of specified type property
      *
      * @param {string} propertyName
@@ -219,8 +179,8 @@ Subclass.Property.PropertyManager = (function()
             );
         }
 
-        var classConstructor = this.createPropertyConstructor(propertyName, propertyDefinition);
-        var inst = new classConstructor(this, propertyName, propertyDefinition);
+        var classConstructor = PropertyManager.getPropertyType(propertyDefinition.type);
+        var inst = Subclass.Tools.createClassInstance(classConstructor, this, propertyName, propertyDefinition);
 
         // Setting context
 

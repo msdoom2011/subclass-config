@@ -97,6 +97,14 @@ Subclass.Property.Type.Map.Map = (function()
     /**
      * @inheritDoc
      */
+    MapType.getAPIClass = function()
+    {
+        return Subclass.Property.Type.Map.MapAPI;
+    };
+
+    /**
+     * @inheritDoc
+     */
     MapType.getEmptyDefinition = function()
     {
         return false;
@@ -165,7 +173,7 @@ Subclass.Property.Type.Map.Map = (function()
      */
     MapType.prototype.getChildren = function()
     {
-        return this._children;
+        return Subclass.Tools.copy(this._children);
     };
 
     /**
@@ -173,7 +181,7 @@ Subclass.Property.Type.Map.Map = (function()
      *
      * @param {string} childPropName
      * @param {Object} childPropDefinition
-     * @returns {PropertyType}
+     * @returns {Subclass.Property.PropertyType}
      */
     MapType.prototype.addChild = function(childPropName, childPropDefinition)
     {
@@ -189,11 +197,11 @@ Subclass.Property.Type.Map.Map = (function()
      * Returns children property instance
      *
      * @param {string} childPropName
-     * @returns {PropertyType}
+     * @returns {Subclass.Property.PropertyType}
      */
     MapType.prototype.getChild = function(childPropName)
     {
-        return this.getChildren()[childPropName];
+        return this._children[childPropName];
     };
 
     /**
@@ -218,23 +226,27 @@ Subclass.Property.Type.Map.Map = (function()
         if (dataOnly !== true) {
             return value;
         }
-        for (var propName in value) {
-            if (value.hasOwnProperty(propName) && !propName.match(/^_(.+)[0-9]+$/i)) {
-                if (
-                    value[propName]
-                    && (
-                        Subclass.Tools.isPlainObject(value[propName])
-                        && value[propName].getData
-                    ) || (
-                        value[propName] instanceof Subclass.Property.Type.Collection.Collection
-                    )
-                ) {
-                    valueClear[propName] = value[propName].getData();
 
-                } else {
-                    valueClear[propName] = value[propName];
-                }
+        for (var propName in value) {
+            //if (value.hasOwnProperty(propName) && !propName.match(/^_(.+)[0-9]+$/i)) {
+            if (!value.hasOwnProperty(propName)) {
+                continue;
             }
+            if (
+                value[propName]
+                && (
+                    Subclass.Tools.isPlainObject(value[propName])
+                    && value[propName].getData
+                ) || (
+                    value[propName] instanceof Subclass.Property.Type.Collection.Collection
+                )
+            ) {
+                valueClear[propName] = value[propName].getData();
+
+            } else {
+                valueClear[propName] = value[propName];
+            }
+            //}
         }
 
         return valueClear;
@@ -301,7 +313,12 @@ Subclass.Property.Type.Map.Map = (function()
     {
         var hashedPropName = this.getNameHashed();
 
-        context[hashedPropName] = {};
+        //context[hashedPropName] = {};
+        Object.defineProperty(context, hashedPropName, {
+            writable: this.getDefinition().isWritable(),
+            configurable: true,
+            value: {}
+        });
         this.attachChildren(context);
         this.attachMethods(context);
 
@@ -317,7 +334,7 @@ Subclass.Property.Type.Map.Map = (function()
     {
         var propertyNameHashed = this.getNameHashed();
         var childrenContext = context[propertyNameHashed];
-        var children = this.getChildren();
+        var children = this._children;
 
         for (var childPropName in children) {
             if (!children.hasOwnProperty(childPropName)) {
@@ -348,10 +365,16 @@ Subclass.Property.Type.Map.Map = (function()
                     return $this.getValue(context, true);
                 }
             },
-            getProperty: {
+            getChild: {
                 configurable: true,
-                value: function(propertyName) {
-                    return $this.getChild(propertyName);
+                value: function(childName) {
+                    return $this.getAPI(context).getChild(childName);
+                }
+            },
+            getChildren: {
+                configurable: true,
+                value: function() {
+                    return $this.getAPI(context).getChildren();
                 }
             }
         });
@@ -365,7 +388,7 @@ Subclass.Property.Type.Map.Map = (function()
     MapType.prototype.getSchemaDefaultValue = function()
     {
         var schemaValues = {};
-        var children = this.getChildren();
+        var children = this._children;
 
         for (var propName in children) {
             if (!children.hasOwnProperty(propName)) {
