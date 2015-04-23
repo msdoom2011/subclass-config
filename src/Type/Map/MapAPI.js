@@ -12,13 +12,21 @@ Subclass.Property.Type.Map.MapAPI = function()
     MapAPI.$parent = Subclass.Property.PropertyAPI;
 
     /**
-     * Returns simple plain data of map property
-     *
-     * @returns {Object}
+     * @inheritDoc
      */
-    MapAPI.prototype.getData = function()
+    MapAPI.prototype.resetValue = function()
     {
-        return this._property.getValue(this._context, true);
+        var defaultValue = this.getDefaultValue();
+        var children = this.getChildren();
+        var childrenDefaultValues = {};
+
+        for (var childName in children) {
+            if (children.hasOwnProperty(childName)) {
+                childrenDefaultValues[childName] = children[childName].getDefaultValue();
+            }
+        }
+        defaultValue = Subclass.Tools.extendDeep(childrenDefaultValues, defaultValue);
+        this._property.setValue(this._context, defaultValue);
     };
 
     /**
@@ -31,7 +39,8 @@ Subclass.Property.Type.Map.MapAPI = function()
      */
     MapAPI.prototype.getChild = function(childName)
     {
-        return this._property.getChild(childName).getAPI(this._context);
+        var hashedName = this._property.getNameHashed();
+        return this._property.getChild(childName).getAPI(this._context[hashedName]);
     };
 
     /**
@@ -41,6 +50,7 @@ Subclass.Property.Type.Map.MapAPI = function()
      */
     MapAPI.prototype.getChildren = function()
     {
+        var hashedName = this._property.getNameHashed();
         var children = this._property.getChildren();
         var childrenAPI = {};
 
@@ -48,7 +58,7 @@ Subclass.Property.Type.Map.MapAPI = function()
             if (!children.hasOwnProperty(childName)) {
                 continue;
             }
-            childrenAPI[childName] = children[childName].getAPI(this._context);
+            childrenAPI[childName] = children[childName].getAPI(this._context[hashedName]);
         }
         return childrenAPI;
     };

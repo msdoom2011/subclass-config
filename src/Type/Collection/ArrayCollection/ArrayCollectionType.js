@@ -119,13 +119,8 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.prototype.getValue = function(context, dataOnly)
+    ArrayCollectionType.prototype.getData = function(context)
     {
-        var value = ArrayCollectionType.$parent.prototype.getValue.call(this, context, dataOnly);
-
-        if (dataOnly !== true) {
-            return value;
-        }
         var collection = this.getCollection();
         var collectionItems = [];
 

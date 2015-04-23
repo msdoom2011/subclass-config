@@ -93,45 +93,60 @@ describe("Testing map property type with its", function() {
             mapMapMixed: 20
         };
         checkPropValues();
-        var propMap = classInst.getProperty('propMap');
-        var propMapMap = propMap.getChild('mapMap');
 
         classInst.getPropMap().getChild('mapMap').resetValue();
+
+        var mapMap = classInst.getPropMap().mapMap;
+        mapMap.mapMapNumber = 100;
+        mapMap.mapMapString = "200";
+        mapMap.mapMapBoolean = true;
+        mapMap.mapMapArray = [ 20 ];
+        mapMap.mapMapObject = { prop: 30 };
+        mapMap.mapMapClass = app.getClass('Class/AppClass').createInstance(20);
+        mapMap.mapMapEnum = "female";
+        mapMap.mapMapFunction = function() { return 60; };
+        mapMap.mapMapMixed = 20;
+
         checkPropValues();
 
-
-
-        //expect(classInst.getPropMap()).toBe(60);
-        //expect(function() { classInst.setPropMap("60"); }).toThrow();
-        //expect(function() { classInst.setPropMap(true); }).toThrow();
+        expect(function() { classInst.setPropMap("60"); }).toThrow();
+        expect(function() { classInst.setPropMap(true); }).toThrow();
     });
 
-    //it ("nullable", function() {
-    //    classInst.setPropMap(null);
-    //    expect(classInst.getPropMap()).toBe(null);
-    //    classInst.setPropMap("50px");
-    //    expect(classInst.getPropMap()).toBe("50px");
-    //});
-    //
-    //it ("ability to lock its writable capability", function() {
-    //    expect(prop.isLocked()).toBe(false);
-    //    prop.lock();
-    //    classInst.setPropMap(60);
-    //    expect(classInst.getPropMap()).toBe("50px");
-    //    prop.unlock();
-    //    classInst.setPropMap(60);
-    //    expect(classInst.getPropMap()).toBe(60);
-    //});
-    //
-    //it ("modifying state after manipulations", function() {
-    //    expect(prop.isModified()).toBe(true);
-    //});
-    //
-    //it ("watchers", function() {
-    //    expect(classInst.changedPropMap).toBe(true);
-    //    expect(classInst.propMapOld).toBe("50px");
-    //    expect(classInst.propMapNew).toBe(60);
-    //});
+    it ("nullable", function() {
+        classInst.setPropMap(null);
+        expect(classInst.getPropMap()).toBe(null);
+        classInst.setPropMap({
+            mapString: "init string value",
+            mapMap: {
+                mapMapArray: [10]
+            }
+        });
+        expect(classInst.getPropMap().mapString).toBe("init string value");
+        expect(classInst.getPropMap().mapMap.mapMapArray.length).toBe(1);
+        expect(classInst.getPropMap().mapMap.mapMapArray).toContain(10);
+    });
+
+    it ("ability to lock its writable capability", function() {
+        expect(prop.isLocked()).toBe(false);
+        prop.lock();
+        classInst.setPropMap({ mapString: "111" });
+        classInst.getPropMap().mapString = "111";
+        expect(classInst.getPropMap().mapString).toBe("init string value");
+        prop.unlock();
+        classInst.setPropMap({ mapString: "111" });
+        expect(classInst.getPropMap().mapString).toBe("111");
+    });
+
+    it ("modifying state after manipulations", function() {
+        expect(prop.isModified()).toBe(true);
+    });
+
+    it ("watchers", function() {
+        expect(classInst.changedPropMap).toBe(true);
+        expect(classInst.propMapOld.mapString).toBe("init string value");
+        expect(classInst.propMapNew.mapString).toBe("111");
+    });
 });
 
 

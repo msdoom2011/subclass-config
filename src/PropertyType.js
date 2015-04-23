@@ -74,6 +74,14 @@ Subclass.Property.PropertyType = (function()
          * @private
          */
         this._isModified = false;
+
+        /**
+         * Reports that current property is temporary locked for the write operation
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._isLocked = false;
     }
 
     PropertyType.$parent = null;
@@ -256,7 +264,7 @@ Subclass.Property.PropertyType = (function()
             );
         }
         var definition = this.getDefinition();
-        var value = this.getValue(context, true);
+        var value = this.getData(context);
 
         if (definition.isAccessors()) {
             Subclass.Error.create('Can\'t rename property ' + this + ' because it uses accessor functions.');
@@ -516,13 +524,27 @@ Subclass.Property.PropertyType = (function()
             watchers[i].call(context, newValue, oldValue, this);
         }
     };
+    //
+    //PropertyType.prototype.getWatcherOldValues = function(context)
+    //{
+    //    var oldValues = [];
+    //
+    //    if (arguments[1] && Array.isArray(arguments[1])) {
+    //        oldValues = arguments[1];
+    //    }
+    //    oldValues.push(this.getValue(context, true));
+    //
+    //    if (this.getContextProperty()) {
+    //        oldValues = this.getContextProperty().getWatcherOldValues(context);
+    //    }
+    //};
 
     /**
      * Makes current property locked
      */
     PropertyType.prototype.lock = function()
     {
-        this.getDefinition().setLocked(true);
+        this._isLocked = true;
     };
 
     /**
@@ -530,7 +552,7 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.unlock = function()
     {
-        this.getDefinition().setLocked(false);
+        this._isLocked = false;
     };
 
     /**
@@ -540,7 +562,14 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.isLocked = function()
     {
-        return this.getDefinition().isLocked();
+        if (this._isLocked) {
+            return true;
+        }
+        if (this.getContextProperty()) {
+            return this.getContextProperty().isLocked() || false;
+        } else {
+            return false;
+        }
     };
 
     /**
@@ -603,6 +632,17 @@ Subclass.Property.PropertyType = (function()
         }
         var propName = this.getName();
         return context[propName];
+    };
+
+    /**
+     * Returns only data of current property
+     *
+     * @param context
+     * @returns {*}
+     */
+    PropertyType.prototype.getData = function(context)
+    {
+        return this.getValue(context);
     };
 
     /**
@@ -700,6 +740,7 @@ Subclass.Property.PropertyType = (function()
 
     /**
      * Generates setter for specified property
+     * @TODO Implement delegation invoking watchers from children to its context properties (ancestors)
      *
      * @returns {function}
      */
@@ -719,7 +760,7 @@ Subclass.Property.PropertyType = (function()
                     'property ' + $this + ' that is locked for write.'
                 );
             }
-            var oldValue = $this.getValue(this);
+            var oldValue = $this.getData(this);
             var newValue = value;
 
             $this.validateValue(value);

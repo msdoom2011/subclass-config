@@ -391,7 +391,7 @@ Subclass.Property.Type.Collection.Collection = (function()
     */
     Collection.prototype.getData = function()
     {
-        return this.getProperty().getValue(this.getContext(), true);
+        return this.getProperty().getData(this.getContext());
     };
 
     return Collection;

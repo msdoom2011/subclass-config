@@ -294,52 +294,6 @@ Subclass.Property.PropertyDefinition = (function()
     PropertyDefinition.prototype.isWritable = PropertyDefinition.prototype.getWritable;
 
     /**
-     * Validates "locked" option value
-     *
-     * @param {*} isLocked
-     */
-    PropertyDefinition.prototype.validateLocked = function(isLocked)
-    {
-        if (isLocked !== null && typeof isLocked != 'boolean') {
-            Subclass.Error.create('InvalidPropertyOption')
-                .option('locked')
-                .received(isLocked)
-                .property(this.getProperty())
-                .expected('a boolean or null')
-                .apply()
-            ;
-        }
-    };
-
-    /**
-     * Set marker if current property is locked
-     *
-     * @param {(boolean|null)} isLocked
-     */
-    PropertyDefinition.prototype.setLocked = function(isLocked)
-    {
-        this.validateLocked(isLocked);
-        this.getData().locked = isLocked;
-    };
-
-    /**
-     * Checks if current property is locked
-     *
-     * @returns {boolean}
-     */
-    PropertyDefinition.prototype.getLocked = function()
-    {
-        var isLocked = this.getData().locked;
-
-        return isLocked !== null ? isLocked : false;
-    };
-
-    /**
-     * @alias Subclass.Property.PropertyDefinition
-     */
-    PropertyDefinition.prototype.isLocked = PropertyDefinition.prototype.getLocked;
-
-    /**
      * Validates "nullable" attribute value
      *
      * @param {*} isNullable
@@ -426,17 +380,6 @@ Subclass.Property.PropertyDefinition = (function()
              * @type {boolean}
              */
             writable: true,
-
-            /**
-             * Allows to lock ability to write the new value to property.
-             *
-             * The difference from "writable" option is in ability
-             * to unlock ability to write new value to property during
-             * application working whenever you need.
-             *
-             * @type {boolean}
-             */
-            locked: false,
 
             /**
              * Callback that triggers when trying to set property value.

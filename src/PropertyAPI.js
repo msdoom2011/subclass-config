@@ -81,9 +81,19 @@ Subclass.Property.PropertyAPI = (function()
      *
      * @returns {PropertyType}
      */
-    PropertyAPI.prototype.getValue = function() //dataOnly)
+    PropertyAPI.prototype.getValue = function()
     {
-        return this._property.getValue(this._context); //, dataOnly);
+        return this._property.getValue(this._context);
+    };
+
+    /**
+     * Returns plain data of current property value
+     *
+     * @returns {*}
+     */
+    PropertyAPI.prototype.getData = function()
+    {
+        return this._property.getData(this._context);
     };
 
     /**

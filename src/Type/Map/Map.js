@@ -216,19 +216,17 @@ Subclass.Property.Type.Map.Map = (function()
     };
 
     /**
-     * @inheritDoc
+     * Returns data only of property value
+     *
+     * @param context
+     * @returns {Object}
      */
-    MapType.prototype.getValue = function(context, dataOnly)
+    MapType.prototype.getData = function(context)
     {
-        var value = MapType.$parent.prototype.getValue.call(this, context, dataOnly);
+        var value = MapType.$parent.prototype.getData.call(this, context);
         var valueClear = {};
 
-        if (dataOnly !== true) {
-            return value;
-        }
-
         for (var propName in value) {
-            //if (value.hasOwnProperty(propName) && !propName.match(/^_(.+)[0-9]+$/i)) {
             if (!value.hasOwnProperty(propName)) {
                 continue;
             }
@@ -246,15 +244,14 @@ Subclass.Property.Type.Map.Map = (function()
             } else {
                 valueClear[propName] = value[propName];
             }
-            //}
         }
 
         return valueClear;
     };
 
     /**
-    * @inheritDoc
-    */
+     * @inheritDoc
+     */
     MapType.prototype.generateGetter = function()
     {
         var $this = this;
@@ -281,7 +278,7 @@ Subclass.Property.Type.Map.Map = (function()
                     'property ' + $this + ' that is locked for write.'
                 );
             }
-            var oldValue = $this.getValue(this);
+            var oldValue = $this.getData(this);
             var newValue = value;
 
             $this.validateValue(value);
@@ -362,7 +359,7 @@ Subclass.Property.Type.Map.Map = (function()
             getData: {
                 configurable: true,
                 value: function() {
-                    return $this.getValue(context, true);
+                    return $this.getAPI(context).getData();
                 }
             },
             getChild: {

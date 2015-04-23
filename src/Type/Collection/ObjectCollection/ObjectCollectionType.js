@@ -106,13 +106,8 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
     /**
      * @inheritDoc
      */
-    ObjectCollectionType.prototype.getValue = function(context, dataOnly)
+    ObjectCollectionType.prototype.getData = function(context)
     {
-        var value = ObjectCollectionType.$parent.prototype.getValue.call(this, context, dataOnly);
-
-        if (dataOnly !== true) {
-            return value;
-        }
         var collection = this.getCollection();
         var collectionItems = {};
 
