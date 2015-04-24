@@ -34,6 +34,10 @@ app.registerClass('Class/StandardDefinition',
     propFunctionOld: false,
     propFunctionNew: false,
 
+    changedPropUntyped: false,
+    propUntypedOld: false,
+    propUntypedNew: false,
+
     changedPropMixed: false,
     propMixedOld: false,
     propMixedNew: false,
@@ -146,6 +150,20 @@ app.registerClass('Class/StandardDefinition',
                 this.changedPropFunction = true;
                 this.propFunctionOld = oldValue;
                 this.propFunctionNew = newValue;
+            }
+        },
+
+        propUntyped: {
+            type: "untyped",
+            default: 10,
+            writable: true,
+            accessors: true,
+            nullable: false,
+            value: "string value",
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropUntyped = true;
+                this.propUntypedOld = oldValue;
+                this.propUntypedNew = newValue;
             }
         },
 

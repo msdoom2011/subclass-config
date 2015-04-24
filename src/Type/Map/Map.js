@@ -254,27 +254,15 @@ Subclass.Property.Type.Map.Map = (function()
      */
     MapType.prototype.resetValue = function(context)
     {
-        //MapType.$parent.prototype.resetValue.call(this, context);
-        //
-        //var hashedName = this.getNameHashed();
-        //var children = this.getChildren();
-        //
-        //for (var childName in children) {
-        //    if (children.hasOwnProperty(childName)) {
-        //        children[childName].resetValue(context[hashedName]);
-        //    }
-        //}
-
+        var hashedName = this.getNameHashed();
         var defaultValue = this.getDefaultValue();
         var children = this.getChildren();
-        var childrenDefaultValues = {};
 
         for (var childName in children) {
             if (children.hasOwnProperty(childName)) {
-                childrenDefaultValues[childName] = children[childName].getDefaultValue();
+                children[childName].resetValue(context[hashedName]);
             }
         }
-        defaultValue = Subclass.Tools.extendDeep(childrenDefaultValues, defaultValue);
         this.setValue(context, defaultValue);
     };
 
@@ -318,9 +306,6 @@ Subclass.Property.Type.Map.Map = (function()
 
                 for (var childPropName in value) {
                     if (value.hasOwnProperty(childPropName)) {
-                        //if (childPropName == 'mapMapArray') {
-                        //    console.log(value[childPropName]);
-                        //}
                         this[$this.getNameHashed()][childPropName] = value[childPropName];
                     }
                 }
@@ -342,7 +327,6 @@ Subclass.Property.Type.Map.Map = (function()
     {
         var hashedPropName = this.getNameHashed();
 
-        //context[hashedPropName] = {};
         Object.defineProperty(context, hashedPropName, {
             writable: this.getDefinition().isWritable(),
             configurable: true,

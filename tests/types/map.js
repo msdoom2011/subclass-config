@@ -3,6 +3,34 @@ describe("Testing map property type with its", function() {
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
     var prop = classInst.getProperty('propMap');
 
+    function checkDefaultValues(prop, mapMapOnly) {
+        if (mapMapOnly !== true) {
+            mapMapOnly == false;
+        }
+        if (!mapMapOnly) {
+            expect(prop.mapNumber).toBe(10);
+            expect(prop.mapString).toBe(null);
+            expect(prop.mapBoolean).toBe(false);
+            expect(prop.mapArray.length).toBe(0);
+            expect(Object.keys(prop.mapObject).length).toBe(0);
+            expect(prop.mapClass).toBe(null);
+            expect(prop.mapEnum).toBe('male');
+            expect(prop.mapFunction).toBe(null);
+            expect(prop.mapMixed).toBe(null);
+        }
+
+        var propMap = prop.mapMap;
+        expect(propMap.mapMapNumber).toBe(0);
+        expect(propMap.mapMapString).toBe(null);
+        expect(propMap.mapMapBoolean).toBe(false);
+        expect(propMap.mapMapArray.length).toBe(0);
+        expect(Object.keys(propMap.mapMapObject).length).toBe(0);
+        expect(propMap.mapMapClass).toBe(null);
+        expect(propMap.mapMapEnum).toBe('male');
+        expect(propMap.mapMapFunction).toBe(null);
+        expect(propMap.mapMapMixed).toBe(null);
+    }
+
     it ("modifying state before manipulations", function() {
         expect(prop.isModified()).toBe(false);
     });
@@ -70,9 +98,10 @@ describe("Testing map property type with its", function() {
         }
 
         checkPropValues(prop);
-        //prop.mapMap.getData();
         checkPropValues(prop.getData());
         classInst.getProperty('propMap').resetValue();
+        checkDefaultValues(prop);
+        checkDefaultValues(prop.getData());
 
         prop.mapNumber = 20;
         prop.mapString = "the new string value";
@@ -98,6 +127,8 @@ describe("Testing map property type with its", function() {
         checkPropValues(prop);
         checkPropValues(prop.getData());
         classInst.getPropMap().getChild('mapMap').resetValue();
+        checkDefaultValues(prop, true);
+        checkDefaultValues(prop.getData(), true);
 
         var mapMap = classInst.getPropMap().mapMap;
         mapMap.mapMapNumber = 100;
@@ -132,12 +163,30 @@ describe("Testing map property type with its", function() {
         expect(classInst.getPropMap().getData().mapMap.mapMapArray).toContain(10);
     });
 
-    it ("valid schema data", function() {
+    it ("valid schema data after null was set", function() {
+        var prop = classInst.getPropMap().getData();
 
-        console.log('====================== START ==========================');
-        console.log(classInst.getPropMap().mapMap.mapMapArray);
-        console.log('======================= END ===========================');
+        expect(prop.mapNumber).toBe(10);
+        expect(prop.mapString).toBe('init string value');
+        expect(prop.mapBoolean).toBe(false);
+        expect(prop.mapArray.length).toBe(0);
+        expect(Object.keys(prop.mapObject).length).toBe(0);
+        expect(prop.mapClass).toBe(null);
+        expect(prop.mapEnum).toBe('male');
+        expect(prop.mapFunction).toBe(null);
+        expect(prop.mapMixed).toBe(null);
 
+        var propMap = prop.mapMap;
+        expect(propMap.mapMapNumber).toBe(0);
+        expect(propMap.mapMapString).toBe(null);
+        expect(propMap.mapMapBoolean).toBe(false);
+        expect(propMap.mapMapArray.length).toBe(1);
+        expect(propMap.mapMapArray).toContain(10);
+        expect(Object.keys(propMap.mapMapObject).length).toBe(0);
+        expect(propMap.mapMapClass).toBe(null);
+        expect(propMap.mapMapEnum).toBe('male');
+        expect(propMap.mapMapFunction).toBe(null);
+        expect(propMap.mapMapMixed).toBe(null);
     });
 
     it ("ability to lock its writable capability", function() {
@@ -161,43 +210,3 @@ describe("Testing map property type with its", function() {
         expect(classInst.propMapNew.mapString).toBe("111");
     });
 });
-
-
-//console.log('-------------------------');
-//console.log(inst.getProperty('typedMap').isModified());
-//console.log('-------------------------');
-//
-//console.log(inst.getTypedMap());
-////console.log(inst.setTypedMap(111));
-//console.log(inst.getTypedMap().propMapString);
-//console.log(inst.getTypedMap().propMapMap.propMapMapString);
-////        inst.getTypedMap().propMapMap.propMapMapString = 111;
-//inst.getTypedMap().propMapMap.propMapMapString += " changed!!!!";
-//console.log(inst.getTypedMap().propMapMap.propMapMapString);
-//inst.setTypedMap(null);
-//console.log(inst.getTypedMap());
-//
-//console.log('-------------------------');
-//inst.getProperty('typedMap').setModified();
-//console.log(inst.getProperty('typedMap').isModified());
-//console.log('-------------------------');
-//
-//inst.setTypedMap({
-//    propMapString: 'psix!!!!!!!!!!!!!!!!!!!!!!'
-//});
-//console.log(inst.getTypedMap());
-//inst.getTypedMap().propMapMap.propMapMapString = "psix!!!!";
-//console.log(inst.getTypedMap());
-//
-//
-//inst.setTypedMap({
-//    propMapMap: {
-//        propMapMapString: "another new value!!!!"
-//    },
-//    propMapString: "changed",
-//    propMapNumber: 1111,
-//    propMapObject: { a: "yes!!!" }
-//});
-//
-//console.log(inst.getTypedMap());
-//console.log(inst.getTypedMap().getData());

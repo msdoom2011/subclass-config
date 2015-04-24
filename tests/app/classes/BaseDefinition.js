@@ -28,6 +28,8 @@ app.registerClass('Class/BaseDefinition',
 
         propFunction: { type: "function" },
 
+        propUntyped: { type: "untyped" },
+
         propMixed: { type: "mixed", allows: [
             { type: "number" },
             { type: "string" }
@@ -79,7 +81,15 @@ app.registerClass('Class/BaseDefinition',
                     { type: "string" }
                 ]}
             }}
-        }}
+        }},
+
+        propCollectionArray: {
+
+        },
+
+        propCollectionObject: {
+
+        }
 
     }
 });
