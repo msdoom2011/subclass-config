@@ -11,23 +11,23 @@ Subclass.Property.Type.Map.MapAPI = function()
 
     MapAPI.$parent = Subclass.Property.PropertyAPI;
 
-    /**
-     * @inheritDoc
-     */
-    MapAPI.prototype.resetValue = function()
-    {
-        var defaultValue = this.getDefaultValue();
-        var children = this.getChildren();
-        var childrenDefaultValues = {};
-
-        for (var childName in children) {
-            if (children.hasOwnProperty(childName)) {
-                childrenDefaultValues[childName] = children[childName].getDefaultValue();
-            }
-        }
-        defaultValue = Subclass.Tools.extendDeep(childrenDefaultValues, defaultValue);
-        this._property.setValue(this._context, defaultValue);
-    };
+    ///**
+    // * @inheritDoc
+    // */
+    //MapAPI.prototype.resetValue = function()
+    //{
+    //    var defaultValue = this.getDefaultValue();
+    //    var children = this.getChildren();
+    //    var childrenDefaultValues = {};
+    //
+    //    for (var childName in children) {
+    //        if (children.hasOwnProperty(childName)) {
+    //            childrenDefaultValues[childName] = children[childName].getDefaultValue();
+    //        }
+    //    }
+    //    defaultValue = Subclass.Tools.extendDeep(childrenDefaultValues, defaultValue);
+    //    this._property.setValue(this._context, defaultValue);
+    //};
 
     /**
      * Returns child property of current map property

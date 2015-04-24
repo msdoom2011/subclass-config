@@ -46,7 +46,7 @@ describe("Testing map property type with its", function() {
 
         var prop = classInst.getPropMap();
 
-        function checkPropValues() {
+        function checkPropValues(prop) {
             expect(prop.mapNumber).toBe(20);
             expect(prop.mapString).toBe('the new string value');
             expect(prop.mapBoolean).toBe(true);
@@ -69,7 +69,9 @@ describe("Testing map property type with its", function() {
             expect(propMap.mapMapMixed).toBe(20);
         }
 
-        checkPropValues();
+        checkPropValues(prop);
+        //prop.mapMap.getData();
+        checkPropValues(prop.getData());
         classInst.getProperty('propMap').resetValue();
 
         prop.mapNumber = 20;
@@ -92,8 +94,9 @@ describe("Testing map property type with its", function() {
             mapMapFunction: function() { return 60; },
             mapMapMixed: 20
         };
-        checkPropValues();
 
+        checkPropValues(prop);
+        checkPropValues(prop.getData());
         classInst.getPropMap().getChild('mapMap').resetValue();
 
         var mapMap = classInst.getPropMap().mapMap;
@@ -107,7 +110,8 @@ describe("Testing map property type with its", function() {
         mapMap.mapMapFunction = function() { return 60; };
         mapMap.mapMapMixed = 20;
 
-        checkPropValues();
+        checkPropValues(prop);
+        checkPropValues(prop.getData());
 
         expect(function() { classInst.setPropMap("60"); }).toThrow();
         expect(function() { classInst.setPropMap(true); }).toThrow();
@@ -125,6 +129,15 @@ describe("Testing map property type with its", function() {
         expect(classInst.getPropMap().mapString).toBe("init string value");
         expect(classInst.getPropMap().mapMap.mapMapArray.length).toBe(1);
         expect(classInst.getPropMap().mapMap.mapMapArray).toContain(10);
+        expect(classInst.getPropMap().getData().mapMap.mapMapArray).toContain(10);
+    });
+
+    it ("valid schema data", function() {
+
+        console.log('====================== START ==========================');
+        console.log(classInst.getPropMap().mapMap.mapMapArray);
+        console.log('======================= END ===========================');
+
     });
 
     it ("ability to lock its writable capability", function() {

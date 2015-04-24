@@ -144,11 +144,6 @@ app.registerClass('Class/AdvancedDefinition',
             type: "map",
             nullable: true,
             watcher: function(newValue, oldValue, property) {
-
-                console.log(oldValue);
-                console.log(newValue);
-                console.log('--------');
-
                 this.changedPropMap = true;
                 this.propMapOld = oldValue;
                 this.propMapNew = newValue;

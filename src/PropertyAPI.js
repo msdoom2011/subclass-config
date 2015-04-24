@@ -33,6 +33,16 @@ Subclass.Property.PropertyAPI = (function()
         return this._property;
     };
 
+    PropertyAPI.prototype.setContext = function(context)
+    {
+        this._context = context;
+    };
+
+    PropertyAPI.prototype.getContext = function()
+    {
+        return this._context;
+    };
+
     /**
      * Returns property name
      *
@@ -71,9 +81,10 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.resetValue = function()
     {
-        var defaultValue = this.getDefaultValue();
-
-        this._property.setValue(this._context, defaultValue);
+        return this._property.resetValue(this._context);
+        //var defaultValue = this.getDefaultValue();
+        //
+        //this._property.setValue(this._context, defaultValue);
     };
 
     /**

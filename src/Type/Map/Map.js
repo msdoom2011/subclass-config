@@ -252,6 +252,35 @@ Subclass.Property.Type.Map.Map = (function()
     /**
      * @inheritDoc
      */
+    MapType.prototype.resetValue = function(context)
+    {
+        //MapType.$parent.prototype.resetValue.call(this, context);
+        //
+        //var hashedName = this.getNameHashed();
+        //var children = this.getChildren();
+        //
+        //for (var childName in children) {
+        //    if (children.hasOwnProperty(childName)) {
+        //        children[childName].resetValue(context[hashedName]);
+        //    }
+        //}
+
+        var defaultValue = this.getDefaultValue();
+        var children = this.getChildren();
+        var childrenDefaultValues = {};
+
+        for (var childName in children) {
+            if (children.hasOwnProperty(childName)) {
+                childrenDefaultValues[childName] = children[childName].getDefaultValue();
+            }
+        }
+        defaultValue = Subclass.Tools.extendDeep(childrenDefaultValues, defaultValue);
+        this.setValue(context, defaultValue);
+    };
+
+    /**
+     * @inheritDoc
+     */
     MapType.prototype.generateGetter = function()
     {
         var $this = this;
@@ -288,12 +317,15 @@ Subclass.Property.Type.Map.Map = (function()
                 $this.setIsNull(false);
 
                 for (var childPropName in value) {
-                    if (!value.hasOwnProperty(childPropName)) {
-                        continue;
+                    if (value.hasOwnProperty(childPropName)) {
+                        //if (childPropName == 'mapMapArray') {
+                        //    console.log(value[childPropName]);
+                        //}
+                        this[$this.getNameHashed()][childPropName] = value[childPropName];
                     }
-                    this[$this.getNameHashed()][childPropName] = value[childPropName];
                 }
             } else {
+                $this.resetValue(this);
                 $this.setIsNull(true);
             }
 
@@ -352,9 +384,11 @@ Subclass.Property.Type.Map.Map = (function()
         } else {
             propName = $this.getName();
         }
+
         if (context[propName] === null) {
             context[propName] = {};
         }
+
         Object.defineProperties(context[propName], {
             getData: {
                 configurable: true,

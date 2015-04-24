@@ -315,6 +315,9 @@ Subclass.Property.PropertyType = (function()
             var apiClass = this.constructor.getAPIClass();
             this._api = Subclass.Tools.createClassInstance(apiClass, this, context);
         }
+        if (context && this._api.getContext() != context) {
+            this._api.setContext(context);
+        }
         return this._api;
     };
 
@@ -631,6 +634,7 @@ Subclass.Property.PropertyType = (function()
             return context[getterName]();
         }
         var propName = this.getName();
+
         return context[propName];
     };
 
@@ -644,6 +648,17 @@ Subclass.Property.PropertyType = (function()
     {
         return this.getValue(context);
     };
+    //
+    ///**
+    // * Resets the value of current property to default
+    // *
+    // * @param {Object} context
+    // *      The object to which current property belongs to.
+    // */
+    //PropertyType.prototype.resetValue = function(context)
+    //{
+    //    this.getDefinition().getData().value = undefined;
+    //};
 
     /**
      * Resets the value of current property to default

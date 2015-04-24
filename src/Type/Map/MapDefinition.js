@@ -22,7 +22,6 @@ Subclass.Property.Type.Map.MapDefinition = (function()
     MapDefinition.prototype.getEmptyValue = function()
     {
         return this.isNullable() ? null : {};
-        //return null;
     };
 
     /**

@@ -123,7 +123,7 @@ Subclass.Property.PropertyDefinition = (function()
     };
 
     /**
-     * Sets property value
+     * Sets the property value
      */
     PropertyDefinition.prototype.setValue = function(value)
     {
