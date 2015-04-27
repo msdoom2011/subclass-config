@@ -202,6 +202,44 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     //    return collectionConstructor;
     //};
 
+    CollectionType.prototype.createCollection = function(context)
+    {
+        var collectionConstructor = this.getCollectionClass();
+        var propertyDefinition = this.getDefinition();
+        var defaultValue = this.getDefaultValue();
+        var proto = this.getProto();
+
+        var collection = Subclass.Tools.createClassInstance(collectionConstructor, this, context);
+
+        // Altering collection
+
+        this.alterCollection(collection);
+
+        // Setting default value
+
+        if (defaultValue !== null) {
+            this.setIsNull(false);
+
+            for (var propName in defaultValue) {
+                if (!defaultValue.hasOwnProperty(propName)) {
+                    continue;
+                }
+                if (!propertyDefinition.isWritable()) {
+                    proto.getDefinition().setWritable(false);
+                }
+                this.addCollectionItem(
+                    collection,
+                    propName,
+                    defaultValue[propName]
+                );
+            }
+            collection.normalizeItems();
+        }
+        Object.seal(collection);
+
+        return collection;
+    };
+
     /**
      * Returns collection instance
      *
@@ -210,54 +248,39 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     CollectionType.prototype.getCollection = function(context)
     {
         if (!this._collection) {
-            //var collectionConstructor = this.getCollectionConstructor();
-            var collectionConstructor = this.getCollectionClass();
-            var propertyDefinition = this.getDefinition();
-            var defaultValue = this.getDefaultValue();
-            var proto = this.getProto();
-
-            //this._collection = new collectionConstructor(this, context);
-            this._collection = Subclass.Tools.createClassInstance(collectionConstructor, this, context);
-            this.alterCollection();
-
-            if (defaultValue !== null) {
-                this.setIsNull(false);
-
-                for (var propName in defaultValue) {
-                    if (!defaultValue.hasOwnProperty(propName)) {
-                        continue;
-                    }
-                    if (!propertyDefinition.isWritable()) {
-                        proto.getDefinition().setWritable(false);
-                    }
-                    this.addCollectionItem(
-                        propName,
-                        defaultValue[propName]
-                    );
-                }
-                this._collection.normalizeItems();
-            }
-
-            Object.seal(this._collection);
+            this._collection = this.createCollection(context);
         }
         return this._collection;
     };
 
     /**
-     * Alters collection instance
+     * Alters property collection instance
+     *
+     * @param {Subclass.Property.Type.Collection} collection
+     *      The instance of property collection
      */
-    CollectionType.prototype.alterCollection = function()
+    CollectionType.prototype.alterCollection = function(collection)
     {
         // Do something
     };
 
     /**
+     * Clearing property collection instance
+     */
+    CollectionType.prototype.clearCollection = function()
+    {
+        var context = this._collection.getContext();
+        this._collection = this.createCollection(context);
+    };
+
+    /**
      * Adds new item to collection
      *
+     * @param collection
      * @param key
      * @param value
      */
-    CollectionType.prototype.addCollectionItem = function(key, value)
+    CollectionType.prototype.addCollectionItem = function(collection, key, value)
     {
         Subclass.Error.create('NotImplementedMethod')
             .method('addCollectionItem')
@@ -298,20 +321,24 @@ Subclass.Property.Type.Collection.CollectionType = (function()
             $this.setIsModified(true);
 
             if (value !== null) {
+                var nameHashed = $this.getNameHashed();
+                this[nameHashed].replaceItems(value);
+                this[nameHashed].normalizeItems();
                 $this.setIsNull(false);
 
-                for (var childPropName in value) {
-                    if (!value.hasOwnProperty(childPropName)) {
-                        continue;
-                    }
-                    this[$this.getNameHashed()].setItem(
-                        childPropName,
-                        value[childPropName]
-                    );
-                }
+                //for (var childPropName in value) {
+                //    if (!value.hasOwnProperty(childPropName)) {
+                //        continue;
+                //    }
+                //    this[$this.getNameHashed()].setItem(
+                //        childPropName,
+                //        value[childPropName]
+                //    );
+                //}
+
             } else {
-                $this.setIsNull(true);
                 $this.getCollection(this).removeItems();
+                $this.setIsNull(true);
             }
         };
     };

@@ -99,21 +99,25 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.prototype.alterCollection = function()
+    ArrayCollectionType.prototype.alterCollection = function(collection)
     {
-        Object.defineProperty(this._collection, 'length', {
+        var $this = this;
+
+        Object.defineProperty(collection, 'length', {
             enumerable: false,
-            get: this._collection.getLength,
-            set: function() {}
+            set: function() {},
+            get: function() {
+                return collection.getLength();
+            }
         });
     };
 
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.prototype.addCollectionItem = function(key, value)
+    ArrayCollectionType.prototype.addCollectionItem = function(collection, key, value)
     {
-        this._collection.addItem(value, false);
+        collection.addItem(value);
     };
 
     /**
@@ -130,37 +134,37 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 
         return collectionItems;
     };
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.prototype.generateSetter = function()
-    {
-        var $this = this;
-
-        return function(value) {
-            if ($this.isLocked()) {
-                return console.warn(
-                    'Trying to set new value for the ' +
-                    'property ' + $this + ' that is locked for write.'
-                );
-            }
-            $this.validateValue(value);
-            $this.setIsModified(true);
-
-            if (value !== null) {
-                $this.setIsNull(false);
-
-                for (var i = 0; i < value.length; i++) {
-                    this[$this.getNameHashed()].addItem(value[i]);
-                }
-
-            } else {
-                $this.setIsNull(true);
-                $this.getCollection(this).removeItems();
-            }
-        };
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.prototype.generateSetter = function()
+    //{
+    //    var $this = this;
+    //
+    //    return function(value) {
+    //        if ($this.isLocked()) {
+    //            return console.warn(
+    //                'Trying to set new value for the ' +
+    //                'property ' + $this + ' that is locked for write.'
+    //            );
+    //        }
+    //        $this.validateValue(value);
+    //        $this.setIsModified(true);
+    //
+    //        if (value !== null) {
+    //            $this.setIsNull(false);
+    //
+    //            for (var i = 0; i < value.length; i++) {
+    //                this[$this.getNameHashed()].addItem(value[i]);
+    //            }
+    //
+    //        } else {
+    //            $this.setIsNull(true);
+    //            $this.getCollection(this).removeItems();
+    //        }
+    //    };
+    //};
 
 
     /*************************************************/

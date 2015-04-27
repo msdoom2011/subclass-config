@@ -46,6 +46,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                 if (!classProperties.hasOwnProperty(propertyName)) {
                     continue;
                 }
+
                 classProperties[propertyName].attachHashed(classInstance);
 
                 // Getting init value

@@ -6,16 +6,45 @@ describe("Checking", function() {
     it ("standard default values", function() {
 
         expect(classInst.getPropNumber()).toBe(50);
+        expect(classInst.getProperty('propNumber').getDefaultValue()).toBe(10);
+
         expect(classInst.getPropString()).toBe('10%');
+        expect(classInst.getProperty('propString').getDefaultValue()).toBe("0%");
+
         expect(classInst.getPropBoolean()).toBe(true);
+        expect(classInst.getProperty('propBoolean').getDefaultValue()).toBe(false);
+
         expect(classInst.getPropArray()).toContain(40);
         expect(classInst.getPropArray()).toContain(50);
         expect(classInst.getPropArray()).toContain(60);
+        expect(classInst.getProperty('propArray').getDefaultValue().length).toBe(3);
+        expect(classInst.getProperty('propArray').getDefaultValue()).toContain(10);
+        expect(classInst.getProperty('propArray').getDefaultValue()).toContain(20);
+        expect(classInst.getProperty('propArray').getDefaultValue()).toContain(30);
+
         expect(classInst.getPropObject().prop1).toBe(30);
+        expect(classInst.getProperty('propObject').getDefaultValue().foo).toBe(10);
+        expect(classInst.getProperty('propObject').getDefaultValue().bar).toBe(20);
+
         expect(classInst.getPropClass()).toBe(null);
+
         expect(classInst.getPropEnum()).toBe('female');
+        expect(classInst.getProperty('propEnum').getDefaultValue()).toBe('male');
+
         expect(classInst.getPropFunction()()).toBe(false);
+        expect(classInst.getProperty('propFunction').getDefaultValue()()).toBe(true);
+
         expect(classInst.getPropMixed()).toBe('100px');
+        expect(classInst.getProperty('propMixed').getDefaultValue()).toBe(10);
+
+        expect(classInst.getPropStringCollectionArray().length).toBe(3);
+        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
+        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
+        expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('str3');
+
+        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue().length).toBe(2);
+        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('foo');
+        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('bar');
 
         var propMap = classInst.getPropMap();
         expect(propMap).not.toBe(null);
@@ -88,6 +117,10 @@ describe("Checking", function() {
         expect(classInst.changedPropMap).toBe(false);
         expect(classInst.propMapOld).toBe(false);
         expect(classInst.propMapNew).toBe(false);
+
+        expect(classInst.changedPropStringCollectionArray).toBe(false);
+        expect(classInst.propStringCollectionArrayOld).toBe(false);
+        expect(classInst.propStringCollectionArrayNew).toBe(false);
 
     });
 });

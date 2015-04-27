@@ -83,13 +83,33 @@ app.registerClass('Class/BaseDefinition',
             }}
         }},
 
-        propCollectionArray: {
+        propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
 
-        },
-
-        propCollectionObject: {
-
-        }
-
+        //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
+        //
+        //propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" } },
+        //
+        //propArrayCollectionArray: { type: "arrayCollection", proto: { type: "array" } },
+        //
+        //propObjectCollectionArray: { type: "arrayCollection", proto: { type: "object" } },
+        //
+        //propClassCollectionArray: { type: "arrayCollection", proto: { type: "class", className: "Class/AppClass" } },
+        //
+        //propEnumCollectionArray: { type: "arrayCollection", proto: { type: "enum", allows: [ "male", "female" ] } },
+        //
+        //propFunctionCollectionArray: { type: "arrayCollection", proto: { type: "function" } },
+        //
+        //propMixedCollectionArray: { type: "arrayCollection", proto: { type: "mixed", allows: [
+        //    { type: "number" },
+        //    { type: "string" }
+        //]}},
+        //
+        //propMapCollectionArray: { type: "arrayCollection", proto: { type: "map", schema: {
+        //    propMapNumber: { type: "number" },
+        //    propMapString: { type: "string" },
+        //    propMapMap: { type: "map", schema: {
+        //        mapMapString: { type: "string" }
+        //    }}
+        //}}}
     }
 });

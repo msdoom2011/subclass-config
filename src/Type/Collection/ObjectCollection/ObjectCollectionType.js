@@ -98,9 +98,9 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
     /**
      * @inheritDoc
      */
-    ObjectCollectionType.prototype.addCollectionItem = function(key, value)
+    ObjectCollectionType.prototype.addCollectionItem = function(collection, key, value)
     {
-        this._collection.addItem(key, value, false);
+        collection.addItem(key, value, false);
     };
 
     /**

@@ -108,7 +108,6 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                     if (dataTypeManager.issetType(propertyTypeName)) {
                         var dataTypeDefinition = Subclass.Tools.copy(dataTypeManager.getTypeDefinition(propertyTypeName));
                         propertyTypeName = dataTypeDefinition.type;
-
                         propertyDefinition = Subclass.Tools.extendDeep(dataTypeDefinition, propertyDefinition);
                         propertyDefinition.type = propertyTypeName;
                     }
@@ -120,7 +119,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                     var requiredClasses = propertyType.parseRelatedClasses(propertyDefinition);
 
                     if (requiredClasses && requiredClasses.length) {
-                        for (i = 0; i < requiredClasses.length; i++) {
+                        for (var i = 0; i < requiredClasses.length; i++) {
                             classManager.loadClass(requiredClasses[i]);
                         }
                     }

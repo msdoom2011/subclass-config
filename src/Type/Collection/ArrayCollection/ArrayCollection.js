@@ -18,13 +18,139 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 
     /**
      * @inheritDoc
+     */
+    ArrayCollection.prototype.validateItems = function(items)
+    {
+        if (!Array.isArray(items)) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the collection items for property ' + this.getProperty(), false)
+                .received(items)
+                .expected('a plain object')
+                .apply()
+            ;
+        }
+        return true;
+    };
+
+    /**
+     * @inheritDoc
+     * @param {Array} items
+     */
+    ArrayCollection.prototype.addItems = function(items)
+    {
+        if (!Array.isArray(items)) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the items for array collection in property ' + this.getProperty(), false)
+                .received(items)
+                .expected('an array')
+                .apply()
+            ;
+        }
+        var itemsNew = {};
+
+        for (var i = 0; i < items.length; i++) {
+            itemsNew[String(i)] = items[i];
+        }
+        for (var key in items) {
+            if (items.hasOwnProperty(key)) {
+                this.addItem(items[key], false);
+            }
+        }
+        this.normalizeItems();
+    };
+
+    /**
+     * @inheritDoc
      * @param {*} value
      */
     ArrayCollection.prototype.addItem = function(value)
     {
-        return ArrayCollection.$parent.prototype.addItem.call(
-            this, String(this.getLength()), value, false
+        this.getManager().createItem(String(this.getLength()), value);
+    };
+
+    /**
+     * @inheritDoc
+     */
+    ArrayCollection.prototype.setItems = ArrayCollection.prototype.addItems;
+
+    /**
+     * @inheritDoc
+     */
+    ArrayCollection.prototype.setItem = function(key, value, normalize)
+    {
+        if (isNaN(parseInt(key))) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the index of array collection item', false)
+                .received(key)
+                .expected('a number')
+                .apply()
+            ;
+        }
+        return ArrayCollection.$parent.prototype.setItem.call(
+            this, String(key), value, normalize
         );
+    };
+
+    /**
+     * @inheritDoc
+     *
+     * @param {number} index
+     */
+    ArrayCollection.prototype.getItem = function(index)
+    {
+        if (!this.issetItem(index)) {
+            Subclass.Error.create(
+                'Trying to get non existent array element with index "' + index + '" ' +
+                'in property ' + this.getProperty() + '.'
+            );
+        }
+        return this.getManager().getItems()[index];
+    };
+
+    /**
+     * Removes item with specified key from collection
+     *
+     * @param {(string|number)} key
+     */
+    ArrayCollection.prototype.removeItem = function(key)
+    {
+        key = parseInt(key);
+
+        var manager = this.getManager();
+        var $this = this;
+        var value = false;
+
+        this.eachItem(function(item, index) {
+            if (index == key) {
+                value = ArrayCollection.$parent.prototype.removeItem.call($this, key);
+            }
+            if (index > key) {
+                var newName = String(index - 1);
+                var context = manager.getItems();
+                var itemProp = manager.getItemProp(index);
+
+                itemProp.rename(newName, context);
+                manager.getItemProps()[newName] = itemProp;
+            }
+        });
+
+        return value;
+    };
+
+    /**
+     * @inheritDoc
+     */
+    ArrayCollection.prototype.issetItem = function(key)
+    {
+        if (isNaN(parseInt(key))) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the index of array collection item', false)
+                .received(key)
+                .expected('a number')
+                .apply()
+            ;
+        }
+        return !!this.getManager().getItems().hasOwnProperty(String(key));
     };
 
     /**
@@ -80,114 +206,6 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         });
 
         this.setItem(0, value);
-    };
-
-    /**
-    * @inheritDoc
-    * @param {Array} items
-    */
-    ArrayCollection.prototype.addItems = function(items)
-    {
-        if (!Array.isArray(items)) {
-            Subclass.Error.create('InvalidArgument')
-                .argument('the items for array collection in property ' + this.getProperty(), false)
-                .received(items)
-                .expected('an array')
-                .apply()
-            ;
-        }
-        var itemsNew = {};
-
-        for (var i = 0; i < items.length; i++) {
-            itemsNew[String(i)] = items[i];
-        }
-        for (var key in items) {
-            if (items.hasOwnProperty(key)) {
-                this.addItem(items[key], false);
-            }
-        }
-        this.normalizeItems();
-    };
-
-    /**
-    * @inheritDoc
-    * @param {Array} items
-    */
-    ArrayCollection.prototype.setItems = ArrayCollection.prototype.addItems;
-
-    ArrayCollection.prototype.setItem = function(key, value, normalize)
-    {
-        if (isNaN(parseInt(key))) {
-            Subclass.Error.create('InvalidArgument')
-                .argument('the index of array collection item', false)
-                .received(key)
-                .expected('a number')
-                .apply()
-            ;
-        }
-        return ArrayCollection.$parent.prototype.setItem.call(
-            this, String(key), value, normalize
-        );
-    };
-
-    /**
-     * @inheritDoc
-     * @param {number} index
-     */
-    ArrayCollection.prototype.getItem = function(index)
-    {
-        if (!this.issetItem(index)) {
-            Subclass.Error.create(
-                'Trying to get non existent array element with index "' + index + '" ' +
-                'in property ' + this.getProperty() + '.'
-            );
-        }
-        return this.getManager().getItems()[index];
-    };
-
-    /**
-     * Removes item with specified key from collection
-     *
-     * @param {(string|number)} key
-     */
-    ArrayCollection.prototype.removeItem = function(key)
-    {
-        key = parseInt(key);
-        var manager = this.getManager();
-        var $this = this;
-        var value = false;
-
-        this.eachItem(function(item, index) {
-            if (index == key) {
-                value = ArrayCollection.$parent.prototype.removeItem.call($this, key);
-            }
-            if (index > key) {
-                var newName = String(index - 1);
-                var context = manager.getItems();
-                var itemProp = manager.getItemProp(index);
-
-                itemProp.rename(newName, context);
-                manager.getItemProps()[newName] = itemProp;
-            }
-        });
-
-        return value;
-    };
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollection.prototype.issetItem = function(key)
-    {
-        if (isNaN(parseInt(key))) {
-            Subclass.Error.create('InvalidArgument')
-                .argument('the index of array collection item', false)
-                .received(key)
-                .expected('a number')
-                .apply()
-            ;
-        }
-        return !!this.getManager().getItems().hasOwnProperty(String(key));
     };
 
     /**

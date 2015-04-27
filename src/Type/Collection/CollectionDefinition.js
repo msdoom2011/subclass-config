@@ -82,14 +82,14 @@ Subclass.Property.Type.Collection.CollectionDefinition = (function()
     {
         var baseDefinition = CollectionDefinition.$parent.prototype.getBaseData.call(this);
 
-        /**
-         * Default property value
-         * @type {null}
-         */
-        baseDefinition.default = {};
+        ///**
+        // * Default property value
+        // * @type {null}
+        // */
+        //baseDefinition.default = {};
 
         /**
-         * Property definition which every collection element must match.
+         * Property definition to which every collection element must match.
          * @type {null}
          */
         baseDefinition.proto = null;
@@ -108,5 +108,4 @@ Subclass.Property.Type.Collection.CollectionDefinition = (function()
     };
 
     return CollectionDefinition;
-
 })();

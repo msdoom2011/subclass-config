@@ -46,6 +46,10 @@ app.registerClass('Class/StandardDefinition',
     propMapOld: false,
     propMapNew: false,
 
+    changedPropStringCollectionArray: false,
+    propStringCollectionArrayOld: false,
+    propStringCollectionArrayNew: false,
+
     $_properties: {
 
         propNumber: {
@@ -238,6 +242,47 @@ app.registerClass('Class/StandardDefinition',
                     ]}
                 }}
             }
+        },
+
+        propStringCollectionArray: {
+            type: "arrayCollection",
+            proto: { type: "string" },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: ["foo", "bar"],
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropStringCollectionArray = true;
+                this.propStringCollectionArrayOld = oldValue;
+                this.propStringCollectionArrayNew = newValue;
+            }
         }
+
+        //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
+        //
+        //propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" } },
+        //
+        //propArrayCollectionArray: { type: "arrayCollection", proto: { type: "array" } },
+        //
+        //propObjectCollectionArray: { type: "arrayCollection", proto: { type: "object" } },
+        //
+        //propClassCollectionArray: { type: "arrayCollection", proto: { type: "class", className: "Class/AppClass" } },
+        //
+        //propEnumCollectionArray: { type: "arrayCollection", proto: { type: "enum", allows: [ "male", "female" ] } },
+        //
+        //propFunctionCollectionArray: { type: "arrayCollection", proto: { type: "function" } },
+        //
+        //propMixedCollectionArray: { type: "arrayCollection", proto: { type: "mixed", allows: [
+        //    { type: "number" },
+        //    { type: "string" }
+        //]}},
+        //
+        //propMapCollectionArray: { type: "arrayCollection", proto: { type: "map", schema: {
+        //    propMapNumber: { type: "number" },
+        //    propMapString: { type: "string" },
+        //    propMapMap: { type: "map", schema: {
+        //        mapMapString: { type: "string" }
+        //    }}
+        //}}}
     }
 });

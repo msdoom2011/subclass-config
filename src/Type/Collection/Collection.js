@@ -49,7 +49,6 @@ Subclass.Property.Type.Collection.Collection = (function()
          * @type {Subclass.Property.Type.Collection.CollectionManager}
          * @private
          */
-        //this._manager = new Subclass.Property.Type.Collection.CollectionManager(this);
         this._manager = Subclass.Tools.createClassInstance(Subclass.Property.Type.Collection.CollectionManager, this);
     }
 
@@ -126,20 +125,36 @@ Subclass.Property.Type.Collection.Collection = (function()
     };
 
     /**
+     * Validates collection items
+     *
+     * @throws {Error}
+     *      Throws error if specified value is invalid
+     *
+     * @param {*} items
+     * @returns {boolean}
+     */
+    Collection.prototype.validateItems = function(items)
+    {
+        if (!Subclass.Tools.isPlainObject(items)) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the items in object collection ' + this.getProperty(), false)
+                .received(items)
+                .expected('a plain object')
+                .apply()
+            ;
+        }
+        return true;
+    };
+
+    /**
      * Adds new items to collection
      *
      * @param {Object} items
      */
     Collection.prototype.addItems = function(items)
     {
-        if (!Subclass.Tools.isPlainObject(items)) {
-            Subclass.Error.create('InvalidArgument')
-                .argument('the items in object collection "' + this.getProperty() + '"', false)
-                .received(items)
-                .expected('a plain object')
-                .apply()
-            ;
-        }
+        this.validateItems(items);
+
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
                 this.addItem(key, items[key], false);
@@ -178,20 +193,26 @@ Subclass.Property.Type.Collection.Collection = (function()
      */
     Collection.prototype.setItems = function(items)
     {
-        if (!Subclass.Tools.isPlainObject(items)) {
-            Subclass.Error.create('InvalidArgument')
-                .argument('the items in object collection "' + this.getProperty() + '"', false)
-                .received(items)
-                .expected('a plain object')
-                .apply()
-            ;
-        }
+        this.validateItems(items);
+
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
                 this.setItem(key, items[key], false);
             }
         }
         this.normalizeItems();
+    };
+
+    /**
+     * Replaces collection items by the new items
+     *
+     * @param {Object} items
+     */
+    Collection.prototype.replaceItems = function(items)
+    {
+        this.validateItems(items);
+        this.removeItems();
+        this.setItems(items);
     };
 
     /**
@@ -219,23 +240,22 @@ Subclass.Property.Type.Collection.Collection = (function()
     Collection.prototype.removeItem = function(key)
     {
         var value = this.getItemData(key);
-        var manager = this.getManager();
-
-        delete manager.getItems()[key];
-        delete manager.getItemProps()[key];
+        this.getManager().removeItem(key);
 
         return value;
     };
 
     /**
-     * Removes all items from collection
+     * Removes and returns all items from collection
+     *
+     * @returns {Object}
      */
     Collection.prototype.removeItems = function()
     {
-        var manager = this.getManager();
+        var data = this.getData();
+        this.getManager().removeItems();
 
-        manager.setItems(Object.create(Object.getPrototypeOf(manager.getItems())));
-        manager.setItemProps(Object.create(Object.getPrototypeOf(manager.getItemProps())));
+        return data;
     };
 
     /**
@@ -385,10 +405,10 @@ Subclass.Property.Type.Collection.Collection = (function()
     };
 
     /**
-    * Returns collection value
-    *
-    * @returns {(Object)}
-    */
+     * Returns collection value
+     *
+     * @returns {Object}
+     */
     Collection.prototype.getData = function()
     {
         return this.getProperty().getData(this.getContext());

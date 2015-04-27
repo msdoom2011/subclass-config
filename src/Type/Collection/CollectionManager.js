@@ -27,7 +27,6 @@ Subclass.Property.Type.Collection.CollectionManager = (function()
          * @type {Object}
          * @private
          */
-        //this._itemsProto = {};
         this._itemProps = {};
 
         /**
@@ -126,6 +125,26 @@ Subclass.Property.Type.Collection.CollectionManager = (function()
     CollectionManager.prototype.getItemProp = function(key)
     {
         return this.getItemProps()[key];
+    };
+
+    /**
+     * Removes collection item with specified key
+     *
+     * @param {string} key
+     */
+    CollectionManager.prototype.removeItem = function(key)
+    {
+        delete this.getItems()[key];
+        delete this.getItemProps()[key];
+    };
+
+    /**
+     * Clears collection items
+     */
+    CollectionManager.prototype.removeItems = function()
+    {
+        this._items = {};
+        this._itemsProp = {};
     };
 
     return CollectionManager;
