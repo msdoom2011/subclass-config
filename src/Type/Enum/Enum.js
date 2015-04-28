@@ -84,7 +84,7 @@ Subclass.Property.Type.Enum.Enum = (function()
     /**
      * @inheritDoc
      */
-    EnumType.prototype.isEmpty = function(context)
+    EnumType.prototype.isEmpty = function() //context)
     {
         return false;
     };

@@ -36,15 +36,15 @@ describe("Checking", function() {
 
         expect(classInst.getPropMixed()).toBe('100px');
         expect(classInst.getProperty('propMixed').getDefaultValue()).toBe(10);
-
-        expect(classInst.getPropStringCollectionArray().length).toBe(3);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
-        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
-        expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('str3');
-
-        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue().length).toBe(2);
-        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('foo');
-        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('bar');
+        //
+        //expect(classInst.getPropStringCollectionArray().length).toBe(3);
+        //expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
+        //expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
+        //expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('str3');
+        //
+        //expect(classInst.getProperty('propStringCollectionArray').getDefaultValue().length).toBe(2);
+        //expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('foo');
+        //expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('bar');
 
         var propMap = classInst.getPropMap();
         expect(propMap).not.toBe(null);
@@ -117,10 +117,10 @@ describe("Checking", function() {
         expect(classInst.changedPropMap).toBe(false);
         expect(classInst.propMapOld).toBe(false);
         expect(classInst.propMapNew).toBe(false);
-
-        expect(classInst.changedPropStringCollectionArray).toBe(false);
-        expect(classInst.propStringCollectionArrayOld).toBe(false);
-        expect(classInst.propStringCollectionArrayNew).toBe(false);
+        //
+        //expect(classInst.changedPropStringCollectionArray).toBe(false);
+        //expect(classInst.propStringCollectionArrayOld).toBe(false);
+        //expect(classInst.propStringCollectionArrayNew).toBe(false);
 
     });
 });

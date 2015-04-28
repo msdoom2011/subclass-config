@@ -9,9 +9,9 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      * @param {Object} context
      * @constructor
      */
-    function ArrayCollection(property, context)
+    function ArrayCollection(property) //, context)
     {
-        ArrayCollection.$parent.call(this, property, context);
+        ArrayCollection.$parent.call(this, property) //, context);
     }
 
     ArrayCollection.$parent = Subclass.Property.Type.Collection.Collection;
@@ -126,10 +126,10 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
             }
             if (index > key) {
                 var newName = String(index - 1);
-                var context = manager.getItems();
+                //var context = manager.getItems();
                 var itemProp = manager.getItemProp(index);
 
-                itemProp.rename(newName, context);
+                itemProp.rename(newName); //, context);
                 manager.getItemProps()[newName] = itemProp;
             }
         });
@@ -198,10 +198,10 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 
         this.eachItem(true, function(item, index) {
             var newName = String(index + 1);
-            var context = manager.getItems();
+            //var context = manager.getItems();
             var itemProto = manager.getItemProp(index);
 
-            itemProto.rename(newName, context);
+            itemProto.rename(newName); //, context);
             manager.getItemProps()[newName] = itemProto;
         });
 

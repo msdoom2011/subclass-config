@@ -83,7 +83,7 @@ app.registerClass('Class/BaseDefinition',
             }}
         }},
 
-        propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
+        //propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
 
         //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
         //

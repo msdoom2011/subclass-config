@@ -202,14 +202,15 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     //    return collectionConstructor;
     //};
 
-    CollectionType.prototype.createCollection = function(context)
+    CollectionType.prototype.createCollection = function() //context)
     {
         var collectionConstructor = this.getCollectionClass();
         var propertyDefinition = this.getDefinition();
         var defaultValue = this.getDefaultValue();
+        var context = this.getContext();
         var proto = this.getProto();
 
-        var collection = Subclass.Tools.createClassInstance(collectionConstructor, this, context);
+        var collection = Subclass.Tools.createClassInstance(collectionConstructor, this); //, context);
 
         // Altering collection
 
@@ -245,10 +246,10 @@ Subclass.Property.Type.Collection.CollectionType = (function()
      *
      * @returns {Collection}
      */
-    CollectionType.prototype.getCollection = function(context)
+    CollectionType.prototype.getCollection = function() //context)
     {
         if (!this._collection) {
-            this._collection = this.createCollection(context);
+            this._collection = this.createCollection(); //context);
         }
         return this._collection;
     };
@@ -299,7 +300,8 @@ Subclass.Property.Type.Collection.CollectionType = (function()
             if ($this.isNull()) {
                 return null;
             }
-            return this[$this.getNameHashed()];
+            //return this[$this.getNameHashed()];
+            return $this._value;
         };
     };
 
@@ -321,9 +323,14 @@ Subclass.Property.Type.Collection.CollectionType = (function()
             $this.setIsModified(true);
 
             if (value !== null) {
-                var nameHashed = $this.getNameHashed();
-                this[nameHashed].replaceItems(value);
-                this[nameHashed].normalizeItems();
+                //var nameHashed = $this.getNameHashed();
+                //this[nameHashed].replaceItems(value);
+                //this[nameHashed].normalizeItems();
+
+                var collection = this.getValue();
+                    collection.replaceItems(value);
+                    collection.normalizeItems();
+
                 $this.setIsNull(false);
 
                 //for (var childPropName in value) {
@@ -343,25 +350,35 @@ Subclass.Property.Type.Collection.CollectionType = (function()
         };
     };
 
-    /**
-     * @inheritDoc
-     */
-    CollectionType.prototype.attachHashed = function(context)
+    CollectionType.prototype.attach = function(context)
     {
-        var hashedPropName = this.getNameHashed();
-        var defaultValue = this.getDefaultValue();
+        CollectionType.$parent.prototype.attach.apply(this, arguments);
 
-        if (defaultValue !== null) {
+        if (this.getDefaultValue() !== null) {
             this.setIsNull(false);
         }
-
-        Object.defineProperty(context, hashedPropName, {
-            configurable: true,
-            //enumerable: true,
-            writable: true,
-            value: this.getCollection(context)
-        });
+        this._value = this.getCollection();
     };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //CollectionType.prototype.attachHashed = function(context)
+    //{
+    //    var hashedPropName = this.getNameHashed();
+    //    var defaultValue = this.getDefaultValue();
+    //
+    //    if (defaultValue !== null) {
+    //        this.setIsNull(false);
+    //    }
+    //
+    //    Object.defineProperty(context, hashedPropName, {
+    //        configurable: true,
+    //        //enumerable: true,
+    //        writable: true,
+    //        value: this.getCollection(context)
+    //    });
+    //};
 
     return CollectionType;
 

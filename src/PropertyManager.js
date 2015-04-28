@@ -68,14 +68,14 @@ Subclass.Property.PropertyManager = (function()
          * @private
          */
         this._module = module;
-
-        /**
-         * Random number that will be added to hashed property names
-         *
-         * @type {number}
-         * @private
-         */
-        this._hash = Math.round(Math.abs(new Date().getTime() * Math.random() / 100000));
+        //
+        ///**
+        // * Random number that will be added to hashed property names
+        // *
+        // * @type {number}
+        // * @private
+        // */
+        //this._hash = Math.round(Math.abs(new Date().getTime() * Math.random() / 100000));
 
         /**
          * Data types manager
@@ -121,16 +121,16 @@ Subclass.Property.PropertyManager = (function()
     {
         this.getDataTypeManager().addTypeDefinitions(definitions);
     };
-
-    /**
-     * Returns hash of all properties that will further created
-     *
-     * @returns {number}
-     */
-    PropertyManager.prototype.getPropertyNameHash = function()
-    {
-        return this._hash;
-    };
+    //
+    ///**
+    // * Returns hash of all properties that will further created
+    // *
+    // * @returns {number}
+    // */
+    //PropertyManager.prototype.getPropertyNameHash = function()
+    //{
+    //    return this._hash;
+    //};
 
     /**
      * Creates instance of specified type property

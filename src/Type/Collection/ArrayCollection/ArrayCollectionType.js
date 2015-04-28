@@ -123,7 +123,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.prototype.getData = function(context)
+    ArrayCollectionType.prototype.getData = function() //context)
     {
         var collection = this.getCollection();
         var collectionItems = [];

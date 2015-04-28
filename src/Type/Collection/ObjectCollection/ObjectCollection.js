@@ -6,12 +6,12 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
 {
     /**
      * @param {CollectionType} property
-     * @param {Object} context
+     //* @param {Object} context
      * @constructor
      */
-    function ObjectCollection(property, context)
+    function ObjectCollection(property) //, context)
     {
-        ObjectCollection.$parent.call(this, property, context);
+        ObjectCollection.$parent.call(this, property); //, context);
     }
 
     ObjectCollection.$parent = Subclass.Property.Type.Collection.Collection;
@@ -46,9 +46,9 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
                 continue;
             }
             var itemChild = manager.getItemProp(itemName).getChild(propName);
-            var itemChildContext = this.getItem(itemName);
+            //var itemChildContext = this.getItem(itemName);
 
-            if (itemChild.isDefaultValue(itemChildContext)) {
+            if (itemChild.isDefaultValue()) { //itemChildContext)) {
                 delete item[propName];
             }
         }

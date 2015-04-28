@@ -39,8 +39,9 @@ Subclass.Property.Type.Map.MapAPI = function()
      */
     MapAPI.prototype.getChild = function(childName)
     {
-        var hashedName = this._property.getNameHashed();
-        return this._property.getChild(childName).getAPI(this._context[hashedName]);
+        //var hashedName = this._property.getNameHashed();
+        //return this._property.getChild(childName).getAPI(this._context[hashedName]);
+        return this._property.getChild(childName).getAPI();
     };
 
     /**
@@ -50,7 +51,7 @@ Subclass.Property.Type.Map.MapAPI = function()
      */
     MapAPI.prototype.getChildren = function()
     {
-        var hashedName = this._property.getNameHashed();
+        //var hashedName = this._property.getNameHashed();
         var children = this._property.getChildren();
         var childrenAPI = {};
 
@@ -58,7 +59,8 @@ Subclass.Property.Type.Map.MapAPI = function()
             if (!children.hasOwnProperty(childName)) {
                 continue;
             }
-            childrenAPI[childName] = children[childName].getAPI(this._context[hashedName]);
+            //childrenAPI[childName] = children[childName].getAPI(this._context[hashedName]);
+            childrenAPI[childName] = children[childName].getAPI();
         }
         return childrenAPI;
     };

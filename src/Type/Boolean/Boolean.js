@@ -66,10 +66,11 @@ Subclass.Property.Type.Boolean.Boolean = (function()
     /**
      * @inheritDoc
      */
-    BooleanType.prototype.attachAccessors = function(context)
+    BooleanType.prototype.attachAccessors = function() //context)
     {
-        BooleanType.$parent.prototype.attachAccessors.call(this, context);
+        BooleanType.$parent.prototype.attachAccessors.call(this); //, context);
 
+        var context = this.getContext();
         var propertyName = this.getName();
         var getterName = Subclass.Tools.generateGetterName(propertyName);
         var checkerName = Subclass.Tools.generateCheckerName(propertyName);

@@ -5,22 +5,22 @@ Subclass.Property.PropertyAPI = (function()
 {
     /**
      * @param {PropertyType} property
-     * @param {Object} context
+     //* @param {Object} context
      * @constructor
      */
-    function PropertyAPI (property, context)
+    function PropertyAPI (property) //, context)
     {
         /**
          * @type {PropertyType}
          * @private
          */
         this._property = property;
-
-        /**
-         * @type {Object}
-         * @private
-         */
-        this._context = context;
+        //
+        ///**
+        // * @type {Object}
+        // * @private
+        // */
+        //this._context = context;
     }
 
     /**
@@ -32,16 +32,16 @@ Subclass.Property.PropertyAPI = (function()
     {
         return this._property;
     };
-
-    PropertyAPI.prototype.setContext = function(context)
-    {
-        this._context = context;
-    };
-
-    PropertyAPI.prototype.getContext = function()
-    {
-        return this._context;
-    };
+    //
+    //PropertyAPI.prototype.setContext = function(context)
+    //{
+    //    this._context = context;
+    //};
+    //
+    //PropertyAPI.prototype.getContext = function()
+    //{
+    //    return this._context;
+    //};
 
     /**
      * Returns property name
@@ -60,7 +60,7 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.rename = function(newName)
     {
-        return this._property.rename(newName, this._context);
+        return this._property.rename(newName); //, this._context);
     };
 
     /**
@@ -73,7 +73,8 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.setValue = function(value)
     {
-        return this._property.setValue(this._context, value);
+        //return this._property.setValue(this._context, value);
+        return this._property.setValue(value);
     };
 
     /**
@@ -81,7 +82,7 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.resetValue = function()
     {
-        return this._property.resetValue(this._context);
+        return this._property.resetValue(); //this._context);
         //var defaultValue = this.getDefaultValue();
         //
         //this._property.setValue(this._context, defaultValue);
@@ -94,7 +95,7 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.getValue = function()
     {
-        return this._property.getValue(this._context);
+        return this._property.getValue(); //this._context);
     };
 
     /**
@@ -104,7 +105,7 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.getData = function()
     {
-        return this._property.getData(this._context);
+        return this._property.getData(); //this._context);
     };
 
     /**
@@ -131,7 +132,8 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.setDefaultValue = function(value)
     {
-        return this._property.setDefaultValue(this._context, value);
+        //return this._property.setDefaultValue(this._context, value);
+        return this._property.setDefaultValue(value);
     };
 
     /**
@@ -151,7 +153,8 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.isDefaultValue = function()
     {
-        return this._property.isDefaultValue(this._context);
+        //return this._property.isDefaultValue(this._context);
+        return this._property.isDefaultValue();
     };
 
     /**
@@ -161,7 +164,8 @@ Subclass.Property.PropertyAPI = (function()
      */
     PropertyAPI.prototype.isEmpty = function()
     {
-        return this._property.isEmpty(this._context);
+        //return this._property.isEmpty(this._context);
+        return this._property.isEmpty();
     };
 
     /**

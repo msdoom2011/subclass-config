@@ -244,19 +244,19 @@ app.registerClass('Class/StandardDefinition',
             }
         },
 
-        propStringCollectionArray: {
-            type: "arrayCollection",
-            proto: { type: "string" },
-            writable: true,
-            accessors: true,
-            nullable: true,
-            default: ["foo", "bar"],
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropStringCollectionArray = true;
-                this.propStringCollectionArrayOld = oldValue;
-                this.propStringCollectionArrayNew = newValue;
-            }
-        }
+        //propStringCollectionArray: {
+        //    type: "arrayCollection",
+        //    proto: { type: "string" },
+        //    writable: true,
+        //    accessors: true,
+        //    nullable: true,
+        //    default: ["foo", "bar"],
+        //    watcher: function(newValue, oldValue, property) {
+        //        this.changedPropStringCollectionArray = true;
+        //        this.propStringCollectionArrayOld = oldValue;
+        //        this.propStringCollectionArrayNew = newValue;
+        //    }
+        //}
 
         //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
         //

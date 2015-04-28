@@ -221,9 +221,9 @@ Subclass.Property.Type.Map.Map = (function()
      * @param context
      * @returns {Object}
      */
-    MapType.prototype.getData = function(context)
+    MapType.prototype.getData = function() //context)
     {
-        var value = MapType.$parent.prototype.getData.call(this, context);
+        var value = MapType.$parent.prototype.getData.call(this); //, context);
         var valueClear = {};
 
         for (var propName in value) {
@@ -252,18 +252,19 @@ Subclass.Property.Type.Map.Map = (function()
     /**
      * @inheritDoc
      */
-    MapType.prototype.resetValue = function(context)
+    MapType.prototype.resetValue = function() //context)
     {
-        var hashedName = this.getNameHashed();
+        //var hashedName = this.getNameHashed();
         var defaultValue = this.getDefaultValue();
         var children = this.getChildren();
 
         for (var childName in children) {
             if (children.hasOwnProperty(childName)) {
-                children[childName].resetValue(context[hashedName]);
+                children[childName].resetValue(); //context[hashedName]);
             }
         }
-        this.setValue(context, defaultValue);
+        //this.setValue(context, defaultValue);
+        this.setValue(defaultValue);
     };
 
     /**
@@ -277,7 +278,8 @@ Subclass.Property.Type.Map.Map = (function()
             if ($this.isNull()) {
                 return null;
             }
-            return this[$this.getNameHashed()];
+            //return this[$this.getNameHashed()];
+            return $this._value;
         };
     };
 
@@ -303,10 +305,12 @@ Subclass.Property.Type.Map.Map = (function()
 
             if (value !== null) {
                 $this.setIsNull(false);
+                var map = $this.getValue();
 
                 for (var childPropName in value) {
                     if (value.hasOwnProperty(childPropName)) {
-                        this[$this.getNameHashed()][childPropName] = value[childPropName];
+                        //this[$this.getNameHashed()][childPropName] = value[childPropName];
+                        map[childPropName] = value[childPropName];
                     }
                 }
             } else {
@@ -319,23 +323,34 @@ Subclass.Property.Type.Map.Map = (function()
             $this.invokeWatchers(this, newValue, oldValue);
         };
     };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapType.prototype.attachHashed = function(context)
+    //{
+    //    var hashedPropName = this.getNameHashed();
+    //
+    //    Object.defineProperty(context, hashedPropName, {
+    //        writable: this.getDefinition().isWritable(),
+    //        configurable: true,
+    //        value: {}
+    //    });
+    //    this.attachChildren(context);
+    //    this.attachMethods(context);
+    //
+    //    Object.seal(context[hashedPropName]);
+    //};
 
-    /**
-     * @inheritDoc
-     */
-    MapType.prototype.attachHashed = function(context)
+    MapType.prototype.attach = function(context)
     {
-        var hashedPropName = this.getNameHashed();
+        MapType.$parent.prototype.attach.apply(this, arguments);
 
-        Object.defineProperty(context, hashedPropName, {
-            writable: this.getDefinition().isWritable(),
-            configurable: true,
-            value: {}
-        });
+        this._value = {};
         this.attachChildren(context);
         this.attachMethods(context);
 
-        Object.seal(context[hashedPropName]);
+        Object.seal(this._value);
     };
 
     /**
@@ -343,10 +358,12 @@ Subclass.Property.Type.Map.Map = (function()
      *
      * @param {Object} context
      */
-    MapType.prototype.attachChildren = function(context)
+    MapType.prototype.attachChildren = function() //context)
     {
-        var propertyNameHashed = this.getNameHashed();
-        var childrenContext = context[propertyNameHashed];
+        //var context = this.getContext();
+        //var propertyNameHashed = this.getNameHashed();
+        //var childrenContext = context[propertyNameHashed];
+        var childrenContext = this.getValue();
         var children = this._children;
 
         for (var childPropName in children) {
@@ -357,39 +374,50 @@ Subclass.Property.Type.Map.Map = (function()
         }
     };
 
-    MapType.prototype.attachMethods = function(context)
+    MapType.prototype.attachMethods = function() //context)
     {
         var $this = this;
         var propName;
+        //var context = this.getContext();
+        //
+        //if ($this.getDefinition().isAccessors()) {
+        //    propName = $this.getNameHashed();
+        //
+        //} else {
+        //    propName = $this.getName();
+        //}
+        //
+        //if (context[propName] === null) {
+        //    context[propName] = {};
+        //}
 
-        if ($this.getDefinition().isAccessors()) {
-            propName = $this.getNameHashed();
+        var value = this.getValue();
 
-        } else {
-            propName = $this.getName();
+        if (value === null) {
+            this.setValue({});
         }
 
-        if (context[propName] === null) {
-            context[propName] = {};
-        }
-
-        Object.defineProperties(context[propName], {
+        //Object.defineProperties(context[propName], {
+        Object.defineProperties(value, {
             getData: {
                 configurable: true,
                 value: function() {
-                    return $this.getAPI(context).getData();
+                    //return $this.getAPI(context).getData();
+                    return $this.getAPI().getData();
                 }
             },
             getChild: {
                 configurable: true,
                 value: function(childName) {
+                    //return $this.getAPI().getChild(childName);
                     return $this.getAPI(context).getChild(childName);
                 }
             },
             getChildren: {
                 configurable: true,
                 value: function() {
-                    return $this.getAPI(context).getChildren();
+                    //return $this.getAPI(context).getChildren();
+                    return $this.getAPI().getChildren();
                 }
             }
         });

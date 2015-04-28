@@ -66,10 +66,11 @@ Subclass.Property.Type.Array.Array = (function()
     /**
      * @inheritDoc
      */
-    ArrayType.prototype.isEmpty = function(context)
+    //ArrayType.prototype.isEmpty = function(context)
+    ArrayType.prototype.isEmpty = function()
     {
         var isNullable = this.getDefinition().isNullable();
-        var value = this.getValue(context);
+        var value = this.getValue(); //context);
 
         return (isNullable && value === null) || (!isNullable && value.length === 0);
     };

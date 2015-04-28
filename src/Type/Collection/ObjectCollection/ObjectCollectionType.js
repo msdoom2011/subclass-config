@@ -106,7 +106,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
     /**
      * @inheritDoc
      */
-    ObjectCollectionType.prototype.getData = function(context)
+    ObjectCollectionType.prototype.getData = function() //context)
     {
         var collection = this.getCollection();
         var collectionItems = {};

@@ -82,6 +82,22 @@ Subclass.Property.PropertyType = (function()
          * @private
          */
         this._isLocked = false;
+
+        /**
+         * The object to which current property attaches
+         *
+         * @type {(Object|null)}
+         * @private
+         */
+        this._context = null;
+
+        /**
+         * The value of property
+         *
+         * @type {*}
+         * @private
+         */
+        this._value = undefined;
     }
 
     PropertyType.$parent = null;
@@ -226,30 +242,30 @@ Subclass.Property.PropertyType = (function()
 
         return (contextPropertyName && contextPropertyName + "." || "") + propertyName;
     };
-
-    /**
-     * Returns property hashed name
-     *
-     * @returns {*}
-     */
-    PropertyType.prototype.getNameHashed = function()
-    {
-        var propertyNameHash = this.getPropertyManager().getPropertyNameHash();
-        var propertyName = this.getName();
-
-        if (propertyName.indexOf(propertyNameHash) >= 0) {
-            return propertyName;
-        }
-        return "_" + propertyName + "_" + propertyNameHash;
-    };
+    //
+    ///**
+    // * Returns property hashed name
+    // *
+    // * @returns {*}
+    // */
+    //PropertyType.prototype.getNameHashed = function()
+    //{
+    //    var propertyNameHash = this.getPropertyManager().getPropertyNameHash();
+    //    var propertyName = this.getName();
+    //
+    //    if (propertyName.indexOf(propertyNameHash) >= 0) {
+    //        return propertyName;
+    //    }
+    //    return "_" + propertyName + "_" + propertyNameHash;
+    //};
 
     /**
      * Renames current property
      *
      * @param {string} newName
-     * @param {Object} context
+     //* @param {Object} context
      */
-    PropertyType.prototype.rename = function(newName, context)
+    PropertyType.prototype.rename = function(newName) //, context)
     {
         if (!newName || typeof newName != 'string') {
             Subclass.Error.create(
@@ -257,23 +273,28 @@ Subclass.Property.PropertyType = (function()
                 'It must be a string.'
             );
         }
-        if (Object.isSealed(context)) {
+        //if (Object.isSealed(context)) {
+        if (Object.isSealed(this.getContext())) {
             Subclass.Error.create(
                 'Can\'t rename property ' + this + '. ' +
                 'The context object is sealed.'
             );
         }
         var definition = this.getDefinition();
-        var value = this.getData(context);
+        //var value = this.getData(context);
+        var value = this.getData();
 
         if (definition.isAccessors()) {
             Subclass.Error.create('Can\'t rename property ' + this + ' because it uses accessor functions.');
         }
 
-        this.detach(context);
+        //this.detach(context);
+        this.detach();
         this._name = newName;
-        this.attach(context);
-        this.setValue(context, value);
+        this.attach(this.getContext());
+        //this.attach(context);
+        //this.setValue(context, value);
+        this.setValue(value);
     };
 
     /**
@@ -306,18 +327,19 @@ Subclass.Property.PropertyType = (function()
     /**
      * Returns property api
      *
-     * @param {Object} [context]
+     //* @param {Object} [context]
      * @returns {Subclass.Property.PropertyAPI}
      */
-    PropertyType.prototype.getAPI = function(context)
+    //PropertyType.prototype.getAPI = function(context)
+    PropertyType.prototype.getAPI = function()
     {
         if (!this._api) {
             var apiClass = this.constructor.getAPIClass();
-            this._api = Subclass.Tools.createClassInstance(apiClass, this, context);
+            this._api = Subclass.Tools.createClassInstance(apiClass, this); //, context);
         }
-        if (context && this._api.getContext() != context) {
-            this._api.setContext(context);
-        }
+        //if (context && this._api.getContext() != context) {
+        //    this._api.setContext(context);
+        //}
         return this._api;
     };
 
@@ -350,6 +372,39 @@ Subclass.Property.PropertyType = (function()
     PropertyType.prototype.isModified = function()
     {
         return this._isModified;
+    };
+
+    /**
+     * Sets the property context object
+     *
+     * @throws {Error}
+     *      Throws error if specified invalid property context object
+     *
+     * @param {Object} context
+     *      The property context object to which later will be
+     *      attached accessor methods of the property
+     */
+    PropertyType.prototype.setContext = function(context)
+    {
+        if (!context || typeof context != 'object') {
+            Subclass.Error.create('InvalidArgument')
+                .argument("the context object for the property " + this, false)
+                .expected("an object")
+                .received(context)
+                .apply()
+            ;
+        }
+        this._context = context;
+    };
+
+    /**
+     * Returns the property context object
+     *
+     * @returns {Object}
+     */
+    PropertyType.prototype.getContext = function()
+    {
+        return this._context;
     };
 
     /**
@@ -507,21 +562,23 @@ Subclass.Property.PropertyType = (function()
     /**
      * Invokes all registered watcher functions
      *
-     * @param {Object} context
+     //* @param {Object} context
      * @param {*} newValue
      * @param {*} oldValue
      */
-    PropertyType.prototype.invokeWatchers = function(context, newValue, oldValue)
+    //PropertyType.prototype.invokeWatchers = function(context, newValue, oldValue)
+    PropertyType.prototype.invokeWatchers = function(newValue, oldValue)
     {
-        if (typeof context != "object" || Array.isArray(context)) {
-            Subclass.Error.create('InvalidArgument')
-                .argument("the context object", false)
-                .received(context)
-                .expected("an object")
-                .apply()
-            ;
-        }
+        //if (typeof context != "object" || Array.isArray(context)) {
+        //    Subclass.Error.create('InvalidArgument')
+        //        .argument("the context object", false)
+        //        .received(context)
+        //        .expected("an object")
+        //        .apply()
+        //    ;
+        //}
         var watchers = this.getWatchers();
+        var context = this.getContext();
 
         for (var i = 0; i < watchers.length; i++) {
             watchers[i].call(context, newValue, oldValue, this);
@@ -580,10 +637,12 @@ Subclass.Property.PropertyType = (function()
      *
      * @returns {boolean}
      */
-    PropertyType.prototype.isEmpty = function(context)
+    //PropertyType.prototype.isEmpty = function(context)
+    PropertyType.prototype.isEmpty = function()
     {
         var emptyValue = this.getDefinition().getEmptyValue();
-        var value = this.getValue(context);
+        //var value = this.getValue(context);
+        var value = this.getValue();
 
         return Subclass.Tools.isEqual(emptyValue, value);
     };
@@ -603,16 +662,19 @@ Subclass.Property.PropertyType = (function()
     /**
      * Sets property value
      *
-     * @param {Object} context
+     //* @param {Object} context
      * @param {*} value
      * @returns {*}
      */
-    PropertyType.prototype.setValue = function(context, value)
+    //PropertyType.prototype.setValue = function(context, value)
+    PropertyType.prototype.setValue = function(value)
     {
         if (!this.getDefinition().isWritable()) {
             console.warn('Trying to change not writable property ' + this + ".");
             return;
         }
+        var context = this.getContext();
+
         if (this.getDefinition().isAccessors()) {
             var setterName = Subclass.Tools.generateSetterName(this.getName());
             return context[setterName](value);
@@ -624,11 +686,14 @@ Subclass.Property.PropertyType = (function()
     /**
      * Returns value of current property
      *
-     * @param {Object} context
-     *      The object to which current property belongs to.
+     //* @param {Object} context
+     //*      The object to which current property belongs to.
      */
-    PropertyType.prototype.getValue = function(context)
+    //PropertyType.prototype.getValue = function(context)
+    PropertyType.prototype.getValue = function()
     {
+        var context = this.getContext();
+
         if (this.getDefinition().isAccessors()) {
             var getterName = Subclass.Tools.generateGetterName(this.getName());
             return context[getterName]();
@@ -641,12 +706,14 @@ Subclass.Property.PropertyType = (function()
     /**
      * Returns only data of current property
      *
-     * @param context
+     //* @param context
      * @returns {*}
      */
-    PropertyType.prototype.getData = function(context)
+    //PropertyType.prototype.getData = function(context)
+    PropertyType.prototype.getData = function()
     {
-        return this.getValue(context);
+        //return this.getValue(context);
+        return this.getValue();
     };
     //
     ///**
@@ -666,26 +733,31 @@ Subclass.Property.PropertyType = (function()
      * @param {Object} context
      *      The object to which current property belongs to.
      */
-    PropertyType.prototype.resetValue = function(context)
+    //PropertyType.prototype.resetValue = function(context)
+    PropertyType.prototype.resetValue = function()
     {
         var defaultValue = this.getDefaultValue();
 
-        this.setValue(context, defaultValue);
+        //this.setValue(context, defaultValue);
+        this.setValue(defaultValue);
     };
 
     /**
      * Sets property default value
      *
      * @param {*} value
-     * @param {Object} [context]
+     //* @param {Object} [context]
      */
-    PropertyType.prototype.setDefaultValue = function(context, value)
+    //PropertyType.prototype.setDefaultValue = function(context, value)
+    PropertyType.prototype.setDefaultValue = function(value)
     {
         var propertyDefinition = this.getDefinition();
             propertyDefinition.setDefault(value);
 
-        if (this.isDefaultValue(context)) {
-            this.setValue(context, value);
+        //if (this.isDefaultValue(context)) {
+        if (this.isDefaultValue()) {
+            //this.setValue(context, value);
+            this.setValue(value);
             this.setIsModified(false);
         }
     };
@@ -703,26 +775,29 @@ Subclass.Property.PropertyType = (function()
     /**
      * Checks whether current property equals default and was not modified
      *
-     * @param context
+     //* @param context
      * @returns {boolean}
      */
-    PropertyType.prototype.isDefaultValue = function(context)
+    //PropertyType.prototype.isDefaultValue = function(context)
+    PropertyType.prototype.isDefaultValue = function()
     {
         var oldDefaultValue = this.getDefaultValue();
 
-        if (context) {
+        //if (context) {
             if ((
-                    Subclass.Tools.isEqual(oldDefaultValue, this.getValue(context))
+                    //Subclass.Tools.isEqual(oldDefaultValue, this.getValue(context))
+                    Subclass.Tools.isEqual(oldDefaultValue, this.getValue())
                     && !this.isModified()
                 ) || (
                     oldDefaultValue === null
-                    && this.isEmpty(context)
+                    //&& this.isEmpty(context)
+                    && this.isEmpty()
                     && !this.isModified()
                 )
             ) {
                 return true;
             }
-        }
+        //}
         return false;
     };
 
@@ -735,22 +810,23 @@ Subclass.Property.PropertyType = (function()
     {
         var $this = this;
 
-        if (
-            this.getDefinition().isAccessors()
-            || (
-                !this.getDefinition().isAccessors()
-                && this.getDefinition().isWritable()
-            )
-        ) {
+        //if (
+        //    this.getDefinition().isAccessors()
+        //    || (
+        //        !this.getDefinition().isAccessors()
+        //        && this.getDefinition().isWritable()
+        //    )
+        //) {
             return function () {
-                return this[$this.getNameHashed()];
+                //return this[$this.getNameHashed()];
+                return $this._value;
             };
 
-        } else {
-            return function() {
-                return this[$this.getName()];
-            }
-        }
+        //} else {
+        //    return function() {
+        //        return this[$this.getName()];
+        //    }
+        //}
     };
 
     /**
@@ -775,14 +851,17 @@ Subclass.Property.PropertyType = (function()
                     'property ' + $this + ' that is locked for write.'
                 );
             }
-            var oldValue = $this.getData(this);
+            //var oldValue = $this.getData(this);
+            var oldValue = $this.getData();
             var newValue = value;
 
             $this.validateValue(value);
             $this.setIsModified(true);
-            this[$this.getNameHashed()] = value;
+            //this[$this.getNameHashed()] = value;
+            $this._value = value;
 
-            $this.invokeWatchers(this, newValue, oldValue);
+            //$this.invokeWatchers(this, newValue, oldValue);
+            $this.invokeWatchers(newValue, oldValue);
         };
     };
 
@@ -793,6 +872,8 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.attach = function(context)
     {
+        this.setContext(context);
+
         if (!context || typeof context != 'object') {
             Subclass.Error.create('InvalidArgument')
                 .argument("the context object", false)
@@ -804,7 +885,8 @@ Subclass.Property.PropertyType = (function()
         var propName = this.getName();
 
         if (this.getDefinition().isAccessors()) {
-            this.attachAccessors(context);
+            //this.attachAccessors(context);
+            this.attachAccessors();
 
         } else if (this.getDefinition().isWritable()) {
             Object.defineProperty(context, propName, {
@@ -822,35 +904,43 @@ Subclass.Property.PropertyType = (function()
                 value: this.getDefaultValue()
             });
         }
-        if (Subclass.Tools.isPlainObject(context)) {
-            this.attachHashed(context);
-        }
+
+        this._value = this.getDefaultValue();
+
+        //if (Subclass.Tools.isPlainObject(context)) {
+        //    this.attachHashed(context);
+        //}
     };
 
     /**
      * Detaches property from class instance
      *
-     * @param {Object} context
+     //* @param {Object} context
      */
-    PropertyType.prototype.detach = function(context)
+    //PropertyType.prototype.detach = function(context)
+    PropertyType.prototype.detach = function()
     {
-        if (!context || typeof context != 'object') {
-            Subclass.Error.create('InvalidArgument')
-                .argument("the context object", false)
-                .received(context)
-                .expected("an object")
-                .apply()
-            ;
-        }
+        //if (!context || typeof context != 'object') {
+        //    Subclass.Error.create('InvalidArgument')
+        //        .argument("the context object", false)
+        //        .received(context)
+        //        .expected("an object")
+        //        .apply()
+        //    ;
+        //}
+        var context = this.getContext();
+
         if (Object.isSealed(context)) {
             Subclass.Error.create('Can\'t detach property ' + this + ' because the context object is sealed.');
         }
-        var hashedPropName = this.getNameHashed();
-        var propName = this.getName();
+        delete context[this.getName()];
 
-        for (var i = 0, propNames = [hashedPropName, propName]; i < propNames.length; i++) {
-            delete context[propNames[i]];
-        }
+        //var hashedPropName = this.getNameHashed();
+        //var propName = this.getName();
+        //
+        //for (var i = 0, propNames = [hashedPropName, propName]; i < propNames.length; i++) {
+        //    delete context[propNames[i]];
+        //}
     };
 
     /**
@@ -858,8 +948,10 @@ Subclass.Property.PropertyType = (function()
      *
      * @param {Object} context
      */
-    PropertyType.prototype.attachAccessors = function(context)
+    //PropertyType.prototype.attachAccessors = function(context)
+    PropertyType.prototype.attachAccessors = function()
     {
+        var context = this.getContext();
         var propName = this.getName();
         var getterName = Subclass.Tools.generateGetterName(propName);
 
@@ -871,50 +963,50 @@ Subclass.Property.PropertyType = (function()
             context[setterName] = this.generateSetter();
         }
     };
-
-    /**
-     * Attaches property that will hold property value in class instance
-     *
-     * @param {Object} context
-     */
-    PropertyType.prototype.attachHashed = function(context)
-    {
-        if (!context || typeof context != 'object') {
-            Subclass.Error.create('InvalidArgument')
-                .argument("the context object", false)
-                .received(context)
-                .expected("an object")
-                .apply()
-            ;
-        }
-        var hashedPropName = this.getNameHashed();
-        var defaultValue = this.getDefaultValue();
-
-        Object.defineProperty(context, hashedPropName, {
-            writable: this.getDefinition().isWritable(),
-            configurable: true,
-            //enumerable: true,
-            value: defaultValue
-        });
-        //if (
-        //    this.getDefinition().isWritable()
-        //    && !this.getDefinition().isAccessors()
-        //) {
-        //    Object.defineProperty(context, hashedPropName, {
-        //        configurable: true,
-        //        writable: true,
-        //        value: defaultValue
-        //    });
-        //
-        //} else if (this.getDefinition().isAccessors()) {
-        //    Object.defineProperty(context, hashedPropName, {
-        //        configurable: true,
-        //        //enumerable: true,
-        //        writable: this.getDefinition().isWritable(),
-        //        value: defaultValue
-        //    });
-        //}
-    };
+    //
+    ///**
+    // * Attaches property that will hold property value in class instance
+    // *
+    // * @param {Object} context
+    // */
+    //PropertyType.prototype.attachHashed = function(context)
+    //{
+    //    if (!context || typeof context != 'object') {
+    //        Subclass.Error.create('InvalidArgument')
+    //            .argument("the context object", false)
+    //            .received(context)
+    //            .expected("an object")
+    //            .apply()
+    //        ;
+    //    }
+    //    var hashedPropName = this.getNameHashed();
+    //    var defaultValue = this.getDefaultValue();
+    //
+    //    Object.defineProperty(context, hashedPropName, {
+    //        writable: this.getDefinition().isWritable(),
+    //        configurable: true,
+    //        //enumerable: true,
+    //        value: defaultValue
+    //    });
+    //    //if (
+    //    //    this.getDefinition().isWritable()
+    //    //    && !this.getDefinition().isAccessors()
+    //    //) {
+    //    //    Object.defineProperty(context, hashedPropName, {
+    //    //        configurable: true,
+    //    //        writable: true,
+    //    //        value: defaultValue
+    //    //    });
+    //    //
+    //    //} else if (this.getDefinition().isAccessors()) {
+    //    //    Object.defineProperty(context, hashedPropName, {
+    //    //        configurable: true,
+    //    //        //enumerable: true,
+    //    //        writable: this.getDefinition().isWritable(),
+    //    //        value: defaultValue
+    //    //    });
+    //    //}
+    //};
 
     /**
      * Return string implementation of property

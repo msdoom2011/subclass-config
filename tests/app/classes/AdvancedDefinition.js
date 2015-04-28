@@ -59,6 +59,7 @@ app.registerClass('Class/AdvancedDefinition',
             nullable: true,
             value: [ 40, 50, 60 ],
             watcher: function(newValue, oldValue, property) {
+                window.advClassForArray = this;
                 this.changedPropArray = true;
                 this.propArrayOld = oldValue;
                 this.propArrayNew = newValue;
@@ -206,19 +207,19 @@ app.registerClass('Class/AdvancedDefinition',
             }
         },
 
-        propStringCollectionArray: {
-            type: "arrayCollection",
-            proto: { type: "string" },
-            writable: true,
-            accessors: true,
-            nullable: true,
-            default: ["foo", "bar"],
-            value: ["str1", "str2", "str3"],
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropStringCollectionArray = true;
-                this.propStringCollectionArrayOld = oldValue;
-                this.propStringCollectionArrayNew = newValue;
-            }
-        }
+        //propStringCollectionArray: {
+        //    type: "arrayCollection",
+        //    proto: { type: "string" },
+        //    writable: true,
+        //    accessors: true,
+        //    nullable: true,
+        //    default: ["foo", "bar"],
+        //    value: ["str1", "str2", "str3"],
+        //    watcher: function(newValue, oldValue, property) {
+        //        this.changedPropStringCollectionArray = true;
+        //        this.propStringCollectionArrayOld = oldValue;
+        //        this.propStringCollectionArrayNew = newValue;
+        //    }
+        //}
     }
 });
