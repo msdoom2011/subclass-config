@@ -26,28 +26,28 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
              * @type {Object}
              */
             data.$_properties = {};
-
-            /**
-             * Checks if property is typed
-             *
-             * @param {string} propertyName
-             * @returns {boolean}
-             */
-            data.issetProperty = function(propertyName)
-            {
-                return this.$_class.issetProperty(propertyName);
-            };
-
-            /**
-             * Returns property api object
-             *
-             * @param {string} propertyName
-             * @returns {Subclass.Property.PropertyAPI}
-             */
-            data.getProperty = function(propertyName)
-            {
-                return this.$_class.getProperty(propertyName).getAPI(this);
-            };
+            //
+            ///**
+            // * Checks if property is typed
+            // *
+            // * @param {string} propertyName
+            // * @returns {boolean}
+            // */
+            //data.issetProperty = function(propertyName)
+            //{
+            //    return this.$_class.issetProperty(propertyName);
+            //};
+            //
+            ///**
+            // * Returns property api object
+            // *
+            // * @param {string} propertyName
+            // * @returns {Subclass.Property.PropertyAPI}
+            // */
+            //data.getProperty = function(propertyName)
+            //{
+            //    return this.$_class.getProperty(propertyName).getAPI(this);
+            //};
         });
 
         classInst.getEvent('onNormalizeData').addListener(function(evt, data)

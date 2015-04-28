@@ -2,6 +2,7 @@
 describe("Checking", function() {
 
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    window.classInstAdvanced = classInst;
 
     it ("standard default values", function() {
 

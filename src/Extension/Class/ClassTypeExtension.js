@@ -48,6 +48,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                 }
 
                 //classProperties[propertyName].attachHashed(classInstance);
+                classProperties[propertyName].setWatchersContext(classInstance);
 
                 // Getting init value
 
@@ -104,7 +105,8 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
      * Returns all typed properties in current class definition instance
      *
      * @param {boolean} [withInherited]
-     * @returns {Object.<Subclass.Property.PropertyType>}
+     //* @returns {Object.<Subclass.Property.PropertyType>}
+     * @returns {Object.<Object>}
      */
     ClassType.prototype.getProperties = function(withInherited)
     {
@@ -137,20 +139,22 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
      */
     ClassType.prototype.addProperty = function(propertyName, propertyDefinition)
     {
-        var propertyManager = this.getClassManager().getModule().getPropertyManager();
-
-        this._properties[propertyName] = propertyManager.createProperty(
-            propertyName,
-            propertyDefinition,
-            this
-        );
+        this._properties[propertyName] = propertyDefinition;
+        //var propertyManager = this.getClassManager().getModule().getPropertyManager();
+        //
+        //this._properties[propertyName] = propertyManager.createProperty(
+        //    propertyName,
+        //    propertyDefinition,
+        //    this
+        //);
     };
 
     /**
      * Returns property instance by its name
      *
      * @param {string} propertyName
-     * @returns {Subclass.Property.PropertyType}
+     //* @returns {Subclass.Property.PropertyType}
+     * @returns {Object}
      * @throws {Error}
      */
     ClassType.prototype.getProperty = function(propertyName)
@@ -195,14 +199,55 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
      */
     ClassType.prototype.attachProperties = function(context)
     {
-        var classProperties = this.getProperties();
+        //var classProperties = this.getProperties();
+        var propertyDefinitions = this.getProperties();
+        var propertyManager = this.getClassManager()
+            .getModule()
+            .getPropertyManager()
+        ;
+        var properties = {};
 
-        for (var propName in classProperties) {
-            if (!classProperties.hasOwnProperty(propName)) {
-                continue;
+        for (var propName in propertyDefinitions) {
+            if (propertyDefinitions.hasOwnProperty(propName)) {
+                properties[propName] = propertyManager.createProperty(
+                    propName,
+                    propertyDefinitions[propName],
+                    this
+                );
+                properties[propName].attach(context);
             }
-            classProperties[propName].attach(context);
         }
+
+        if (Object.keys(properties).length) {
+            /**
+             * Checks if property is typed
+             *
+             * @param {string} propertyName
+             * @returns {boolean}
+             */
+            context.issetProperty = function(propertyName)
+            {
+                return properties.hasOwnProperty(propertyName);
+            };
+
+            /**
+             * Returns property api object
+             *
+             * @param {string} propertyName
+             * @returns {Subclass.Property.PropertyAPI}
+             */
+            context.getProperty = function(propertyName)
+            {
+                return properties[propertyName].getAPI();
+            };
+        }
+
+        //for (var propName in classProperties) {
+        //    if (!classProperties.hasOwnProperty(propName)) {
+        //        continue;
+        //    }
+        //    classProperties[propName].attach(context);
+        //}
     };
 
 

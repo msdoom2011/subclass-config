@@ -1,6 +1,7 @@
 describe("Testing object property type with its", function() {
 
-    var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    var classInst = window.classInstAdvanced;
+    //var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
     var prop = classInst.getProperty('propObject');
 
     it ("modifying state before manipulations", function() {

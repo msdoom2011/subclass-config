@@ -1,5 +1,6 @@
 describe("Testing string property type with its", function() {
 
+    //var classInst = window.classInstAdvanced;
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
     var prop = classInst.getProperty('propString');
 

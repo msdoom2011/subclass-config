@@ -1,6 +1,7 @@
 //describe("Testing number property type with its", function() {
 //
-//    var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+//    var classInst = window.classInstAdvanced;
+//    //var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
 //    var prop = classInst.getProperty('propStringCollectionArray');
 //
 //    it ("modifying state before manipulations", function() {

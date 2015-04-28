@@ -2,7 +2,8 @@ describe("Testing class property type with its", function() {
 
     app.registerClass("Class/AppClassFalse", {});
 
-    var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    //var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    var classInst = window.classInstAdvanced;
     var prop = classInst.getProperty('propClass');
 
     it ("modifying state before manipulations", function() {

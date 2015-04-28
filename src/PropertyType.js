@@ -68,6 +68,14 @@ Subclass.Property.PropertyType = (function()
         this._watchers = [];
 
         /**
+         * The context object acceptable for watcher callbacks
+         *
+         * @type {null}
+         * @private
+         */
+        this._watchersContext = null;
+
+        /**
          * Checks if current value was ever modified (was set any value)
          *
          * @type {boolean}
@@ -478,6 +486,29 @@ Subclass.Property.PropertyType = (function()
     };
 
     /**
+     * Sets the context object for all property watcher callbacks
+     *
+     * @param {Object} watchersContext
+     */
+    PropertyType.prototype.setWatchersContext = function(watchersContext)
+    {
+        this._watchersContext = watchersContext;
+    };
+
+    /**
+     * Returns context object for watcher callback functions
+     *
+     * @returns {Object}
+     */
+    PropertyType.prototype.getWatchersContext = function()
+    {
+        if (this._watchersContext) {
+            return this._watchersContext;
+        }
+        return this._context;
+    };
+
+    /**
      * Returns all registered watchers
      *
      * @returns {Function[]}
@@ -578,7 +609,8 @@ Subclass.Property.PropertyType = (function()
         //    ;
         //}
         var watchers = this.getWatchers();
-        var context = this.getContext();
+        //var context = this.getContext();
+        var context = this.getWatchersContext();
 
         for (var i = 0; i < watchers.length; i++) {
             watchers[i].call(context, newValue, oldValue, this);
@@ -888,22 +920,22 @@ Subclass.Property.PropertyType = (function()
             //this.attachAccessors(context);
             this.attachAccessors();
 
-        } else if (this.getDefinition().isWritable()) {
+        } else { //if (this.getDefinition().isWritable()) {
             Object.defineProperty(context, propName, {
                 configurable: true,
                 enumerable: true,
                 get: this.generateGetter(),
                 set: this.generateSetter()
             });
-
-        } else {
-            Object.defineProperty(context, propName, {
-                configurable: true,
-                writable: false,
-                enumerable: true,
-                value: this.getDefaultValue()
-            });
         }
+        //else {
+        //    Object.defineProperty(context, propName, {
+        //        configurable: true,
+        //        writable: false,
+        //        enumerable: true,
+        //        value: this.getDefaultValue()
+        //    });
+        //}
 
         this._value = this.getDefaultValue();
 

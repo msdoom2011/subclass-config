@@ -42,10 +42,12 @@ module.exports = function(config) {
       "tests/app/app.js",
       "tests/app/**/*.js",
       "tests/main.js",
-      "tests/def_base.js",
-      "tests/def_standard.js",
+      //"tests/def_base.js",
+      //"tests/def_standard.js",
       "tests/def_advanced.js",
-      "tests/types/**/*.js"
+      "tests/types/number.js",
+      //"tests/types/string.js"
+      //"tests/types/**/*.js"
     ],
 
 

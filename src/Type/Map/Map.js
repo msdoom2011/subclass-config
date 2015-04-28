@@ -409,8 +409,8 @@ Subclass.Property.Type.Map.Map = (function()
             getChild: {
                 configurable: true,
                 value: function(childName) {
-                    //return $this.getAPI().getChild(childName);
-                    return $this.getAPI(context).getChild(childName);
+                    //return $this.getAPI(context).getChild(childName);
+                    return $this.getAPI().getChild(childName);
                 }
             },
             getChildren: {

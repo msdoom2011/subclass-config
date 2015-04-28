@@ -2,6 +2,8 @@ app.registerClass('Class/AdvancedDefinition',
 {
     $_extends: "Class/StandardDefinition",
 
+    _psix: 0,
+
     $_properties: {
 
         propNumber: {
@@ -59,7 +61,6 @@ app.registerClass('Class/AdvancedDefinition',
             nullable: true,
             value: [ 40, 50, 60 ],
             watcher: function(newValue, oldValue, property) {
-                window.advClassForArray = this;
                 this.changedPropArray = true;
                 this.propArrayOld = oldValue;
                 this.propArrayNew = newValue;

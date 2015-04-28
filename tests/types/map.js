@@ -1,6 +1,7 @@
 describe("Testing map property type with its", function() {
 
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    //var classInst = window.classInstAdvanced;
     var prop = classInst.getProperty('propMap');
 
     function checkDefaultValues(prop, mapMapOnly) {

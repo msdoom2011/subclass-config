@@ -1,6 +1,7 @@
 describe("Testing mixed property type with its", function() {
 
-    var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    //var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    var classInst = window.classInstAdvanced;
     var prop = classInst.getProperty('propMixed');
 
     it ("modifying state before manipulations", function() {

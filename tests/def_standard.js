@@ -8,7 +8,7 @@ describe("Checking", function() {
         expect(classInst.getPropNumber()).toBe(10);
         expect(classInst.getPropString()).toBe('default string');
         expect(classInst.getPropBoolean()).toBe(true);
-        expect(classInst.getPropArray().length).toBe(3);
+        //expect(classInst.getPropArray().length).toBe(3);
         expect(Object.keys(classInst.getPropObject()).length).toBe(2);
         expect(classInst.getPropClass()).toBe(null);
         expect(classInst.getPropEnum()).toBe('female');
@@ -87,10 +87,10 @@ describe("Checking", function() {
         expect(classInst.changedPropMap).toBe(false);
         expect(classInst.propMapOld).toBe(false);
         expect(classInst.propMapNew).toBe(false);
-        //
-        //expect(classInst.changedPropStringCollectionArray).toBe(false);
-        //expect(classInst.propStringCollectionArrayOld).toBe(false);
-        //expect(classInst.propStringCollectionArrayNew).toBe(false);
+
+        expect(classInst.changedPropStringCollectionArray).toBe(false);
+        expect(classInst.propStringCollectionArrayOld).toBe(false);
+        expect(classInst.propStringCollectionArrayNew).toBe(false);
 
     });
 });

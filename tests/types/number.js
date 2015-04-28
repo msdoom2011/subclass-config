@@ -1,7 +1,13 @@
 describe("Testing number property type with its", function() {
 
+    //var classInst = window.classInstAdvanced;
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+        classInst._psix = 10;
+    var classInstElse = app.getClass('Class/AdvancedDefinition').createInstance();
+        classInstElse._psix = 20;
     var prop = classInst.getProperty('propNumber');
+
+    console.log(classInst.getProperty('propNumber') == classInstElse.getProperty('propNumber'));
 
     it ("modifying state before manipulations", function() {
         expect(prop.isModified()).toBe(false);

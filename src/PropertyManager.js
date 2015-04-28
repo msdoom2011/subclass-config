@@ -141,10 +141,10 @@ Subclass.Property.PropertyManager = (function()
      * @param {Object} propertyDefinition
      *      A plain object which describes property.
      *
-     * @param {ClassType} [contextClass]
+     * @param {Subclass.Class.ClassType} [contextClass]
      *      A Subclass.Class.ClassType instance to which creating property will belongs to.
      *
-     * @param {PropertyType} [contextProperty]
+     * @param {Subclass.Property.PropertyType} [contextProperty]
      *      A Subclass.Property.PropertyType instance to witch creating property will belongs to.
      *
      * @returns {Subclass.Property.PropertyType}

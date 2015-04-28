@@ -1,7 +1,12 @@
 describe("Testing array property type with its", function() {
 
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
+    //var classInst = window.classInstAdvanced;
     var prop = classInst.getProperty('propArray');
+
+    //console.log(classInst == prop.getProperty().getWatchersContext());
+    //console.log(classInst == window.advClassForArray);
+    //console.log('----------------------');
 
     it ("modifying state before manipulations", function() {
         expect(prop.isModified()).toBe(false);
