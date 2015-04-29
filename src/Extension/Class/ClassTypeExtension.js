@@ -203,38 +203,46 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
             }
         }
         if (Object.keys(properties).length) {
+            for (propName in properties) {
+                if (!properties.hasOwnProperty(propName)) {
+                    continue;
+                }
 
-            /**
-             * Checks if property is typed
-             *
-             * @param {string} propertyName
-             * @returns {boolean}
-             */
-            context.issetProperty = function(propertyName)
-            {
-                return properties.hasOwnProperty(propertyName);
-            };
+                !function() {
 
-            /**
-             * Returns property api object
-             *
-             * @param {string} propertyName
-             * @returns {Subclass.Property.Property}
-             */
-            context.getProperty = function(propertyName)
-            {
-                return properties[propertyName];
-            };
+                    /**
+                     * Checks if property is typed
+                     *
+                     * @param {string} propertyName
+                     * @returns {boolean}
+                     */
+                    context.issetProperty = function (propertyName)
+                    {
+                        return properties.hasOwnProperty(propertyName);
+                    };
 
-            /**
-             * Returns context type name
-             *
-             * @returns {string}
-             */
-            context.getContextType = function()
-            {
-                return "class";
-            };
+                    /**
+                     * Returns property api object
+                     *
+                     * @param {string} propertyName
+                     * @returns {Subclass.Property.Property}
+                     */
+                    context.getProperty = function (propertyName)
+                    {
+                        return properties[propertyName];
+                    };
+
+                    /**
+                     * Returns context type name
+                     *
+                     * @returns {string}
+                     */
+                    context.getContextType = function ()
+                    {
+                        return "class";
+                    };
+                }(properties[propName]);
+            }
         }
     };
 

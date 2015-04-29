@@ -1,11 +1,6 @@
 /**
- * @namespace
- */
-Subclass.Property.Type.Number = {};
-
-/**
  * @class
- * @extends {Subclass.Property.PropertyType}
+ * @extends {Subclass.Property.Property}
  */
 Subclass.Property.Type.Number.Number = (function()
 {
@@ -20,9 +15,9 @@ Subclass.Property.Type.Number.Number = (function()
      * @extends {PropertyType}
      * @constructor
      */
-    function NumberType(propertyManager, propertyName, propertyDefinition)
+    function NumberProperty(propertyManager, propertyName, propertyDefinition)
     {
-        NumberType.$parent.call(
+        NumberProperty.$parent.call(
             this,
             propertyManager,
             propertyName,
@@ -30,12 +25,12 @@ Subclass.Property.Type.Number.Number = (function()
         );
     }
 
-    NumberType.$parent = Subclass.Property.PropertyType;
+    NumberProperty.$parent = Subclass.Property.PropertyType;
 
     /**
      * @inheritDoc
      */
-    NumberType.getPropertyTypeName = function()
+    NumberProperty.getPropertyTypeName = function()
     {
         return "number";
     };
@@ -43,7 +38,7 @@ Subclass.Property.Type.Number.Number = (function()
     /**
      * @inheritDoc
      */
-    NumberType.getDefinitionClass = function()
+    NumberProperty.getDefinitionClass = function()
     {
         return Subclass.Property.Type.Number.NumberDefinition;
     };
@@ -51,7 +46,7 @@ Subclass.Property.Type.Number.Number = (function()
     /**
      * @inheritDoc
      */
-    NumberType.getEmptyDefinition = function()
+    NumberProperty.getEmptyDefinition = function()
     {
         return this.$parent.getEmptyDefinition.call(this);
     };
@@ -59,18 +54,11 @@ Subclass.Property.Type.Number.Number = (function()
     /**
      * @inheritDoc
      */
-    NumberType.normalizeDefinition = function(definition)
+    NumberProperty.normalizeDefinition = function(definition)
     {
         return this.$parent.normalizeDefinition.call(this, definition);
     };
 
-
-    /*************************************************/
-    /*        Registering new property type          */
-    /*************************************************/
-
-    Subclass.Property.PropertyManager.registerPropertyType(NumberType);
-
-    return NumberType;
+    return NumberProperty;
 
 })();

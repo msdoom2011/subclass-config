@@ -26,6 +26,8 @@ module.exports = function(config) {
       "src/Error/Option/*.js",
       "src/Error/**/*.js",
       "src/Extension/**/*.js",
+      "src/Type/Number/NumberType.js",
+      "src/Type/Number/*.js",
       "src/Type/Collection/CollectionType.js",
       "src/Type/Collection/CollectionManager.js",
       "src/Type/Collection/*.js",

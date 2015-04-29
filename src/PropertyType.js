@@ -8,13 +8,21 @@ Subclass.Property.PropertyType = (function()
      * @param {Object} definitionData
      * @constructor
      */
-    function PropertyType(propertyManager, definitionData)
+    function PropertyType(propertyManager, dataTypeName, definitionData)
     {
         if (!propertyManager || !(propertyManager instanceof Subclass.Property.PropertyManager)) {
             Subclass.Error.create('InvalidArgument')
                 .argument('the property manager instance', false)
                 .expected('an instance of "Subclass.Property.PropertyManager" class')
                 .received(propertyManager)
+                .apply()
+            ;
+        }
+        if (!dataTypeName || typeof dataTypeName != 'object') {
+            Subclass.Error.create('InvalidArgument')
+                .argument("the name of property", false)
+                .received(definitionData)
+                .expected('a string')
                 .apply()
             ;
         }
@@ -33,6 +41,14 @@ Subclass.Property.PropertyType = (function()
          * @private
          */
         this._propertyManager = propertyManager;
+
+        /**
+         * The name of current data type definition
+         *
+         * @type {string}
+         * @private
+         */
+        this._name = dataTypeName;
 
         /**
          * The plain object with definition data
@@ -601,6 +617,16 @@ Subclass.Property.PropertyType = (function()
     //};
 
     /**
+     * Returns the name of property
+     *
+     * @returns {string}
+     */
+    PropertyType.prototype.getName = function()
+    {
+        return this._name;
+    };
+
+    /**
      * Returns property definition
      *
      * @returns {Object}
@@ -840,7 +866,7 @@ Subclass.Property.PropertyType = (function()
      *
      * @return {(null|*)}
      */
-    PropertyType.prototype.getValueEmpty = function()
+    PropertyType.prototype.getEmptyValue = function()
     {
         return null;
     };
@@ -1147,7 +1173,7 @@ Subclass.Property.PropertyType = (function()
             if (!definition.hasOwnProperty(attrName)) {
                 Subclass.Error.create(
                     'Missed required attribute "' + attrName + '" ' +
-                    'in definition of the property ' + this.getProperty() + '.'
+                    'in definition of the property ' // + this.getProperty() + '.'
                 );
             }
         }

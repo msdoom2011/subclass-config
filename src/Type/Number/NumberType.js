@@ -1,25 +1,30 @@
 /**
- * @class
- * @extends {Subclass.Property.PropertyDefinition}
+ * @namespace
  */
-Subclass.Property.Type.Number.NumberDefinition = (function()
+Subclass.Property.Type.Number = {};
+
+/**
+ * @class
+ * @extends {Subclass.Property.PropertyType}
+ */
+Subclass.Property.Type.Number.NumberType = (function()
 {
     /**
      * @param {PropertyType} property
      * @param {Object} propertyDefinition
      * @constructor
      */
-    function NumberDefinition (property, propertyDefinition)
+    function NumberType (property, propertyDefinition)
     {
-        NumberDefinition.$parent.call(this, property, propertyDefinition);
+        NumberType.$parent.call(this, property, propertyDefinition);
     }
 
-    NumberDefinition.$parent = Subclass.Property.PropertyDefinition;
+    NumberType.$parent = Subclass.Property.PropertyType;
 
     /**
      * @inheritDoc
      */
-    NumberDefinition.prototype.getEmptyValue = function()
+    NumberType.prototype.getEmptyValue = function()
     {
         return this.isNullable() ? null : 0;
     };
@@ -27,9 +32,9 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
     /**
      * @inheritDoc
      */
-    NumberDefinition.prototype.validateValue = function(value)
+    NumberType.prototype.validateValue = function(value)
     {
-        NumberDefinition.$parent.prototype.validateValue.call(this, value);
+        NumberType.$parent.prototype.validateValue.call(this, value);
 
         if (value === null) {
             return;
@@ -67,14 +72,14 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
     /**
      * @inheritDoc
      */
-    NumberDefinition.prototype.validateDefault = NumberDefinition.prototype.validateValue;
+    NumberType.prototype.validateDefault = NumberType.prototype.validateValue;
 
     /**
      * Validates "maxValue" attribute value
      *
      * @param {*} maxValue
      */
-    NumberDefinition.prototype.validateMaxValue = function(maxValue)
+    NumberType.prototype.validateMaxValue = function(maxValue)
     {
         if (maxValue !== null && typeof maxValue != 'number') {
             Subclass.Error.create('InvalidPropertyOption')
@@ -92,7 +97,7 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
      *
      * @param {(number|null)} maxValue
      */
-    NumberDefinition.prototype.setMaxValue = function(maxValue)
+    NumberType.prototype.setMaxValue = function(maxValue)
     {
         this.validateMaxValue(maxValue);
         this.getData().maxValue = maxValue;
@@ -104,7 +109,7 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
      *
      * @returns {(number|null)}
      */
-    NumberDefinition.prototype.getMaxValue = function()
+    NumberType.prototype.getMaxValue = function()
     {
         return this.getData().maxValue;
     };
@@ -114,7 +119,7 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
      *
      * @param {*} minValue
      */
-    NumberDefinition.prototype.validateMinValue = function(minValue)
+    NumberType.prototype.validateMinValue = function(minValue)
     {
         if (minValue !== null && typeof minValue != 'number') {
             Subclass.Error.create('InvalidPropertyOption')
@@ -132,7 +137,7 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
      *
      * @param {(number|null)} minValue
      */
-    NumberDefinition.prototype.setMinValue = function(minValue)
+    NumberType.prototype.setMinValue = function(minValue)
     {
         this.validateMinValue(minValue);
         this.getData().minValue = minValue;
@@ -144,7 +149,7 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
      *
      * @returns {(number|null)}
      */
-    NumberDefinition.prototype.getMinValue = function()
+    NumberType.prototype.getMinValue = function()
     {
         return this.getData().minValue;
     };
@@ -152,7 +157,7 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
     /**
      * Validates how minValue and maxValue are compatable
      */
-    NumberDefinition.prototype.validateMinMaxValues = function()
+    NumberType.prototype.validateMinMaxValues = function()
     {
         var property = this.getProperty();
         var minValue = this.getMinValue();
@@ -169,9 +174,9 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
     /**
      * @inheritDoc
      */
-    NumberDefinition.prototype.getBaseData = function()
+    NumberType.prototype.getBaseData = function()
     {
-        var baseDefinition = NumberDefinition.$parent.prototype.getBaseData.call(this);
+        var baseDefinition = NumberType.$parent.prototype.getBaseData.call(this);
 
         /**
          * Specified max number value if it isn't null
@@ -196,13 +201,20 @@ Subclass.Property.Type.Number.NumberDefinition = (function()
     /**
      * @inheritDoc
      */
-    NumberDefinition.prototype.validateData = function()
+    NumberType.prototype.validateData = function()
     {
-        NumberDefinition.$parent.prototype.processData.call(this);
+        NumberType.$parent.prototype.processData.call(this);
 
         this.validateMinMaxValues();
     };
 
-    return NumberDefinition;
+
+    /*************************************************/
+    /*        Registering new property type          */
+    /*************************************************/
+
+    Subclass.Property.PropertyManager.registerPropertyType(NumberProperty);
+
+    return NumberType;
 
 })();
