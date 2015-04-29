@@ -99,7 +99,7 @@ Subclass.Property.Type.Mixed.MixedDefinition = (function()
 
         if (allows && Array.isArray(allows)) {
             for (var i = 0; i < allows.length; i++) {
-                allows[i] = propertyManager.normalizePropertyDefinition(allows[i]);
+                allows[i] = propertyManager.normalizeTypeDefinition(allows[i]);
             }
         }
         return allows;

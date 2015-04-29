@@ -412,7 +412,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         for (propName in classProperties) {
             if (classProperties.hasOwnProperty(propName)) {
-                classProperties[propName] = propertyManager.normalizePropertyDefinition(
+                classProperties[propName] = propertyManager.normalizeTypeDefinition(
                     classProperties[propName]
                 );
             }

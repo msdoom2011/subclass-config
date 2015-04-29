@@ -93,14 +93,14 @@ Subclass.Property.Type.Map.Map = (function()
     {
         return Subclass.Property.Type.Map.MapDefinition;
     };
-
-    /**
-     * @inheritDoc
-     */
-    MapType.getAPIClass = function()
-    {
-        return Subclass.Property.Type.Map.MapAPI;
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapType.getAPIClass = function()
+    //{
+    //    return Subclass.Property.Type.Map.MapAPI;
+    //};
 
     /**
      * @inheritDoc

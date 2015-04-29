@@ -77,7 +77,8 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
         this.checkModuleIsReady();
         this.getModule()
             .getPropertyManager()
-            .defineDataTypes(propertyDefinitions)
+            .addTypeDefinitions(propertyDefinitions)
+            //.defineDataTypes(propertyDefinitions)
         ;
     };
 
@@ -93,7 +94,7 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
     {
         return this.getModule()
             .getPropertyManager()
-            .getDataTypeManager()
+            //.getDataTypeManager()
             .getTypeDefinitions()
         ;
     };

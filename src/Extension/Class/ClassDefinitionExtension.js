@@ -27,27 +27,27 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
              */
             data.$_properties = {};
 
-            /**
-             * Checks if property is typed
-             *
-             * @param {string} propertyName
-             * @returns {boolean}
-             */
-            data.issetProperty = function(propertyName)
-            {
-                return this.$_class.issetProperty(propertyName);
-            };
-
-            /**
-             * Returns property api object
-             *
-             * @param {string} propertyName
-             * @returns {Subclass.Property.PropertyAPI}
-             */
-            data.getProperty = function(propertyName)
-            {
-                return this.$_class.getProperty(propertyName).getAPI(this);
-            };
+            ///**
+            // * Checks if property is typed
+            // *
+            // * @param {string} propertyName
+            // * @returns {boolean}
+            // */
+            //data.issetProperty = function(propertyName)
+            //{
+            //    return this.$_class.issetProperty(propertyName);
+            //};
+            //
+            ///**
+            // * Returns property api object
+            // *
+            // * @param {string} propertyName
+            // * @returns {Subclass.Property.PropertyAPI}
+            // */
+            //data.getProperty = function(propertyName)
+            //{
+            //    return this.$_class.getProperty(propertyName).getAPI(this);
+            //};
         });
 
         classInst.getEvent('onNormalizeData').addListener(function(evt, data)
@@ -84,11 +84,12 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
             this.processPropertyAccessors();
         });
 
-        classInst.getEvent('onProcessRelatedClasses').addListener(function(evt) {
+        classInst.getEvent('onProcessRelatedClasses').addListener(function(evt)
+        {
             var classInst = this.getClass();
             var classManager = classInst.getClassManager();
             var propertyManager = classManager.getModule().getPropertyManager();
-            var dataTypeManager = propertyManager.getDataTypeManager();
+            //var dataTypeManager = propertyManager.getDataTypeManager();
             var properties = this.getProperties();
 
             // Performing $_properties option
@@ -98,15 +99,15 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                     if (!properties.hasOwnProperty(propName)) {
                         continue;
                     }
-                    var propertyDefinition = propertyManager.normalizePropertyDefinition(properties[propName]);
+                    var propertyDefinition = propertyManager.normalizeTypeDefinition(properties[propName]);
 
                     if (typeof propertyDefinition != 'object') {
                         continue;
                     }
                     var propertyTypeName = propertyDefinition.type;
 
-                    if (dataTypeManager.issetType(propertyTypeName)) {
-                        var dataTypeDefinition = Subclass.Tools.copy(dataTypeManager.getTypeDefinition(propertyTypeName));
+                    if (this.issetType(propertyTypeName)) {
+                        var dataTypeDefinition = Subclass.Tools.copy(this.getTypeDefinition(propertyTypeName));
                         propertyTypeName = dataTypeDefinition.type;
                         propertyDefinition = Subclass.Tools.extendDeep(dataTypeDefinition, propertyDefinition);
                         propertyDefinition.type = propertyTypeName;
@@ -246,7 +247,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
         if (properties && Subclass.Tools.isPlainObject(properties)) {
             for (var propertyName in properties) {
                 if (properties.hasOwnProperty(propertyName)) {
-                    properties[propertyName] = propertyManager.normalizePropertyDefinition(
+                    properties[propertyName] = propertyManager.normalizeTypeDefinition(
                         properties[propertyName]
                     );
                 }

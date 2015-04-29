@@ -19,10 +19,10 @@ module.exports = function(config) {
       // Src Files
       "vendors/subclass.js",
       "src/PropertyManager.js",
-      "src/DataTypeManager.js",
+      //"src/DataTypeManager.js",
       "src/PropertyType.js",
-      "src/PropertyDefinition.js",
-      "src/PropertyAPI.js",
+      //"src/PropertyDefinition.js",
+      //"src/PropertyAPI.js",
       "src/Error/Option/*.js",
       "src/Error/**/*.js",
       "src/Extension/**/*.js",
@@ -43,9 +43,9 @@ module.exports = function(config) {
       "tests/app/**/*.js",
       "tests/main.js",
       "tests/def_base.js",
-      "tests/def_standard.js",
-      "tests/def_advanced.js",
-      "tests/types/**/*.js"
+      //"tests/def_standard.js",
+      //"tests/def_advanced.js",
+      //"tests/types/**/*.js"
     ],
 
 

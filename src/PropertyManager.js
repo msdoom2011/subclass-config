@@ -70,26 +70,63 @@ Subclass.Property.PropertyManager = (function()
         this._module = module;
 
         /**
-         * Random number that will be added to hashed property names
-         *
-         * @type {number}
+         * @type {(Object.<Object>|{})}
          * @private
          */
-        this._hash = Math.round(Math.abs(new Date().getTime() * Math.random() / 100000));
+        this._typeDefinitions = {};
 
         /**
-         * Data types manager
-         *
-         * @type {Subclass.Property.DataTypeManager}
+         * @type {(Object.<Subclass.Property.PropertyType>|{})}
          * @private
          */
-        //this._dataTypeManager = new Subclass.Property.DataTypeManager(this);
-        this._dataTypeManager = Subclass.Tools.createClassInstance(Subclass.Property.DataTypeManager, this);
+        this._types = {};
     }
 
     PropertyManager.prototype.initialize = function()
     {
-        this.getDataTypeManager().initialize();
+        //this.getDataTypeManager().initialize();
+
+        var module = this.getModule();
+        var eventManager = module.getEventManager();
+        var $this = this;
+
+        eventManager.getEvent('onLoadingEnd').addListener(function() {
+            var typeDefinitions = $this.getTypeDefinitions();
+
+            // Initializing type definitions
+
+            for (var typeName in typeDefinitions) {
+                if (!typeDefinitions.hasOwnProperty(typeName)) {
+                    continue;
+                }
+                var typeDefinition = typeDefinitions[typeName];
+
+                this._types[typeName] = $this.createProperty(
+                    typeName,
+                    Subclass.Tools.copy(typeDefinition)
+                );
+            }
+        });
+
+        if (module.isRoot()) {
+            var propertyTypes = PropertyManager.getPropertyTypes();
+            var defaultTypeDefinitions = {};
+
+            for (var typeName in propertyTypes) {
+                if (!propertyTypes.hasOwnProperty(typeName)) {
+                    continue;
+                }
+                var defaultPropertyDefinition = propertyTypes[typeName].getEmptyDefinition();
+
+                if (defaultPropertyDefinition) {
+                    defaultTypeDefinitions[typeName] = defaultPropertyDefinition;
+                }
+            }
+            this._typeDefinitions = Subclass.Tools.extendDeep(
+                defaultTypeDefinitions,
+                this._typeDefinitions
+            );
+        }
     };
 
     /**
@@ -101,35 +138,238 @@ Subclass.Property.PropertyManager = (function()
     {
         return this._module;
     };
+    //
+    ///**
+    // * Returns instance of data type manager
+    // *
+    // * @returns {Subclass.Property.DataTypeManager}
+    // */
+    //PropertyManager.prototype.getDataTypeManager = function()
+    //{
+    //    return this._dataTypeManager;
+    //};
 
     /**
-     * Returns instance of data type manager
+     * Validates data type definitions
      *
-     * @returns {Subclass.Property.DataTypeManager}
+     * @param {Object.<Object>} definitions
+     * @throws {Error}
      */
-    PropertyManager.prototype.getDataTypeManager = function()
+    PropertyManager.prototype.validateTypeDefinitions = function(definitions)
     {
-        return this._dataTypeManager;
+        try {
+            if (!Subclass.Tools.isPlainObject(definitions)) {
+                throw 'error';
+            }
+            for (var typeName in definitions) {
+                if (!definitions.hasOwnProperty(typeName)) {
+                    continue;
+                }
+                if (!Subclass.Tools.isPlainObject(definitions[typeName])) {
+                    throw 'error';
+                }
+            }
+
+        } catch (e) {
+            if (e == 'error') {
+                Subclass.Error.create('InvalidArgument')
+                    .argument("the data type definitions", false)
+                    .received(definitions)
+                    .expected('a plain object with another plain objects')
+                    .apply()
+                ;
+            } else {
+                throw e;
+            }
+        }
     };
+    //
+    ///**
+    // * Defines data types
+    // *
+    // * @param {Object.<Object>} definitions
+    // */
+    //PropertyManager.prototype.defineDataTypes = function(definitions)
+    //{
+    //    this.getDataTypeManager().addTypeDefinitions(definitions);
+    //};
 
     /**
-     * Defines data types
+     * Adds new type definitions
      *
      * @param {Object.<Object>} definitions
      */
-    PropertyManager.prototype.defineDataTypes = function(definitions)
+    PropertyManager.prototype.addTypeDefinitions = function(definitions)
     {
-        this.getDataTypeManager().addTypeDefinitions(definitions);
+        this.validateTypeDefinitions(definitions);
+
+        for (var typeName in definitions) {
+            if (definitions.hasOwnProperty(typeName)) {
+                this._typeDefinitions[typeName] = definitions[typeName];
+            }
+        }
     };
 
     /**
-     * Returns hash of all properties that will further created
+     * Normalizes definition of data type
      *
-     * @returns {number}
+     * @param definition
+     * @returns {*}
      */
-    PropertyManager.prototype.getPropertyNameHash = function()
+    PropertyManager.prototype.normalizeTypeDefinition = function(definition)
     {
-        return this._hash;
+        //var dataTypeManager = this.getDataTypeManager();
+
+        if (definition === undefined || definition === null) {
+            Subclass.Error.create("InvalidArgument")
+                .argument('the definition of property', false)
+                .received(definition)
+                .expected('not null or undefined')
+                .apply()
+            ;
+        }
+        if (typeof definition == 'string' && this.issetType(definition)) {
+            return this.getTypeDefinition(definition);
+        }
+        if (Array.isArray(definition) && definition.length >= 1) {
+            var dataTypeName, dataType;
+
+            if (definition[0] && PropertyManager.issetPropertyType(definition[0])) {
+                dataTypeName = definition[0];
+                dataType = PropertyManager.getPropertyType(dataTypeName);
+
+                definition = dataType.normalizeDefinition(definition);
+
+            } else if (definition[0] && this.issetType(definition[0])) {
+                dataTypeName = definition[0];
+                definition = this.getTypeDefinition(dataTypeName);
+            }
+        }
+        return definition;
+    };
+
+    /**
+     * Returns definitions of custom types
+     *
+     * @param {boolean} [privateDefinitions = false]
+     *      If passed true it returns type definitions only from current module
+     *      without type definitions from its plug-ins
+     *
+     * @returns {Object}
+     */
+    PropertyManager.prototype.getTypeDefinitions = function(privateDefinitions)
+    {
+        var mainModule = this.getModule();
+        var moduleStorage = mainModule.getModuleStorage();
+        var typeDefinitions = {};
+        var $this = this;
+
+        if (privateDefinitions !== true) {
+            privateDefinitions = false;
+        }
+        if (privateDefinitions) {
+            return this._typeDefinitions;
+        }
+
+        moduleStorage.eachModule(function(module) {
+            if (module == mainModule) {
+                Subclass.Tools.extend(typeDefinitions, $this._typeDefinitions);
+                return;
+            }
+            var modulePropertyManager = module.getPropertyManager();
+            var moduleDefinitions = modulePropertyManager.getTypeDefinitions();
+
+            Subclass.Tools.extend(typeDefinitions, moduleDefinitions);
+        });
+
+        return typeDefinitions;
+    };
+
+    /**
+     * Returns definition of data type
+     *
+     * @param {string} typeName
+     * @returns {Object}
+     * @throws {Error}
+     */
+    PropertyManager.prototype.getTypeDefinition = function(typeName)
+    {
+        if (!this.issetType(typeName)) {
+            Subclass.Error.create('Trying to get definition of non existent data type "' + typeName + '".');
+        }
+        return this.getTypeDefinitions()[typeName];
+    };
+    //
+    ///**
+    // * Returns hash of all properties that will further created
+    // *
+    // * @returns {number}
+    // */
+    //PropertyManager.prototype.getPropertyNameHash = function()
+    //{
+    //    return this._hash;
+    //};
+
+    /**
+     * Returns data types
+     *
+     * @param {boolean} [privateTypes = false]
+     *      If passed true it returns data types only from current module
+     *      without data types from its plug-ins
+     *
+     * @returns {Object}
+     */
+    PropertyManager.prototype.getTypes = function(privateTypes)
+    {
+        var mainModule = this.getModule();
+        var moduleStorage = mainModule.getModuleStorage();
+        var dataTypes = {};
+        var $this = this;
+
+        if (privateTypes !== true) {
+            privateTypes = false;
+        }
+        if (privateTypes) {
+            return this._types;
+        }
+
+        moduleStorage.eachModule(function(module) {
+            if (module == mainModule) {
+                Subclass.Tools.extend(dataTypes, $this._types);
+                return;
+            }
+            var modulePropertyManager = module.getPropertyManager();
+            var moduleDataTypes = modulePropertyManager.getTypes();
+
+            Subclass.Tools.extend(dataTypes, moduleDataTypes);
+        });
+
+        return dataTypes;
+    };
+
+    /**
+     * Returns data type instance
+     *
+     * @param {string} typeName
+     * @returns {PropertyType}
+     */
+    PropertyManager.prototype.getType = function(typeName)
+    {
+        if (!this.issetType(typeName)) {
+            Subclass.Error.create('Trying to get definition of non existent data type "' + typeName + '".');
+        }
+        return this.getTypes()[typeName];
+    };
+
+    /**
+     * Checks if specified data type exists
+     *
+     * @param {string} typeName
+     * @returns {boolean}
+     */
+    PropertyManager.prototype.issetType = function(typeName)
+    {
+        return !!this.getTypeDefinitions()[typeName];
     };
 
     /**
@@ -141,10 +381,10 @@ Subclass.Property.PropertyManager = (function()
      * @param {Object} propertyDefinition
      *      A plain object which describes property.
      *
-     * @param {ClassType} [contextClass]
+     * @param {Subclass.Class.ClassType} [contextClass]
      *      A Subclass.Class.ClassType instance to which creating property will belongs to.
      *
-     * @param {PropertyType} [contextProperty]
+     * @param {Subclass.Property.PropertyType} [contextProperty]
      *      A Subclass.Property.PropertyType instance to witch creating property will belongs to.
      *
      * @returns {Subclass.Property.PropertyType}
@@ -159,18 +399,18 @@ Subclass.Property.PropertyManager = (function()
                 .apply()
             ;
         }
-        var dataTypeManager = this.getDataTypeManager();
+        //var dataTypeManager = this.getDataTypeManager();
         var propertyTypeName = propertyDefinition.type;
 
-        if (dataTypeManager.issetType(propertyTypeName)) {
-            var dataTypeDefinition = Subclass.Tools.copy(dataTypeManager.getTypeDefinition(propertyTypeName));
+        if (this.issetType(propertyTypeName)) {
+            var dataTypeDefinition = Subclass.Tools.copy(this.getTypeDefinition(propertyTypeName));
             propertyTypeName = dataTypeDefinition.type;
 
             propertyDefinition = Subclass.Tools.extendDeep(dataTypeDefinition, propertyDefinition);
             propertyDefinition.type = propertyTypeName;
         }
 
-        if (!Subclass.Property.PropertyManager.issetPropertyType(propertyTypeName)) {
+        if (!PropertyManager.issetPropertyType(propertyTypeName)) {
             var propertyFullName = (contextProperty && contextProperty.getNameFull() + "." || '') + propertyName;
 
             Subclass.Error.create(
@@ -198,38 +438,6 @@ Subclass.Property.PropertyManager = (function()
         inst.initialize();
 
         return inst;
-    };
-
-    PropertyManager.prototype.normalizePropertyDefinition = function(definition)
-    {
-        var dataTypeManager = this.getDataTypeManager();
-
-        if (definition === undefined || definition === null) {
-            Subclass.Error.create("InvalidArgument")
-                .argument('the definition of property', false)
-                .received(definition)
-                .expected('not null or undefined')
-                .apply()
-            ;
-        }
-        if (typeof definition == 'string' && dataTypeManager.issetType(definition)) {
-            return dataTypeManager.getTypeDefinition(definition);
-        }
-        if (Array.isArray(definition) && definition.length >= 1) {
-            var dataTypeName, dataType;
-
-            if (definition[0] && PropertyManager.issetPropertyType(definition[0])) {
-                dataTypeName = definition[0];
-                dataType = PropertyManager.getPropertyType(dataTypeName);
-
-                definition = dataType.normalizeDefinition(definition);
-
-            } else if (definition[0] && dataTypeManager.issetType(definition[0])) {
-                dataTypeName = definition[0];
-                definition = dataTypeManager.getTypeDefinition(dataTypeName);
-            }
-        }
-        return definition;
     };
 
 

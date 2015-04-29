@@ -63,10 +63,10 @@ Subclass.Property.Extension.Class.Type.Class.ClassDefinitionExtension = function
                     property = this.getProperty(dataType);
 
                 } else {
-                    var dataTypeManager = propertyManager.getDataTypeManager();
+                    //var dataTypeManager = propertyManager.getDataTypeManager();
 
-                    if (dataTypeManager.issetType(dataType)) {
-                        property = dataTypeManager.getType(dataType).getAPI(this);
+                    if (this.issetType(dataType)) {
+                        property = this.getType(dataType).getAPI(this);
                     }
                 }
                 if (!property) {

@@ -51,7 +51,7 @@ Subclass.Property.Type.Collection.CollectionDefinition = (function()
     {
         var property = this.getProperty();
         var propertyManager = property.getPropertyManager();
-        proto = propertyManager.normalizePropertyDefinition(proto);
+        proto = propertyManager.normalizeTypeDefinition(proto);
 
         this.validateProto(proto);
         this.getData().proto = proto;
