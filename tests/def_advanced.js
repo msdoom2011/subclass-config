@@ -110,7 +110,7 @@ describe("Checking", function() {
         expect(classInst.propMixedOld).toBe(false);
         expect(classInst.propMixedNew).toBe(false);
 
-        expect(classInst.changedPropMixedUntyped).toBe(false);
+        expect(classInst.changedPropUntyped).toBe(false);
         expect(classInst.propUntypedOld).toBe(false);
         expect(classInst.propUntypedNew).toBe(false);
 

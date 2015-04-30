@@ -59,6 +59,22 @@ Subclass.Property.PropertyType = (function()
          * @private
          */
         this._data = definitionData;
+
+        /**
+         * The class to which current property belongs
+         *
+         * @type {(Subclass.Class.ClassType|null)}
+         * @private
+         */
+        this._contextClass = null;
+
+        /**
+         * The property to which current one belongs
+         *
+         * @type {(Subclass.Property.PropertyType|null)}
+         * @private
+         */
+        this._contextProperty = null;
     }
 
     PropertyType.$parent = null;
