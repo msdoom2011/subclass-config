@@ -101,7 +101,7 @@ Subclass.Property.PropertyManager = (function()
                 }
                 var typeDefinition = typeDefinitions[typeName];
 
-                this._types[typeName] = $this.createProperty(
+                $this._types[typeName] = $this.createProperty(
                     typeName,
                     Subclass.Tools.copy(typeDefinition)
                 );
@@ -116,6 +116,7 @@ Subclass.Property.PropertyManager = (function()
                 if (!propertyTypes.hasOwnProperty(typeName)) {
                     continue;
                 }
+
                 var defaultPropertyDefinition = propertyTypes[typeName].getEmptyDefinition();
 
                 if (defaultPropertyDefinition) {
@@ -422,10 +423,10 @@ Subclass.Property.PropertyManager = (function()
         var classConstructor = PropertyManager.getPropertyType(propertyDefinition.type);
         var inst = Subclass.Tools.createClassInstance(classConstructor, this, propertyName, propertyDefinition);
 
-        // Setting context
-
-        inst.setContextClass(contextClass || null);
-        inst.setContextProperty(contextProperty || null);
+        //// Setting context
+        //
+        //inst.setContextClass(contextClass || null);
+        //inst.setContextProperty(contextProperty || null);
 
         // Checking if property name allowed
 
@@ -466,9 +467,9 @@ Subclass.Property.PropertyManager = (function()
      */
     PropertyManager.registerPropertyType = function(propertyTypeConstructor)
     {
-        var propertyTypeName = propertyTypeConstructor.getPropertyTypeName();
+        var propertyTypeName = propertyTypeConstructor.getName();
 
-        this._propertyTypes[propertyTypeName] = propertyTypeConstructor;
+        this._propertyTypes[propertyTypeName] = Subclass.Tools.buildClassConstructor(propertyTypeConstructor);
     };
 
     /**

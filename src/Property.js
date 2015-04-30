@@ -1,6 +1,6 @@
 Subclass.Property.Property = function()
 {
-    function Property(name, context, definition)
+    function Property(name, definition)
     {
         if (!name || typeof name != 'string') {
             Subclass.Error.create('InvalidError')
@@ -41,7 +41,7 @@ Subclass.Property.Property = function()
          * @type {Object}
          * @private
          */
-        this._context = context;
+        this._context = null;
 
         /**
          * A set of callbacks which will invoked when property changes its value
@@ -58,14 +58,6 @@ Subclass.Property.Property = function()
          * @private
          */
         this._watchersContext = null;
-
-        /**
-         * Reports whether current property was attached
-         *
-         * @type {boolean}
-         * @private
-         */
-        this._isAttached = false;
 
         /**
          * Checks if current value was ever modified (was set any value)
@@ -91,15 +83,6 @@ Subclass.Property.Property = function()
          */
         this._value = undefined;
     }
-
-    /**
-     * Initializes property
-     */
-    Property.prototype.initialize = function()
-    {
-        this.validateContext();
-        this.attach();
-    };
 
     /**
      * Sets the property name
@@ -142,10 +125,11 @@ Subclass.Property.Property = function()
      * Renames current property
      *
      * @param {string} newName
-     * @param {Object} context
      */
-    Property.prototype.rename = function(newName, context)
+    Property.prototype.rename = function(newName)
     {
+        var context = this.getContext();
+
         if (!newName || typeof newName != 'string') {
             Subclass.Error.create(
                 'Specified invalid new value argument while was called method rename in property ' + this + '. ' +
@@ -167,8 +151,18 @@ Subclass.Property.Property = function()
 
         this.detach(context);
         this._name = newName;
-        this.attach();
+        this.attach(context);
         this.setValue(value);
+    };
+
+    /**
+     * Returns property definition
+     *
+     * @returns {Subclass.Property.PropertyType}
+     */
+    Property.prototype.getDefinition = function()
+    {
+        return this._definition;
     };
 
     /**
@@ -176,10 +170,11 @@ Subclass.Property.Property = function()
      *
      * @throws {Error}
      *      Throws error if specified invalid property context object
+     *
+     * @returns {Object} context object
      */
-    Property.prototype.validateContext = function()
+    Property.prototype.validateContext = function(context)
     {
-        var context = this.getContext();
         var requiredMethods = [
             'getProperty',
             'issetProperty',
@@ -198,6 +193,18 @@ Subclass.Property.Property = function()
                 );
             }
         }
+        return context;
+    };
+
+    /**
+     * Sets the property context object
+     *
+     * @param context
+     */
+    Property.prototype.setContext = function(context)
+    {
+        this.validateContext(context);
+        this._context = context;
     };
 
     /**
@@ -541,77 +548,6 @@ Subclass.Property.Property = function()
             && this.isEmpty()
             && !this.isModified()
         );
-    };
-
-    /**
-     * Attaches property to specified context
-     */
-    Property.prototype.attach = function()
-    {
-        if (this.isAttached()) {
-            Subclass.Error.create('Trying to attach already attached property ' + this);
-        }
-        var context = this.getContext();
-        var propName = this.getName();
-        var definition = this.getDefinition();
-        this._isAttached = true;
-
-        if (definition.isAccessors()) {
-            this.attachAccessors(context);
-
-        } else {
-            Object.defineProperty(context, propName, {
-                configurable: true,
-                enumerable: true,
-                get: this.generateGetter(propName),
-                set: this.generateSetter(propName)
-            });
-        }
-        //if (Subclass.Tools.isPlainObject(context)) {
-        //    this.attachHashed(context);
-        //}
-    };
-
-    /**
-     * Attaches property accessor functions
-     */
-    Property.prototype.attachAccessors = function()
-    {
-        var context = this.getContext();
-        var propName = this.getName();
-        var getterName = Subclass.Tools.generateGetterName(propName);
-
-        context[getterName] = this.generateGetter();
-
-        if (this.getDefinition().isWritable()) {
-            var setterName = Subclass.Tools.generateSetterName(propName);
-
-            context[setterName] = this.generateSetter(propName);
-        }
-    };
-
-    /**
-     * Reports whether current property was attached
-     *
-     * @returns {boolean|*}
-     */
-    Property.prototype.isAttached = function()
-    {
-        return this._isAttached;
-    };
-
-    /**
-     * Detaches property from class instance
-     */
-    Property.prototype.detach = function()
-    {
-        var context = this.getContext();
-        this._isAttached = false;
-
-        if (Object.isSealed(context)) {
-            Subclass.Error.create('Can\'t detach property ' + this + ' because the context object is sealed.');
-        }
-        delete context[this.getName()];
     };
 
     /**

@@ -10,16 +10,23 @@ Subclass.Property.Type.Number = {};
 Subclass.Property.Type.Number.NumberType = (function()
 {
     /**
-     * @param {PropertyType} property
-     * @param {Object} propertyDefinition
+     * @inheritDoc
      * @constructor
      */
-    function NumberType (property, propertyDefinition)
+    function NumberType()
     {
-        NumberType.$parent.call(this, property, propertyDefinition);
+        NumberType.$parent.apply(this, arguments);
     }
 
     NumberType.$parent = Subclass.Property.PropertyType;
+
+    /**
+     * @inheritDoc
+     */
+    NumberType.getName = function()
+    {
+        return "number";
+    };
 
     /**
      * @inheritDoc
@@ -39,7 +46,6 @@ Subclass.Property.Type.Number.NumberType = (function()
         if (value === null) {
             return;
         }
-        var property = this.getProperty();
         var minValue = this.getMinValue();
         var maxValue = this.getMaxValue();
         var error = false;
@@ -49,19 +55,19 @@ Subclass.Property.Type.Number.NumberType = (function()
         }
         if (!error && minValue !== null && value < minValue) {
             Subclass.Error.create(
-                'The value of the property ' + property + ' is too small ' +
+                'The value of the property ' + this + ' is too small ' +
                 'and must be more or equals the number ' + minValue + "."
             );
         }
         if (!error && maxValue !== null && value > maxValue) {
             Subclass.Error.create(
-                'The value of the property ' + property + ' is too high ' +
+                'The value of the property ' + this + ' is too high ' +
                 'and must be less or equals the number ' + maxValue + "."
             );
         }
         if (error) {
             Subclass.Error.create('InvalidPropertyValue')
-                .property(this.getProperty())
+                .property(this)
                 .received(value)
                 .expected('a number')
                 .apply()
@@ -85,7 +91,7 @@ Subclass.Property.Type.Number.NumberType = (function()
             Subclass.Error.create('InvalidPropertyOption')
                 .option('maxValue')
                 .received(maxValue)
-                .property(this.getProperty())
+                .property(this)
                 .expected('a number or null')
                 .apply()
             ;
@@ -125,7 +131,7 @@ Subclass.Property.Type.Number.NumberType = (function()
             Subclass.Error.create('InvalidPropertyOption')
                 .option('minValue')
                 .received(minValue)
-                .property(this.getProperty())
+                .property(this)
                 .expected('a number or null')
                 .apply()
             ;
@@ -159,14 +165,13 @@ Subclass.Property.Type.Number.NumberType = (function()
      */
     NumberType.prototype.validateMinMaxValues = function()
     {
-        var property = this.getProperty();
         var minValue = this.getMinValue();
         var maxValue = this.getMaxValue();
 
         if (minValue !== null && maxValue !== null && minValue > maxValue) {
             Subclass.Error.create(
                 'The "maxLength" attribute value must be higher than "minLength" attribute value ' +
-                'in definition of property ' + property + ' must be number or null.'
+                'in definition of property ' + this + ' must be number or null.'
             );
         }
     };
@@ -213,7 +218,7 @@ Subclass.Property.Type.Number.NumberType = (function()
     /*        Registering new property type          */
     /*************************************************/
 
-    Subclass.Property.PropertyManager.registerPropertyType(NumberProperty);
+    Subclass.Property.PropertyManager.registerPropertyType(NumberType);
 
     return NumberType;
 

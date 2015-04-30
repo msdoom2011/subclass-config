@@ -1,25 +1,36 @@
 /**
- * @class
- * @extends {Subclass.Property.PropertyDefinition}
+ * @namespace
  */
-Subclass.Property.Type.String.StringDefinition = (function()
+Subclass.Property.Type.String = {};
+
+/**
+ * @class
+ * @extends {Subclass.Property.PropertyType}
+ */
+Subclass.Property.Type.String.StringType = (function()
 {
     /**
-     * @param {PropertyType} property
-     * @param {Object} propertyDefinition
-     * @constructor
+     * @inheritDoc
      */
-    function StringDefinition (property, propertyDefinition)
+    function StringType ()
     {
-        StringDefinition.$parent.call(this, property, propertyDefinition);
+        StringType.$parent.apply(this, arguments);
     }
 
-    StringDefinition.$parent = Subclass.Property.PropertyDefinition;
+    StringType.$parent = Subclass.Property.PropertyType;
 
     /**
      * @inheritDoc
      */
-    StringDefinition.prototype.getEmptyValue = function()
+    StringType.getName = function()
+    {
+        return 'string';
+    };
+
+    /**
+     * @inheritDoc
+     */
+    StringType.prototype.getEmptyValue = function()
     {
         return this.isNullable() ? null : "";
     };
@@ -27,9 +38,9 @@ Subclass.Property.Type.String.StringDefinition = (function()
     /**
      * @inheritDoc
      */
-    StringDefinition.prototype.validateValue = function(value)
+    StringType.prototype.validateValue = function(value)
     {
-        StringDefinition.$parent.prototype.validateValue.call(this, value);
+        StringType.$parent.prototype.validateValue.call(this, value);
 
         if (value === null) {
             return;
@@ -37,7 +48,6 @@ Subclass.Property.Type.String.StringDefinition = (function()
         var pattern = this.getPattern();
         var minLength = this.getMinLength();
         var maxLength = this.getMaxLength();
-        var property = this.getProperty();
         var error = false;
 
         if (typeof value != 'string') {
@@ -46,25 +56,25 @@ Subclass.Property.Type.String.StringDefinition = (function()
 
         if (!error && pattern && !pattern.test(value)) {
             Subclass.Error.create(
-                'The value "' + value + '" of the property ' + property + ' is not valid ' +
+                'The value "' + value + '" of the property ' + this + ' is not valid ' +
                 'and must match the regular expression "' + pattern.toString() + '".'
             );
         }
         if (!error && minLength !== null && value.length < minLength) {
             Subclass.Error.create(
-                'The value "' + value + '" of the property ' + property + ' is too short ' +
+                'The value "' + value + '" of the property ' + this + ' is too short ' +
                 'and must consist of at least ' + minLength + ' symbols.'
             );
         }
         if (!error && maxLength !== null && value.length > maxLength) {
             Subclass.Error.create(
-                'The value "' + value + '" of the property "' + property + '" is too long ' +
+                'The value "' + value + '" of the property "' + this + '" is too long ' +
                 'and must be not longer than ' + maxLength + ' symbols.'
             );
         }
         if (error) {
             Subclass.Error.create('InvalidPropertyValue')
-                .property(this.getProperty())
+                .property(this)
                 .received(value)
                 .expected('a string')
                 .apply()
@@ -75,20 +85,20 @@ Subclass.Property.Type.String.StringDefinition = (function()
     /**
      * @inheritDoc
      */
-    StringDefinition.prototype.validateDefault = StringDefinition.prototype.validateValue;
+    StringType.prototype.validateDefault = StringType.prototype.validateValue;
 
     /**
      * Validates "pattern" attribute value
      *
      * @param {*} pattern
      */
-    StringDefinition.prototype.validatePattern = function(pattern)
+    StringType.prototype.validatePattern = function(pattern)
     {
         if (pattern !== null && typeof pattern != 'object' && !(pattern instanceof RegExp)) {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('pattern')
                 .received(pattern)
-                .property(this.getProperty())
+                .property(this)
                 .expected('a RegExp instance or null')
                 .apply()
             ;
@@ -100,7 +110,7 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @param {(RegExp|null)} pattern
      */
-    StringDefinition.prototype.setPattern = function(pattern)
+    StringType.prototype.setPattern = function(pattern)
     {
         this.validatePattern(pattern);
         this.getData().pattern = pattern;
@@ -111,7 +121,7 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @returns {(RegExp|null)}
      */
-    StringDefinition.prototype.getPattern = function()
+    StringType.prototype.getPattern = function()
     {
         return this.getData().pattern;
     };
@@ -121,13 +131,13 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @param {*} maxLength
      */
-    StringDefinition.prototype.validateMaxLength = function(maxLength)
+    StringType.prototype.validateMaxLength = function(maxLength)
     {
         if (maxLength !== null && typeof maxLength != 'number') {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('maxLength')
                 .received(maxLength)
-                .property(this.getProperty())
+                .property(this)
                 .expected('a number or null')
                 .apply()
             ;
@@ -139,7 +149,7 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @param {(number|null)} maxLength
      */
-    StringDefinition.prototype.setMaxLength = function(maxLength)
+    StringType.prototype.setMaxLength = function(maxLength)
     {
         this.validateMaxLength(maxLength);
         this.getData().maxLength = maxLength;
@@ -151,7 +161,7 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @returns {(number|null)}
      */
-    StringDefinition.prototype.getMaxLength = function()
+    StringType.prototype.getMaxLength = function()
     {
         return this.getData().maxLength;
     };
@@ -161,13 +171,13 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @param {*} minLength
      */
-    StringDefinition.prototype.validateMinLength = function(minLength)
+    StringType.prototype.validateMinLength = function(minLength)
     {
         if (minLength !== null && typeof minLength != 'number') {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('minLength')
                 .received(minLength)
-                .property(this.getProperty())
+                .property(this)
                 .expected('a number or null')
                 .apply()
             ;
@@ -179,7 +189,7 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @param {(number|null)} minLength
      */
-    StringDefinition.prototype.setMinLength = function(minLength)
+    StringType.prototype.setMinLength = function(minLength)
     {
         this.validateMinLength(minLength);
         this.getData().minLength = minLength;
@@ -191,7 +201,7 @@ Subclass.Property.Type.String.StringDefinition = (function()
      *
      * @returns {(number|null)}
      */
-    StringDefinition.prototype.getMinLength = function()
+    StringType.prototype.getMinLength = function()
     {
         return this.getData().minLength;
     };
@@ -199,16 +209,15 @@ Subclass.Property.Type.String.StringDefinition = (function()
     /**
      * Validates how minLength and maxLength are compatable
      */
-    StringDefinition.prototype.validateMinMaxLengths = function()
+    StringType.prototype.validateMinMaxLengths = function()
     {
-        var property = this.getProperty();
         var minLength = this.getMinLength();
         var maxLength = this.getMaxLength();
 
         if (minLength !== null && maxLength !== null && minLength > maxLength) {
             Subclass.Error.create(
                 'The "maxLength" attribute value must be more than "minLength" attribute value ' +
-                'in definition of property ' + property + ' must be number or null.'
+                'in definition of property ' + this + ' must be number or null.'
             );
         }
     };
@@ -216,9 +225,9 @@ Subclass.Property.Type.String.StringDefinition = (function()
     /**
      * @inheritDoc
      */
-    StringDefinition.prototype.getBaseData = function()
+    StringType.prototype.getBaseData = function()
     {
-        var baseDefinition = StringDefinition.$parent.prototype.getBaseData.call(this);
+        var baseDefinition = StringType.$parent.prototype.getBaseData.call(this);
 
         /**
          * @inheritDoc
@@ -246,6 +255,14 @@ Subclass.Property.Type.String.StringDefinition = (function()
         return baseDefinition;
     };
 
-    return StringDefinition;
+
+    /*************************************************/
+    /*        Registering new property type          */
+    /*************************************************/
+
+    Subclass.Property.PropertyManager.registerPropertyType(StringType);
+
+
+    return StringType;
 
 })();

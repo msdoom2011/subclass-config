@@ -31,7 +31,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
             this._properties = {};
         });
 
-        classInst.getEvent('onCreate').addListener(function(evt, classConstructor)
+        classInst.getEvent('onCreateAfter').addListener(function(evt, classConstructor)
         {
             this.attachProperties(classConstructor.prototype);
         });
@@ -39,6 +39,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
         classInst.getEvent('onCreateInstanceBefore').addListener(function(evt, classInstance)
         {
             var classProperties = this.getProperties(true);
+            this.attachPropertyMethods(classInstance);
 
             //Attaching hashed typed properties
 
@@ -53,7 +54,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                 var propertyDefinition = classProperties[propertyName];
                 var initValue = propertyDefinition.getValue();
 
-                property.setWatchersContext(classInstance);
+                //property.setWatchersContext(classInstance);
 
                 // Setting init value
 
@@ -194,54 +195,63 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
      */
     ClassType.prototype.attachProperties = function(context)
     {
+        if (!this.getProperties) {
+            return;
+        }
         var classProperties = this.getProperties();
-        var properties = {};
 
         for (var propName in classProperties) {
             if (classProperties.hasOwnProperty(propName)) {
-                properties[propName] = classProperties[propName].createInstance(propName, context);
+                classProperties[propName].attach(context);
             }
         }
-        if (Object.keys(properties).length) {
-            for (propName in properties) {
-                if (!properties.hasOwnProperty(propName)) {
-                    continue;
-                }
+    };
 
-                !function() {
+    ClassType.prototype.attachPropertyMethods = function(context)
+    {
+        if (!this.getProperties) {
+            return;
+        }
+        var allClassProperties = this.getProperties(true);
+        var properties = {};
 
-                    /**
-                     * Checks if property is typed
-                     *
-                     * @param {string} propertyName
-                     * @returns {boolean}
-                     */
-                    context.issetProperty = function (propertyName)
-                    {
-                        return properties.hasOwnProperty(propertyName);
-                    };
+        /**
+         * Checks if property is typed
+         *
+         * @param {string} propertyName
+         * @returns {boolean}
+         */
+        context.issetProperty = function (propertyName)
+        {
+            return properties.hasOwnProperty(propertyName);
+        };
 
-                    /**
-                     * Returns property api object
-                     *
-                     * @param {string} propertyName
-                     * @returns {Subclass.Property.Property}
-                     */
-                    context.getProperty = function (propertyName)
-                    {
-                        return properties[propertyName];
-                    };
+        /**
+         * Returns property api object
+         *
+         * @param {string} propertyName
+         * @returns {Subclass.Property.Property}
+         */
+        context.getProperty = function (propertyName)
+        {
+            return properties[propertyName];
+        };
 
-                    /**
-                     * Returns context type name
-                     *
-                     * @returns {string}
-                     */
-                    context.getContextType = function ()
-                    {
-                        return "class";
-                    };
-                }(properties[propName]);
+        /**
+         * Returns context type name
+         *
+         * @returns {string}
+         */
+        context.getContextType = function ()
+        {
+            return "class";
+        };
+
+        for (var propName in allClassProperties) {
+            if (allClassProperties.hasOwnProperty(propName)) {
+                properties[propName] = allClassProperties[propName].createInstance(propName);
+                properties[propName].setContext(context);
+                properties[propName].resetValue();
             }
         }
     };

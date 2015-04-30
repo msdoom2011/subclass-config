@@ -10,31 +10,40 @@ app.registerClass('Class/AppClass', {
 
 app.registerClass('Class/BaseDefinition',
 {
+    _usedCustomGetter: false,
+    
+    getPropNumber: function()
+    {
+        this._usedCustomGetter = true;
+
+        return this.getPropNumberDefault();
+    },
+
     $_properties: {
 
         propNumber: { type: 'number' },
 
-        //propString: { type: 'string' },
-        //
-        //propBoolean: { type: 'boolean' },
-        //
-        //propArray: { type: 'array' },
-        //
-        //propObject: { type: 'object' },
-        //
-        //propClass: { type: "class", className: "Class/AppClass"},
-        //
-        //propEnum: { type: "enum", allows: [ "male", "female" ] },
-        //
-        //propFunction: { type: "function" },
-        //
-        //propUntyped: { type: "untyped" },
-        //
-        //propMixed: { type: "mixed", allows: [
-        //    { type: "number" },
-        //    { type: "string" }
-        //]},
-        //
+        propString: { type: 'string' },
+
+        propBoolean: { type: 'boolean' },
+
+        propArray: { type: 'array' },
+
+        propObject: { type: 'object' },
+
+        propClass: { type: "class", className: "Class/AppClass"},
+
+        propEnum: { type: "enum", allows: [ "male", "female" ] },
+
+        propFunction: { type: "function" },
+
+        propUntyped: { type: "untyped" },
+
+        propMixed: { type: "mixed", allows: [
+            { type: "number" },
+            { type: "string" }
+        ]},
+
         //propMap: { type: "map", schema: {
         //
         //    mapNumber: { type: "number" },

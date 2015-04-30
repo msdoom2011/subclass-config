@@ -106,8 +106,8 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                     }
                     var propertyTypeName = propertyDefinition.type;
 
-                    if (this.issetType(propertyTypeName)) {
-                        var dataTypeDefinition = Subclass.Tools.copy(this.getTypeDefinition(propertyTypeName));
+                    if (propertyManager.issetType(propertyTypeName)) {
+                        var dataTypeDefinition = Subclass.Tools.copy(propertyManager.getTypeDefinition(propertyTypeName));
                         propertyTypeName = dataTypeDefinition.type;
                         propertyDefinition = Subclass.Tools.extendDeep(dataTypeDefinition, propertyDefinition);
                         propertyDefinition.type = propertyTypeName;
@@ -309,6 +309,14 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
     */
     ClassDefinition.prototype.processPropertyAccessors = function()
     {
+        return;
+
+
+
+
+
+
+
         if (!this.getClass().getProperties) {
             return;
         }
@@ -321,7 +329,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
             }
             var property = classProperties[propertyName];
 
-            if (!property.getDefinition().isAccessors()) {
+            if (!property.isAccessors()) {
                 continue;
             }
             var accessors = {
