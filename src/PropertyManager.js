@@ -423,10 +423,10 @@ Subclass.Property.PropertyManager = (function()
         var classConstructor = PropertyManager.getPropertyType(propertyDefinition.type);
         var inst = Subclass.Tools.createClassInstance(classConstructor, this, propertyName, propertyDefinition);
 
-        //// Setting context
-        //
-        //inst.setContextClass(contextClass || null);
-        //inst.setContextProperty(contextProperty || null);
+        // Setting context class and property
+
+        inst.setContextClass(contextClass || null);
+        inst.setContextProperty(contextProperty || null);
 
         // Checking if property name allowed
 

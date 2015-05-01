@@ -201,6 +201,23 @@ Subclass.Property.PropertyType = (function()
     };
 
     /**
+     * Returns property name with names of context property
+     *
+     * @returns {string}
+     */
+    PropertyType.prototype.getNameFull = function()
+    {
+        var propertyName = this.getName();
+        var contextProperty = this.getContextProperty();
+        var contextPropertyName = "";
+
+        if (contextProperty) {
+            contextPropertyName = contextProperty.getNameFull();
+        }
+        return (contextPropertyName && contextPropertyName + "." || "") + propertyName;
+    };
+
+    /**
      * Returns property definition
      *
      * @returns {Object}
@@ -211,10 +228,49 @@ Subclass.Property.PropertyType = (function()
     };
 
     /**
+     * Sets the context class
+     *
+     * @param {Subclass.Class.ClassType} contextClass
+     */
+    PropertyType.prototype.setContextClass = function(contextClass)
+    {
+        this._contextClass = contextClass;
+    };
+
+    /**
+     * Returns the context class
+     *
+     * @returns {(Subclass.Class.ClassType|null)}
+     */
+    PropertyType.prototype.getContextClass = function()
+    {
+        return this._contextClass;
+    };
+
+    /**
+     * Sets the context property
+     *
+     * @param {Subclass.Property.PropertyType} contextProperty
+     */
+    PropertyType.prototype.setContextProperty = function(contextProperty)
+    {
+        this._contextProperty = contextProperty;
+    };
+
+    /**
+     * Returns the context property
+     *
+     * @returns {(Subclass.Property.PropertyType|null)}
+     */
+    PropertyType.prototype.getContextProperty = function()
+    {
+        return this._contextProperty;
+    };
+
+    /**
      * Creates the instance of property
      *
      * @param {string} propertyName
-     * @param {Object} context
      */
     PropertyType.prototype.createInstance = function(propertyName)
     {
@@ -254,7 +310,7 @@ Subclass.Property.PropertyType = (function()
 
         if (!this.isWritable()) {
             return function() {
-                Subclass.Error.create('Property ' + $this + ' is not writable.');
+                Subclass.Error.create('Property ' + this.getProperty(propName) + ' is not writable.');
             }
         }
         return function(value) {
@@ -263,7 +319,7 @@ Subclass.Property.PropertyType = (function()
             if (property.isLocked()) {
                 return console.warn(
                     'Trying to set new value for the ' +
-                    'property ' + $this + ' that is locked for write.'
+                    'property ' + property + ' that is locked for write.'
                 );
             }
             var oldValue = property.getData();
@@ -279,17 +335,14 @@ Subclass.Property.PropertyType = (function()
     /**
      * Attaches property to specified context
      */
-    PropertyType.prototype.attach = function(context)
+    PropertyType.prototype.attach = function(context, propName)
     {
-        var propName = this.getName();
-
         if (Object.isSealed(context)) {
             Subclass.Error.create(
                 'Can\'t attach property ' + this + ' because ' +
                 'the context object is sealed.'
             );
         }
-
         if (this.isAccessors()) {
             var getterName = Subclass.Tools.generateGetterName(propName);
 
@@ -319,15 +372,17 @@ Subclass.Property.PropertyType = (function()
     /**
      * Detaches property from class instance
      */
-    PropertyType.prototype.detach = function(context)
+    PropertyType.prototype.detach = function(context, propName)
     {
         if (Object.isSealed(context)) {
+            var property = context.getProperty(propName);
+
             Subclass.Error.create(
-                'Can\'t detach property ' + this + ' because ' +
+                'Can\'t detach property ' + property + ' because ' +
                 'the context object is sealed.'
             );
         }
-        delete context[this.getName()];
+        delete context[propName];
     };
 
     /**
@@ -735,6 +790,21 @@ Subclass.Property.PropertyType = (function()
         if (definition.hasOwnProperty('value')) {
             this.setValue(definition.value);
         }
+    };
+
+    /**
+     * Return string implementation of property
+     *
+     * @returns {string}
+     */
+    PropertyType.prototype.toString = function()
+    {
+        var propertyName = this.getNameFull();
+        var contextClassName = this.getContextClass()
+            ? (' in the class "' + this.getContextClass().getName() + '"')
+            : "";
+
+        return 'definition "' + propertyName + '"' + contextClassName;
     };
 
     return PropertyType;

@@ -54,8 +54,6 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                 var propertyDefinition = classProperties[propertyName];
                 var initValue = propertyDefinition.getValue();
 
-                //property.setWatchersContext(classInstance);
-
                 // Setting init value
 
                 if (initValue !== undefined) {
@@ -202,11 +200,16 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
 
         for (var propName in classProperties) {
             if (classProperties.hasOwnProperty(propName)) {
-                classProperties[propName].attach(context);
+                classProperties[propName].attach(context, propName);
             }
         }
     };
 
+    /**
+     * Attaches methods for work with properties
+     *
+     * @param context
+     */
     ClassType.prototype.attachPropertyMethods = function(context)
     {
         if (!this.getProperties) {
