@@ -140,71 +140,71 @@ app.registerClass('Class/AdvancedDefinition',
             }
         },
 
-        //propMap: {
-        //    type: "map",
-        //    nullable: true,
-        //    watcher: function(newValue, oldValue, property) {
-        //        this.changedPropMap = true;
-        //        this.propMapOld = oldValue;
-        //        this.propMapNew = newValue;
-        //    },
-        //    default: {
-        //        mapNumber: 10
-        //    },
-        //    value: {
-        //        mapString: "init string value",
-        //        mapMap: {
-        //            mapMapArray: [10]
-        //        }
-        //    },
-        //    schema: {
-        //
-        //        mapNumber: { type: "number" },
-        //
-        //        mapString: { type: "string" },
-        //
-        //        mapBoolean: { type: "boolean" },
-        //
-        //        mapArray: { type: "array" },
-        //
-        //        mapObject: { type: "object" },
-        //
-        //        mapClass: { type: "class", className: "Class/AppClass" },
-        //
-        //        mapEnum: { type: "enum", allows: [ "male", "female" ] },
-        //
-        //        mapFunction: { type: "function" },
-        //
-        //        mapMixed: {type: "mixed", allows: [
-        //            { type: "number" },
-        //            { type: "string" }
-        //        ]},
-        //
-        //        mapMap: { type: "map", schema: {
-        //
-        //            mapMapNumber: { type: "number" },
-        //
-        //            mapMapString: { type: "string" },
-        //
-        //            mapMapBoolean: { type: "boolean" },
-        //
-        //            mapMapArray: { type: "array" },
-        //
-        //            mapMapObject: { type: "object" },
-        //
-        //            mapMapClass: { type: "class", className: "Class/AppClass" },
-        //
-        //            mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
-        //
-        //            mapMapFunction: { type: "function" },
-        //
-        //            mapMapMixed: {type: "mixed", allows: [
-        //                { type: "number" },
-        //                { type: "string" }
-        //            ]}
-        //        }}
-        //    }
-        //},
+        propMap: {
+            type: "map",
+            nullable: true,
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropMap = true;
+                this.propMapOld = oldValue;
+                this.propMapNew = newValue;
+            },
+            default: {
+                mapNumber: 10
+            },
+            value: {
+                mapString: "init string value",
+                mapMap: {
+                    mapMapArray: [10]
+                }
+            },
+            schema: {
+
+                mapNumber: { type: "number" },
+
+                mapString: { type: "string" },
+
+                mapBoolean: { type: "boolean" },
+
+                mapArray: { type: "array" },
+
+                mapObject: { type: "object" },
+
+                mapClass: { type: "class", className: "Class/AppClass" },
+
+                mapEnum: { type: "enum", allows: [ "male", "female" ] },
+
+                mapFunction: { type: "function" },
+
+                mapMixed: {type: "mixed", allows: [
+                    { type: "number" },
+                    { type: "string" }
+                ]},
+
+                mapMap: { type: "map", schema: {
+
+                    mapMapNumber: { type: "number" },
+
+                    mapMapString: { type: "string" },
+
+                    mapMapBoolean: { type: "boolean" },
+
+                    mapMapArray: { type: "array" },
+
+                    mapMapObject: { type: "object" },
+
+                    mapMapClass: { type: "class", className: "Class/AppClass" },
+
+                    mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
+
+                    mapMapFunction: { type: "function" },
+
+                    mapMapMixed: {type: "mixed", allows: [
+                        { type: "number" },
+                        { type: "string" }
+                    ]}
+                }}
+            }
+        },
         //
         //propStringCollectionArray: {
         //    type: "arrayCollection",

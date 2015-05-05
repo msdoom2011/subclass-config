@@ -21,12 +21,12 @@ Subclass.Property.Type.Map.MapType = function()
          * @private
          */
         this._children = {};
-
-        /**
-         * @type {boolean}
-         * @private
-         */
-        this._isNull = true;
+        //
+        ///**
+        // * @type {boolean}
+        // * @private
+        // */
+        //this._isNull = true;
     }
 
     MapType.$parent = Subclass.Property.PropertyType;
@@ -34,7 +34,7 @@ Subclass.Property.Type.Map.MapType = function()
     /**
      * @inheritDoc
      */
-    MapType.getPropertyTypeName = function()
+    MapType.getName = function()
     {
         return "map";
     };
@@ -44,7 +44,7 @@ Subclass.Property.Type.Map.MapType = function()
      */
     MapType.getPropertyClass = function()
     {
-        return Subclass.Property.Map.MapProperty;
+        return Subclass.Property.Type.Map.MapProperty;
     };
 
     /**
@@ -132,21 +132,23 @@ Subclass.Property.Type.Map.MapType = function()
      */
     MapType.prototype.getChildren = function()
     {
-        return Subclass.Tools.copy(this._children);
+        return this._children;
     };
 
     /**
      * Adds children property to current
      *
-     * @param {string} childPropName
-     * @param {Object} childPropDefinition
+     * @param {string} childName
+     * @param {Object} childDefinition
      * @returns {Subclass.Property.PropertyType}
      */
-    MapType.prototype.addChild = function(childPropName, childPropDefinition)
+    MapType.prototype.addChild = function(childName, childDefinition)
     {
-        return this._children[childPropName] = this.getPropertyManager().createProperty(
-            childPropName,
-            childPropDefinition,
+        childDefinition.accessors = false;
+
+        return this._children[childName] = this.getPropertyManager().createProperty(
+            childName,
+            childDefinition,
             this.getContextClass(),
             this
         );
@@ -181,59 +183,86 @@ Subclass.Property.Type.Map.MapType = function()
     {
         return this.isNullable() ? null : {};
     };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapType.prototype.generateGetter = function()
+    //{
+    //    var $this = this;
+    //
+    //    return function() {
+    //        return this[$this.getNameHashed()];
+    //    };
+    //};
 
     /**
      * @inheritDoc
      */
-    MapType.prototype.generateGetter = function()
-    {
-        var $this = this;
-
-        return function() {
-            if ($this.isNull()) {
-                return null;
-            }
-            return this[$this.getNameHashed()];
-        };
-    };
-
-    /**
-     * @inheritDoc
-     */
-    MapType.prototype.generateSetter = function()
+    MapType.prototype.generateSetter = function(propName)
     {
         var $this = this;
 
         return function(value) {
-            if ($this.isLocked()) {
+            var property = this.getProperty(propName);
+
+            if (property.isLocked()) {
                 return console.warn(
                     'Trying to set new value for the ' +
-                    'property ' + $this + ' that is locked for write.'
+                    'property ' + property + ' that is locked for write.'
                 );
             }
-            var oldValue = $this.getData(this);
+            var childrenContext = property.getValue();
+            var oldValue = property.getData();
             var newValue = value;
 
+            if (!Subclass.Tools.isEqual(oldValue, newValue)) {
+                property.modify();
+            }
             $this.validateValue(value);
-            $this.setIsModified(true);
 
             if (value !== null) {
-                $this.setIsNull(false);
-
-                for (var childPropName in value) {
-                    if (value.hasOwnProperty(childPropName)) {
-                        this[$this.getNameHashed()][childPropName] = value[childPropName];
+                if (childrenContext === null) {
+                    property.resetValue();
+                    childrenContext = property.getValue();
+                }
+                for (var childName in value) {
+                    if (value.hasOwnProperty(childName)) {
+                        childrenContext.getProperty(childName).setValue(value[childName]);
                     }
                 }
             } else {
-                $this.resetValue(this);
-                $this.setIsNull(true);
+                property._value = null;
             }
 
             // Invoking watchers
 
-            $this.invokeWatchers(this, newValue, oldValue);
+            property.invokeWatchers(this, newValue, oldValue);
         };
+    };
+
+    /**
+     * Returns default values for all properties in schema
+     *
+     * @returns {Object}
+     */
+    MapType.prototype.getDefaultValue = function()
+    {
+        var defaultValue = {};
+        var children = this.getChildren();
+
+        for (var propName in children) {
+            if (children.hasOwnProperty(propName)) {
+                defaultValue[propName] = children[propName].getDefaultValue();
+            }
+            //if (children[propName].getDefaultValue) {
+            //    schemaValues[propName] = children[propName].getDefaultValue();
+            //
+            //} else {
+            //    schemaValues[propName] = children[propName].getDefaultValue();
+            //}
+        }
+        return defaultValue;
     };
 
     /**
@@ -242,8 +271,6 @@ Subclass.Property.Type.Map.MapType = function()
     MapType.prototype.validateValue = function(value)
     {
         MapType.$parent.prototype.validateValue.call(this, value);
-
-        var property = this.getProperty();
         var error = false;
 
         if (
@@ -261,17 +288,17 @@ Subclass.Property.Type.Map.MapType = function()
                 if (!value.hasOwnProperty(propName)) {
                     continue;
                 }
-                if (!property.hasChild(propName)) {
-                    var childrenProps = property.getChildren();
+                if (!this.hasChild(propName)) {
+                    var childrenProps = this.getChildren();
 
                     Subclass.Error.create(
                         'Trying to set not registered property "' + propName + '" ' +
-                        'to not extendable map property ' + property + '. ' +
+                        'to not extendable map property ' + this + '. ' +
                         'Allowed properties are: "' + Object.keys(childrenProps).join('", "') + '".'
                     );
 
                 } else {
-                    property
+                    this
                         .getChild(propName)
                         .validateValue(value[propName])
                     ;
@@ -280,7 +307,7 @@ Subclass.Property.Type.Map.MapType = function()
         }
         if (error) {
             Subclass.Error.create('InvalidPropertyValue')
-                .property(this.getProperty())
+                .property(this)
                 .received(value)
                 .expected("a plain object")
                 .apply()
@@ -301,16 +328,10 @@ Subclass.Property.Type.Map.MapType = function()
         MapType.$parent.prototype.setDefault.call(this, defaultValue);
 
         if (defaultValue !== null) {
-            var property = this.getProperty();
-
             for (var propName in defaultValue) {
-                if (!defaultValue.hasOwnProperty(propName)) {
-                    continue;
+                if (defaultValue.hasOwnProperty(propName)) {
+                    this.getChild(propName).setDefault(defaultValue[propName]);
                 }
-                property.getChild(propName)
-                    .getDefinition()
-                    .setDefault(defaultValue[propName])
-                ;
             }
         }
     };
@@ -329,7 +350,7 @@ Subclass.Property.Type.Map.MapType = function()
         ) {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('schema')
-                .property(this.getProperty())
+                .property(this)
                 .received(schema)
                 .expected('a plain object with definitions of properties')
                 .apply()
@@ -347,8 +368,7 @@ Subclass.Property.Type.Map.MapType = function()
         this.validateSchema(schema);
         this.getData().schema = schema;
 
-        var propertyManager = this.getProperty().getPropertyManager();
-        var property = this.getProperty();
+        var propertyManager = this.getPropertyManager();
         //var defaultValue = {};
 
         for (var propName in schema) {
@@ -360,7 +380,7 @@ Subclass.Property.Type.Map.MapType = function()
             if (!this.isWritable()) {
                 schema[propName].writable = false;
             }
-            property.addChild(propName, schema[propName]);
+            this.addChild(propName, schema[propName]);
 
             //defaultValue[propName] = property
             //    .getChild(propName)
@@ -431,8 +451,8 @@ Subclass.Property.Type.Map.MapType = function()
                     continue;
                 }
                 console.warn(
-                    'Specified "value" attribute for definition of ' +
-                    'property ' + this.getProperty() + ' was ignored.\n ' +
+                    'Specified "value" option for definition of ' +
+                    'property ' + this + ' was ignored.\n ' +
                     'The value from "default" attribute was applied instead.'
                 );
             }
@@ -473,19 +493,26 @@ Subclass.Property.Type.Map.MapType = function()
     //        }
     //    }
     //};
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapType.prototype.processData = function()
+    //{
+    //    MapType.$parent.prototype.processData.call(this);
+    //
+    //    if (this.getValue() != undefined || this.getDefault() !== null) {
+    //        this.getProperty().setIsNull(false);
+    //    }
+    //};
 
-    /**
-     * @inheritDoc
-     */
-    MapType.prototype.processData = function()
-    {
-        MapType.$parent.prototype.processData.call(this);
 
-        if (this.getValue() != undefined || this.getDefault() !== null) {
-            this.getProperty().setIsNull(false);
-        }
-    };
 
+    /*************************************************/
+    /*        Registering new property type          */
+    /*************************************************/
+
+    Subclass.Property.PropertyManager.registerPropertyType(MapType);
 
     return MapType;
 

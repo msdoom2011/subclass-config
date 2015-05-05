@@ -1,26 +1,16 @@
 /**
- * @namespace
- */
-Subclass.Property.Type.Map = {};
-
-/**
  * @class
  * @extends {Subclass.Property.PropertyType}
  */
-Subclass.Property.Type.Map.Map = (function()
+Subclass.Property.Type.Map.MapProperty = function()
 {
     /*************************************************/
     /*        Describing property type "Map"         */
     /*************************************************/
 
     /**
-     * @param {Subclass.Property.PropertyManager} propertyManager
-     * @param {string} propertyName
-     * @param {Object} propertyDefinition
-     * @extends {PropertyType}
-     * @constructor
+     * @inheritDoc
      */
-    //function MapType(propertyManager, propertyName, propertyDefinition)
     function MapProperty()
     {
         MapProperty.$parent.apply(this, arguments);
@@ -31,12 +21,21 @@ Subclass.Property.Type.Map.Map = (function()
          */
         this._children = {};
 
-        /**
-         * @type {boolean}
-         * @private
-         */
-        this._isNull = true;
+        var childrenDefinitions = this.getDefinition().getChildren();
 
+        for (var childName in childrenDefinitions) {
+            if (childrenDefinitions.hasOwnProperty(childName)) {
+                this._children[childName] = childrenDefinitions[childName].createInstance(childName);
+            }
+        }
+
+
+        ///**
+        // * @type {boolean}
+        // * @private
+        // */
+        //this._isNull = true;
+        //
         //MapType.$parent.call(
         //    this,
         //    propertyManager,
@@ -148,26 +147,26 @@ Subclass.Property.Type.Map.Map = (function()
     //    }
     //    return definition;
     //};
-
-    /**
-     * Tells is property value null
-     *
-     * @returns {boolean}
-     */
-    MapProperty.prototype.isNull = function()
-    {
-        return this._isNull;
-    };
-
-    /**
-     * Sets marker that tells that property value is null
-     *
-     * @param {boolean} isNull
-     */
-    MapProperty.prototype.setIsNull = function(isNull)
-    {
-        this._isNull = isNull;
-    };
+    //
+    ///**
+    // * Tells is property value null
+    // *
+    // * @returns {boolean}
+    // */
+    //MapProperty.prototype.isNull = function()
+    //{
+    //    return this._isNull;
+    //};
+    //
+    ///**
+    // * Sets marker that tells that property value is null
+    // *
+    // * @param {boolean} isNull
+    // */
+    //MapProperty.prototype.setIsNull = function(isNull)
+    //{
+    //    this._isNull = isNull;
+    //};
 
     /**
      * Returns all map child properties
@@ -230,31 +229,6 @@ Subclass.Property.Type.Map.Map = (function()
     //    return !!this.getChild(childPropName);
     //};
 
-    MapProperty.prototype.createMap = function()
-    {
-        var $this = this;
-
-        function Map(mapProperty)
-        {
-            // Do something
-        }
-
-        Map.$parent = Subclass.Property.Type.Map.Map;
-
-        /**
-         * @inheritDoc
-         */
-        Map.prototype.getProperty = function(childName)
-        {
-            if (!arguments.length) {
-                return $this;
-            }
-            return $this.getChildren()[childName];
-        };
-
-        return Subclass.Tools.createClassInstance(Map);
-    };
-
     /**
      * Sets the children properties
      *
@@ -299,48 +273,104 @@ Subclass.Property.Type.Map.Map = (function()
      */
     MapProperty.prototype.getData = function(context)
     {
-        var value = MapProperty.$parent.prototype.getData.call(this, context);
-        var valueClear = {};
+        var children = this.getChildren();
+        var data = {};
 
-        for (var propName in value) {
-            if (!value.hasOwnProperty(propName)) {
-                continue;
-            }
-            if (
-                value[propName]
-                && (
-                    Subclass.Tools.isPlainObject(value[propName])
-                    && value[propName].getData
-                ) || (
-                    value[propName] instanceof Subclass.Property.Type.Collection.Collection
-                )
-            ) {
-                valueClear[propName] = value[propName].getData();
-
-            } else {
-                valueClear[propName] = value[propName];
+        for (var childName in children) {
+            if (children.hasOwnProperty(childName)) {
+                data[childName] = children[childName].getData();
             }
         }
 
-        return valueClear;
+        return data;
+
+        //var value = MapProperty.$parent.prototype.getData.apply(this, arguments);
+        //var valueClear = {};
+        //
+        //for (var propName in value) {
+        //    if (!value.hasOwnProperty(propName)) {
+        //        continue;
+        //    }
+        //    if (
+        //        value[propName]
+        //        && (
+        //            Subclass.Tools.isPlainObject(value[propName])
+        //            && value[propName].getData
+        //        ) || (
+        //            value[propName] instanceof Subclass.Property.Type.Collection.Collection
+        //        )
+        //    ) {
+        //        valueClear[propName] = value[propName].getData();
+        //
+        //    } else {
+        //        valueClear[propName] = value[propName];
+        //    }
+        //}
+        //
+        //return valueClear;
     };
 
     /**
      * @inheritDoc
      */
-    MapProperty.prototype.resetValue = function(context)
+    MapProperty.prototype.resetValue = function()
     {
-        var hashedName = this.getNameHashed();
-        var defaultValue = this.getDefaultValue();
+        var $this = this;
+
+        function Map()
+        {
+            // Hack for the grunt-contrib-uglify plugin
+            return Map.name;
+        }
+
+        Map.$parent = Subclass.Property.Type.Map.Map;
+
+        /**
+         * @inheritDoc
+         */
+        Map.prototype.getProperty = function(childName)
+        {
+            if (!arguments.length) {
+                return $this;
+            }
+            return this.getChildren()[childName];
+        };
+
+        // Creating instance of map
+
+        var mapInst = Subclass.Tools.createClassInstance(Map);
+
+        // Attaching map children
+
         var children = this.getChildren();
 
         for (var childName in children) {
             if (children.hasOwnProperty(childName)) {
-                children[childName].resetValue(context[hashedName]);
+                children[childName].getDefinition().attach(Map.prototype, childName);
+                children[childName].setContext(mapInst);
+                children[childName].resetValue();
             }
         }
-        this.setValue(context, defaultValue);
+
+        Object.seal(mapInst);
+        this._value = mapInst;
     };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapProperty.prototype.resetValue = function()
+    //{
+    //    var defaultValue = this.getDefaultValue();
+    //    var children = this.getChildren();
+    //
+    //    for (var childName in children) {
+    //        if (children.hasOwnProperty(childName)) {
+    //            children[childName].resetValue();
+    //        }
+    //    }
+    //    this.setValue(defaultValue);
+    //};
     //
     ///**
     // * @inheritDoc
@@ -395,113 +425,114 @@ Subclass.Property.Type.Map.Map = (function()
     //        $this.invokeWatchers(this, newValue, oldValue);
     //    };
     //};
-
-    /**
-     * @inheritDoc
-     */
-    MapProperty.prototype.attachHashed = function(context)
-    {
-        var hashedPropName = this.getNameHashed();
-
-        Object.defineProperty(context, hashedPropName, {
-            writable: this.getDefinition().isWritable(),
-            configurable: true,
-            value: {}
-        });
-        this.attachChildren(context);
-        this.attachMethods(context);
-
-        Object.seal(context[hashedPropName]);
-    };
-
-    /**
-     * Attaches children property to current property
-     *
-     * @param {Object} context
-     */
-    MapProperty.prototype.attachChildren = function(context)
-    {
-        var propertyNameHashed = this.getNameHashed();
-        var childrenContext = context[propertyNameHashed];
-        var children = this._children;
-
-        for (var childPropName in children) {
-            if (!children.hasOwnProperty(childPropName)) {
-                continue;
-            }
-            children[childPropName].attach(childrenContext);
-        }
-    };
-
-    MapProperty.prototype.attachMethods = function(context)
-    {
-        var $this = this;
-        var propName;
-
-        if ($this.getDefinition().isAccessors()) {
-            propName = $this.getNameHashed();
-
-        } else {
-            propName = $this.getName();
-        }
-
-        if (context[propName] === null) {
-            context[propName] = {};
-        }
-
-        Object.defineProperties(context[propName], {
-            getData: {
-                configurable: true,
-                value: function() {
-                    return $this.getAPI(context).getData();
-                }
-            },
-            getChild: {
-                configurable: true,
-                value: function(childName) {
-                    return $this.getAPI(context).getChild(childName);
-                }
-            },
-            getChildren: {
-                configurable: true,
-                value: function() {
-                    return $this.getAPI(context).getChildren();
-                }
-            }
-        });
-    };
-
-    /**
-     * Returns default values for all properties in schema
-     *
-     * @returns {Object}
-     */
-    MapProperty.prototype.getSchemaDefaultValue = function()
-    {
-        var schemaValues = {};
-        var children = this._children;
-
-        for (var propName in children) {
-            if (!children.hasOwnProperty(propName)) {
-                continue;
-            }
-            if (children[propName].getSchemaDefaultValue) {
-                schemaValues[propName] = children[propName].getSchemaDefaultValue();
-
-            } else {
-                schemaValues[propName] = children[propName].getDefaultValue();
-            }
-        }
-        return schemaValues;
-    };
-
-
-    /*************************************************/
-    /*        Registering new property type          */
-    /*************************************************/
-
-    Subclass.Property.PropertyManager.registerPropertyType(MapProperty);
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapProperty.prototype.attachHashed = function(context)
+    //{
+    //    var hashedPropName = this.getNameHashed();
+    //
+    //    Object.defineProperty(context, hashedPropName, {
+    //        writable: this.getDefinition().isWritable(),
+    //        configurable: true,
+    //        value: {}
+    //    });
+    //    this.attachChildren(context);
+    //    this.attachMethods(context);
+    //
+    //    Object.seal(context[hashedPropName]);
+    //};
+    //
+    ///**
+    // * Attaches children property to current property
+    // *
+    // * @param {Object} context
+    // */
+    //MapProperty.prototype.attachChildren = function(context)
+    //{
+    //    var propertyNameHashed = this.getNameHashed();
+    //    var childrenContext = context[propertyNameHashed];
+    //    var children = this._children;
+    //
+    //    for (var childPropName in children) {
+    //        if (!children.hasOwnProperty(childPropName)) {
+    //            continue;
+    //        }
+    //        children[childPropName].attach(childrenContext);
+    //    }
+    //};
+    //
+    //MapProperty.prototype.attachMethods = function(context)
+    //{
+    //    var $this = this;
+    //    var propName;
+    //
+    //    if ($this.getDefinition().isAccessors()) {
+    //        propName = $this.getNameHashed();
+    //
+    //    } else {
+    //        propName = $this.getName();
+    //    }
+    //
+    //    if (context[propName] === null) {
+    //        context[propName] = {};
+    //    }
+    //
+    //    Object.defineProperties(context[propName], {
+    //        getData: {
+    //            configurable: true,
+    //            value: function() {
+    //                return $this.getAPI(context).getData();
+    //            }
+    //        },
+    //        getChild: {
+    //            configurable: true,
+    //            value: function(childName) {
+    //                return $this.getAPI(context).getChild(childName);
+    //            }
+    //        },
+    //        getChildren: {
+    //            configurable: true,
+    //            value: function() {
+    //                return $this.getAPI(context).getChildren();
+    //            }
+    //        }
+    //    });
+    //};
+    //
+    ///**
+    // * Returns default values for all properties in schema
+    // *
+    // * @returns {Object}
+    // */
+    ////MapProperty.prototype.getSchemaDefaultValue = function()
+    //MapProperty.prototype.getDefaultValue = function()
+    //{
+    //    var schemaValues = {};
+    //    var children = this._children;
+    //
+    //    for (var propName in children) {
+    //        if (!children.hasOwnProperty(propName)) {
+    //            continue;
+    //        }
+    //        if (children[propName].getSchemaDefaultValue) {
+    //            schemaValues[propName] = children[propName].getSchemaDefaultValue();
+    //
+    //        } else {
+    //            schemaValues[propName] = children[propName].getDefaultValue();
+    //        }
+    //    }
+    //    return schemaValues;
+    //};
+    //
+    //
+    ///*************************************************/
+    ///*        Registering new property type          */
+    ///*************************************************/
+    //
+    //Subclass.Property.PropertyManager.registerPropertyType(MapProperty);
 
     return MapProperty;
 
-})();
+}();

@@ -21,6 +21,7 @@ module.exports = function(config) {
       "src/PropertyManager.js",
       //"src/DataTypeManager.js",
       "src/PropertyType.js",
+      "src/Property.js",
       //"src/PropertyDefinition.js",
       //"src/PropertyAPI.js",
       "src/Error/Option/*.js",
@@ -36,6 +37,8 @@ module.exports = function(config) {
       "src/Type/Function/*.js",
       "src/Type/Mixed/*.js",
       "src/Type/Untyped/*.js",
+      "src/Type/Map/MapType.js",
+      "src/Type/Map/*.js",
       //"src/Type/Collection/CollectionType.js",
       //"src/Type/Collection/CollectionManager.js",
       //"src/Type/Collection/*.js",
@@ -64,7 +67,8 @@ module.exports = function(config) {
       "tests/types/enum.js",
       "tests/types/function.js",
       "tests/types/mixed.js",
-      "tests/types/untyped.js"
+      "tests/types/untyped.js",
+      "tests/types/map.js"
       //"tests/types/**/*.js"
     ],
 

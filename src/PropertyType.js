@@ -181,6 +181,16 @@ Subclass.Property.PropertyType = (function()
     };
 
     /**
+     * Returns the name of data type
+     *
+     * @returns {*}
+     */
+    PropertyType.prototype.getType = function()
+    {
+        return this.constructor.getName();
+    };
+
+    /**
      * Returns property manager instance
      *
      * @returns {Subclass.Property.PropertyManager}
@@ -774,7 +784,7 @@ Subclass.Property.PropertyType = (function()
 
             } catch (e) {
                 console.error(
-                    'The default value was not specified. \n' +
+                    'The default value was not specified for property "' + this + '". \n' +
                     'The standard default value "' + this.getEmptyValue() + '" was used but it is not relevant. \n' +
                     'You should specify appropriate default value or mark this property as nullable.'
                 );

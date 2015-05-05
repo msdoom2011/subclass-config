@@ -50,6 +50,30 @@ Subclass.Property.Type.Map.Map = function()
     };
 
     /**
+     * Sort out all child properties using specified callback function
+     *
+     * @param {function} callback
+     *      The callback function which receives three arguments:
+     *      - the value of child property
+     *      - the name of child property
+     *      - the child property
+     *
+     *      Each call of callback function will be invoked in the Map property context
+     */
+    Map.prototype.forEach = function(callback)
+    {
+        var children = this.getChildren();
+
+        for (var childName in children) {
+            if (children.hasOwnProperty(childName)) {
+                var child = children[childName];
+
+                callback.call(this, child.getValue(), childName, child);
+            }
+        }
+    };
+
+    /**
      * Returns all map property children
      *
      * @returns {Object.<Subclass.Property.Property>}
@@ -60,11 +84,13 @@ Subclass.Property.Type.Map.Map = function()
     };
 
     /**
-     * 
+     * Returns data of map property
+     *
+     * @returns {Object}
      */
-    Map.prototype.forEach = function()
+    Map.prototype.getData = function()
     {
-
+        return this.getProperty().getData();
     };
 
     return Map;

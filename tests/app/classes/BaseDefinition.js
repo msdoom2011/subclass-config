@@ -44,56 +44,56 @@ app.registerClass('Class/BaseDefinition',
             { type: "string" }
         ]},
 
-        //propMap: { type: "map", schema: {
-        //
-        //    mapNumber: { type: "number" },
-        //
-        //    mapString: { type: "string" },
-        //
-        //    mapBoolean: { type: "boolean" },
-        //
-        //    mapArray: { type: "array" },
-        //
-        //    mapObject: { type: "object" },
-        //
-        //    mapClass: { type: "class", className: "Class/AppClass" },
-        //
-        //    mapEnum: { type: "enum", allows: [ "male", "female" ] },
-        //
-        //    mapFunction: { type: "function" },
-        //
-        //    mapMixed: {type: "mixed", allows: [
-        //        { type: "number" },
-        //        { type: "string" }
-        //    ]},
-        //
-        //    mapMap: { type: "map", schema: {
-        //
-        //        mapMapNumber: { type: "number" },
-        //
-        //        mapMapString: { type: "string" },
-        //
-        //        mapMapBoolean: { type: "boolean" },
-        //
-        //        mapMapArray: { type: "array" },
-        //
-        //        mapMapObject: { type: "object" },
-        //
-        //        mapMapClass: { type: "class", className: "Class/AppClass" },
-        //
-        //        mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
-        //
-        //        mapMapFunction: { type: "function" },
-        //
-        //        mapMapMixed: {type: "mixed", allows: [
-        //            { type: "number" },
-        //            { type: "string" }
-        //        ]}
-        //    }}
-        //}},
+        propMap: { type: "map", schema: {
+
+            mapNumber: { type: "number" },
+
+            mapString: { type: "string" },
+
+            mapBoolean: { type: "boolean" },
+
+            mapArray: { type: "array" },
+
+            mapObject: { type: "object" },
+
+            mapClass: { type: "class", className: "Class/AppClass" },
+
+            mapEnum: { type: "enum", allows: [ "male", "female" ] },
+
+            mapFunction: { type: "function" },
+
+            mapMixed: {type: "mixed", allows: [
+                { type: "number" },
+                { type: "string" }
+            ]},
+
+            mapMap: { type: "map", schema: {
+
+                mapMapNumber: { type: "number" },
+
+                mapMapString: { type: "string" },
+
+                mapMapBoolean: { type: "boolean" },
+
+                mapMapArray: { type: "array" },
+
+                mapMapObject: { type: "object" },
+
+                mapMapClass: { type: "class", className: "Class/AppClass" },
+
+                mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
+
+                mapMapFunction: { type: "function" },
+
+                mapMapMixed: {type: "mixed", allows: [
+                    { type: "number" },
+                    { type: "string" }
+                ]}
+            }}
+        }},
         //
         //propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
-
+        //
         //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
         //
         //propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" } },

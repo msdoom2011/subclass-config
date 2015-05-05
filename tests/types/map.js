@@ -41,10 +41,10 @@ describe("Testing map property type with its", function() {
     });
 
     it ("value", function() {
-        expect(Object.keys(classInst.getPropMap()).length).toBe(10);
+        expect(Object.keys(classInst.getPropMap().getChildren()).length).toBe(10);
         expect(classInst.getPropMap().mapNumber).toBe(10);
         expect(classInst.getPropMap().mapString).toBe('init string value');
-        expect(Object.keys(classInst.getPropMap().mapMap).length).toBe(9);
+        expect(Object.keys(classInst.getPropMap().mapMap.getChildren()).length).toBe(9);
         expect(classInst.getPropMap().mapMap.mapMapArray).toContain(10);
     });
 
@@ -126,7 +126,7 @@ describe("Testing map property type with its", function() {
 
         checkPropValues(prop);
         checkPropValues(prop.getData());
-        classInst.getPropMap().getChild('mapMap').resetValue();
+        classInst.getPropMap().getProperty('mapMap').resetValue();
         checkDefaultValues(prop, true);
         checkDefaultValues(prop.getData(), true);
 

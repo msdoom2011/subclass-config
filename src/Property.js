@@ -50,14 +50,14 @@ Subclass.Property.Property = function()
          * @private
          */
         this._watchers = [];
-
-        /**
-         * Context of watcher callback functions
-         *
-         * @type {(Object|null)}
-         * @private
-         */
-        this._watchersContext = null;
+        //
+        ///**
+        // * Context of watcher callback functions
+        // *
+        // * @type {(Object|null)}
+        // * @private
+        // */
+        //this._watchersContext = null;
 
         /**
          * Checks if current value was ever modified (was set any value)
@@ -286,29 +286,29 @@ Subclass.Property.Property = function()
             return false;
         }
     };
-
-    /**
-     * Sets the property watchers callback functions context object
-     *
-     * @param {Object} watchersContext
-     */
-    Property.prototype.setWatchersContext = function(watchersContext)
-    {
-        this._watchersContext = watchersContext;
-    };
-
-    /**
-     * Returns the watchers context object.
-     *
-     * If wasn't specified special watcher context then the standard
-     * property context will be returned
-     *
-     * @returns {Object}
-     */
-    Property.prototype.getWatchersContext = function()
-    {
-        return this._watchersContext || this._context;
-    };
+    //
+    ///**
+    // * Sets the property watchers callback functions context object
+    // *
+    // * @param {Object} watchersContext
+    // */
+    //Property.prototype.setWatchersContext = function(watchersContext)
+    //{
+    //    this._watchersContext = watchersContext;
+    //};
+    //
+    ///**
+    // * Returns the watchers context object.
+    // *
+    // * If wasn't specified special watcher context then the standard
+    // * property context will be returned
+    // *
+    // * @returns {Object}
+    // */
+    //Property.prototype.getWatchersContext = function()
+    //{
+    //    return this._watchersContext || this._context;
+    //};
 
     /**
      * Returns all registered watchers
@@ -400,8 +400,8 @@ Subclass.Property.Property = function()
      */
     Property.prototype.invokeWatchers = function(newValue, oldValue)
     {
-        var context = this.getWatchersContext();
         var watchers = this.getWatchers();
+        var context = this.getContext();
 
         if (typeof context != "object" || Array.isArray(context)) {
             Subclass.Error.create('InvalidArgument')
@@ -481,6 +481,7 @@ Subclass.Property.Property = function()
             var getterName = Subclass.Tools.generateGetterName(propName);
             return context[getterName]();
         }
+
         return context[propName];
     };
 
