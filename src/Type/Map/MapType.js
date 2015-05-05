@@ -237,7 +237,7 @@ Subclass.Property.Type.Map.MapType = function()
 
             // Invoking watchers
 
-            property.invokeWatchers(this, newValue, oldValue);
+            property.invokeWatchers(newValue, oldValue);
         };
     };
 

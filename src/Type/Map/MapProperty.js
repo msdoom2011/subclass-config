@@ -273,6 +273,11 @@ Subclass.Property.Type.Map.MapProperty = function()
      */
     MapProperty.prototype.getData = function(context)
     {
+        var value = this.getValue();
+
+        if (value === null) {
+            return null;
+        }
         var children = this.getChildren();
         var data = {};
 
@@ -281,7 +286,6 @@ Subclass.Property.Type.Map.MapProperty = function()
                 data[childName] = children[childName].getData();
             }
         }
-
         return data;
 
         //var value = MapProperty.$parent.prototype.getData.apply(this, arguments);
