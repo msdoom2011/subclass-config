@@ -39,6 +39,7 @@ module.exports = function(config) {
       "src/Type/Untyped/*.js",
       "src/Type/Map/MapType.js",
       "src/Type/Map/*.js",
+      //"src/Type/Constructor/*.js",
       //"src/Type/Collection/CollectionType.js",
       //"src/Type/Collection/CollectionManager.js",
       //"src/Type/Collection/*.js",

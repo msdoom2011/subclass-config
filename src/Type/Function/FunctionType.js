@@ -7,7 +7,7 @@ Subclass.Property.Type.Function = {};
  * @class
  * @extends {Subclass.Property.PropertyType}
  */
-Subclass.Property.Type.Function.FunctionDefinition = (function()
+Subclass.Property.Type.Function.FunctionType = (function()
 {
     /**
      * @inheritDoc
