@@ -140,6 +140,21 @@ app.registerClass('Class/AdvancedDefinition',
             }
         },
 
+        propConstructor: {
+            type: "constructor",
+            construct: Date,
+            default: new Date(0),
+            writable: true,
+            accessors: true,
+            nullable: true,
+            value: new Date(100),
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropConstructor = true;
+                this.propConstructorOld = oldValue;
+                this.propConstructorNew = newValue;
+            }
+        },
+
         propMap: {
             type: "map",
             nullable: true,

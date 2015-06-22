@@ -123,6 +123,7 @@ Subclass.Property.PropertyManager = (function()
                     defaultTypeDefinitions[typeName] = defaultPropertyDefinition;
                 }
             }
+
             this._typeDefinitions = Subclass.Tools.extendDeep(
                 defaultTypeDefinitions,
                 this._typeDefinitions
@@ -370,7 +371,7 @@ Subclass.Property.PropertyManager = (function()
      */
     PropertyManager.prototype.issetType = function(typeName)
     {
-        return !!this.getTypeDefinitions()[typeName];
+        return this.getTypeDefinitions().hasOwnProperty(typeName);
     };
 
     /**
@@ -507,7 +508,7 @@ Subclass.Property.PropertyManager = (function()
      */
     PropertyManager.issetPropertyType = function(propertyTypeName)
     {
-        return !!this._propertyTypes[propertyTypeName];
+        return this._propertyTypes.hasOwnProperty(propertyTypeName);
     };
 
     /**

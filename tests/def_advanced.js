@@ -37,6 +37,10 @@ describe("Checking", function() {
         expect(classInst.getPropMixed()).toBe('100px');
         expect(classInst.getProperty('propMixed').getDefaultValue()).toBe(10);
 
+        expect(classInst.getPropConstructor()).toEqual(jasmine.any(Date));
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(100);
+        expect(classInst.getProperty('propConstructor').getDefaultValue().getMilliseconds()).toBe(0);
+
         //expect(classInst.getPropStringCollectionArray().length).toBe(3);
         //expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
         //expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
@@ -109,6 +113,10 @@ describe("Checking", function() {
         expect(classInst.changedPropMixed).toBe(false);
         expect(classInst.propMixedOld).toBe(false);
         expect(classInst.propMixedNew).toBe(false);
+
+        expect(classInst.changedPropConstructor).toBe(false);
+        expect(classInst.propConstructorOld).toBe(false);
+        expect(classInst.propConstructorNew).toBe(false);
 
         expect(classInst.changedPropUntyped).toBe(false);
         expect(classInst.propUntypedOld).toBe(false);

@@ -44,6 +44,8 @@ app.registerClass('Class/BaseDefinition',
             { type: "string" }
         ]},
 
+        propConstructor: { type: "constructor", construct: Date },
+
         propMap: { type: "map", schema: {
 
             mapNumber: { type: "number" },

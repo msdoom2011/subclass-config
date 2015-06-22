@@ -59,7 +59,7 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
         {
             ConstructorType.$parent.prototype.validateValue.call(this, value);
 
-            var constructor = this.getConstructor();
+            var constructor = this.getConstruct();
 
             if (typeof value != 'object' && !(value instanceof constructor)) {
                 Subclass.Error.create('InvalidPropertyValue')
@@ -73,15 +73,15 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
         },
 
         /**
-         * Validates "constructor" option value
+         * Validates "construct" option value
          *
          * @param {*} constructor
          */
-        validateConstructor: function(constructor)
+        validateConstruct: function(constructor)
         {
             if (typeof constructor != 'function') {
                 Subclass.Error.create('InvalidPropertyOption')
-                    .option('constructor')
+                    .option('construct')
                     .property(this)
                     .received(constructor)
                     .expected('a constructor function which prototype the object value should inherit')
@@ -91,24 +91,24 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
         },
 
         /**
-         * Sets "constructor" option
+         * Sets "construct" option
          *
          * @param {Function} constructor
          */
-        setConstructor: function(constructor)
+        setConstruct: function(constructor)
         {
-            this.validateConstructor(constructor);
-            this.getData().constructor = constructor;
+            this.validateConstruct(constructor);
+            this.getData().construct = constructor;
         },
 
         /**
-         * Returns value of "constructor" option
+         * Returns value of "construct" option
          *
          * @returns {Function}
          */
-        getConstructor: function()
+        getConstruct: function()
         {
-            return this.getData().constructor;
+            return this.getData().construct;
         },
 
         /**
@@ -118,7 +118,7 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
         {
             var attrs = ConstructorType.$parent.prototype.getRequiredOptions.call(this);
 
-            return attrs.concat(['constructor']);
+            return attrs.concat(['construct']);
         },
 
         /**
@@ -136,7 +136,7 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
              *
              * @type {Function}
              */
-            data.constructor = null;
+            data.construct = null;
 
             /**
              * @inheritDoc

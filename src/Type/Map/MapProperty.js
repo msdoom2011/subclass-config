@@ -266,12 +266,61 @@ Subclass.Property.Type.Map.MapProperty = function()
     };
 
     /**
+     * @inheritDoc
+     */
+    MapProperty.prototype.setValue = function(value, markAsModified)
+    {
+        if (markAsModified !== false) {
+            markAsModified = true;
+        }
+        if (this.isLocked()) {
+            return console.warn(
+                'Trying to set new value for the ' +
+                'property ' + this + ' that is locked for write.'
+            );
+        }
+        var childrenContext = this.getValue();
+
+        if (markAsModified) {
+            var oldValue = this.getData();
+            var newValue = value;
+
+            if (!Subclass.Tools.isEqual(oldValue, newValue)) {
+                this.modify();
+            }
+        }
+        this.getDefinition().validateValue(value);
+
+        if (value !== null) {
+            if (childrenContext === null) {
+                this.resetValue(markAsModified);
+                childrenContext = this.getValue();
+            }
+            for (var childName in value) {
+                if (value.hasOwnProperty(childName)) {
+                    childrenContext.getProperty(childName).setValue(
+                        value[childName],
+                        markAsModified
+                    );
+                }
+            }
+        } else {
+            this._value = null;
+        }
+
+        // Invoking watchers
+
+        if (markAsModified) {
+            this.invokeWatchers(newValue, oldValue);
+        }
+    };
+
+    /**
      * Returns data only of property value
      *
-     * @param context
      * @returns {Object}
      */
-    MapProperty.prototype.getData = function(context)
+    MapProperty.prototype.getData = function()
     {
         var value = this.getValue();
 
@@ -317,9 +366,13 @@ Subclass.Property.Type.Map.MapProperty = function()
     /**
      * @inheritDoc
      */
-    MapProperty.prototype.resetValue = function()
+    MapProperty.prototype.resetValue = function(markAsModified)
     {
         var $this = this;
+
+        if (markAsModified !== false) {
+            markAsModified = true;
+        }
 
         function Map()
         {
@@ -352,8 +405,11 @@ Subclass.Property.Type.Map.MapProperty = function()
             if (children.hasOwnProperty(childName)) {
                 children[childName].getDefinition().attach(Map.prototype, childName);
                 children[childName].setContext(mapInst);
-                children[childName].resetValue();
+                children[childName].resetValue(markAsModified);
             }
+        }
+        if (markAsModified) {
+            this.modify();
         }
 
         Object.seal(mapInst);

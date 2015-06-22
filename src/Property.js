@@ -451,22 +451,45 @@ Subclass.Property.Property = function()
      * Sets property value
      *
      * @param {*} value
+     * @param {boolean} [markAsModified=true]
      * @returns {*}
      */
-    Property.prototype.setValue = function(value)
+    Property.prototype.setValue = function(value, markAsModified)
     {
-        var context = this.getContext();
-        var propName = this.getName();
+        //var context = this.getContext();
+        //var propName = this.getName();
+        //
+        //if (!this.getDefinition().isWritable()) {
+        //    console.warn('Trying to change not writable property ' + this + ".");
+        //    return;
+        //}
+        //if (this.getDefinition().isAccessors()) {
+        //    var setterName = Subclass.Tools.generateSetterName(propName);
+        //    return context[setterName](value);
+        //}
+        //context[propName] = value;
 
-        if (!this.getDefinition().isWritable()) {
-            console.warn('Trying to change not writable property ' + this + ".");
-            return;
+        if (markAsModified !== false) {
+            markAsModified = true;
         }
-        if (this.getDefinition().isAccessors()) {
-            var setterName = Subclass.Tools.generateSetterName(propName);
-            return context[setterName](value);
+        if (this.isLocked()) {
+            return console.warn(
+                'Trying to set new value for the ' +
+                'property ' + this + ' that is locked for write.'
+            );
         }
-        context[propName] = value;
+        if (markAsModified) {
+            var oldValue = this.getData();
+            var newValue = value;
+            this.modify();
+        }
+
+        this.getDefinition().validateValue(value);
+        this._value = value;
+
+        if (markAsModified) {
+            this.invokeWatchers(newValue, oldValue);
+        }
     };
 
     /**
@@ -474,25 +497,29 @@ Subclass.Property.Property = function()
      */
     Property.prototype.getValue = function()
     {
-        var context = this.getContext();
-        var propName = this.getName();
+        //var context = this.getContext();
+        //var propName = this.getName();
+        //
+        //if (this.getDefinition().isAccessors()) {
+        //    var getterName = Subclass.Tools.generateGetterName(propName);
+        //    return context[getterName]();
+        //}
+        //
+        //return context[propName];
 
-        if (this.getDefinition().isAccessors()) {
-            var getterName = Subclass.Tools.generateGetterName(propName);
-            return context[getterName]();
-        }
-
-        return context[propName];
+        return this._value;
     };
 
     /**
      * Resets the value of current property to default
+     *
+     * @param {boolean} [markAsModified=true]
      */
-    Property.prototype.resetValue = function()
+    Property.prototype.resetValue = function(markAsModified)
     {
         var defaultValue = this.getDefaultValue();
 
-        this.setValue(defaultValue);
+        this.setValue(defaultValue, markAsModified);
     };
 
     /**

@@ -42,6 +42,10 @@ app.registerClass('Class/StandardDefinition',
     propMixedOld: false,
     propMixedNew: false,
 
+    changedPropConstructor: false,
+    propConstructorOld: false,
+    propConstructorNew: false,
+
     changedPropMap: false,
     propMapOld: false,
     propMapNew: false,
@@ -185,6 +189,20 @@ app.registerClass('Class/StandardDefinition',
                 this.changedPropMixed = true;
                 this.propMixedOld = oldValue;
                 this.propMixedNew = newValue;
+            }
+        },
+
+        propConstructor: {
+            type: "constructor",
+            construct: Date,
+            default: new Date(0),
+            writable: true,
+            accessors: true,
+            nullable: true,
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropConstructor = true;
+                this.propConstructorOld = oldValue;
+                this.propConstructorNew = newValue;
             }
         },
 

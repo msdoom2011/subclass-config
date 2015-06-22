@@ -150,7 +150,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 .apply()
             ;
         }
-        return !!this.getManager().getItems().hasOwnProperty(String(key));
+        return this.getManager().getItems().hasOwnProperty(String(key));
     };
 
     /**

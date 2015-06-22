@@ -76,13 +76,13 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                 }
             }
         });
-
-        classInst.getEvent('onProcessData').addListener(function(evt, data)
-        {
-            //Extending accessors
-
-            this.processPropertyAccessors();
-        });
+        //
+        //classInst.getEvent('onProcessData').addListener(function(evt, data)
+        //{
+        //    //Extending accessors
+        //
+        //    this.processPropertyAccessors();
+        //});
 
         classInst.getEvent('onProcessRelatedClasses').addListener(function(evt)
         {
@@ -112,7 +112,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                         propertyDefinition = Subclass.Tools.extendDeep(dataTypeDefinition, propertyDefinition);
                         propertyDefinition.type = propertyTypeName;
                     }
-                    var propertyType = Subclass.Property.PropertyManager.getPropertyType(propertyDefinition.type);
+                    var propertyType = Subclass.Property.PropertyManager.getPropertyType(propertyTypeName);
 
                     if (!propertyType.parseRelatedClasses) {
                         continue;
@@ -298,57 +298,57 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
         return this.getData().$_properties;
     };
 
-    /**
-    * Extends class constructor with specific methods.
-    *
-    * If getter or setter of any typed property was redefined in the class definition
-    * the new methods will generated. For setter it's gonna be "<setterOrGetterName>Default"
-    * where "<setterOrGetterName>" is name of redefined setter or getter name.
-    *
-    * These methods allows to interact with private properties through redefined getters and setters.
-    */
-    ClassDefinition.prototype.processPropertyAccessors = function()
-    {
-        return;
-
-
-
-
-
-
-
-        if (!this.getClass().getProperties) {
-            return;
-        }
-        var classProperties = this.getClass().getProperties();
-        var classDefinition = this.getData();
-
-        for (var propertyName in classProperties) {
-            if (!classProperties.hasOwnProperty(propertyName)) {
-                continue;
-            }
-            var property = classProperties[propertyName];
-
-            if (!property.isAccessors()) {
-                continue;
-            }
-            var accessors = {
-                Getter: Subclass.Tools.generateGetterName(propertyName),
-                Setter: Subclass.Tools.generateSetterName(propertyName)
-            };
-
-            for (var accessorType in accessors) {
-                if (!accessors.hasOwnProperty(accessorType)) {
-                    continue;
-                }
-                var accessorName = accessors[accessorType];
-
-                if (classDefinition[accessorName]) {
-                    classDefinition[accessorName + "Default"] = property['generate' + accessorType]();
-                }
-            }
-        }
-    };
+    ///**
+    //* Extends class constructor with specific methods.
+    //*
+    //* If getter or setter of any typed property was redefined in the class definition
+    //* the new methods will generated. For setter it's gonna be "<setterOrGetterName>Default"
+    //* where "<setterOrGetterName>" is name of redefined setter or getter name.
+    //*
+    //* These methods allows to interact with private properties through redefined getters and setters.
+    //*/
+    //ClassDefinition.prototype.processPropertyAccessors = function()
+    //{
+    //    return;
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //    if (!this.getClass().getProperties) {
+    //        return;
+    //    }
+    //    var classProperties = this.getClass().getProperties();
+    //    var classDefinition = this.getData();
+    //
+    //    for (var propertyName in classProperties) {
+    //        if (!classProperties.hasOwnProperty(propertyName)) {
+    //            continue;
+    //        }
+    //        var property = classProperties[propertyName];
+    //
+    //        if (!property.isAccessors()) {
+    //            continue;
+    //        }
+    //        var accessors = {
+    //            Getter: Subclass.Tools.generateGetterName(propertyName),
+    //            Setter: Subclass.Tools.generateSetterName(propertyName)
+    //        };
+    //
+    //        for (var accessorType in accessors) {
+    //            if (!accessors.hasOwnProperty(accessorType)) {
+    //                continue;
+    //            }
+    //            var accessorName = accessors[accessorType];
+    //
+    //            if (classDefinition[accessorName]) {
+    //                classDefinition[accessorName + "Default"] = property['generate' + accessorType]();
+    //            }
+    //        }
+    //    }
+    //};
 
 
     //=========================================================================

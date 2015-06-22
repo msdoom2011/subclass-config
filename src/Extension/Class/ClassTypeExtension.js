@@ -57,14 +57,16 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                 // Setting init value
 
                 if (initValue !== undefined) {
-                    if (propertyDefinition.isAccessors()) {
-                        var setterName = Subclass.Tools.generateSetterName(propertyName);
-                        classInstance[setterName](initValue);
+                    property.setValue(initValue, false);
 
-                    } else {
-                        classInstance[propertyName] = initValue;
-                    }
-                    property.unModify();
+                    //if (propertyDefinition.isAccessors()) {
+                    //    var setterName = Subclass.Tools.generateSetterName(propertyName);
+                    //    classInstance[setterName](initValue);
+                    //
+                    //} else {
+                    //    classInstance[propertyName] = initValue;
+                    //}
+                    //property.unModify();
                 }
             }
         });
@@ -254,8 +256,8 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
             if (allClassProperties.hasOwnProperty(propName)) {
                 properties[propName] = allClassProperties[propName].createInstance(propName);
                 properties[propName].setContext(context);
-                properties[propName].resetValue();
-                properties[propName].unModify();
+                properties[propName].resetValue(false);
+                //properties[propName].unModify();
             }
         }
     };

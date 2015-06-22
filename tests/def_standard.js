@@ -15,6 +15,8 @@ describe("Checking", function() {
         expect(typeof classInst.getPropFunction()).toBe('function');
         expect(classInst.getPropMixed()).toBe('string value');
         expect(classInst.getPropUntyped()).toBe('string value');
+        expect(classInst.getPropConstructor()).toEqual(jasmine.any(Date));
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(0);
         //expect(classInst.getPropStringCollectionArray().length).toBe(2);
 
         var propMap = classInst.getPropMap();
@@ -84,6 +86,10 @@ describe("Checking", function() {
         expect(classInst.changedPropUntyped).toBe(false);
         expect(classInst.propUntypedOld).toBe(false);
         expect(classInst.propUntypedNew).toBe(false);
+
+        expect(classInst.changedPropConstructor).toBe(false);
+        expect(classInst.propConstructorOld).toBe(false);
+        expect(classInst.propConstructorNew).toBe(false);
 
         expect(classInst.changedPropMap).toBe(false);
         expect(classInst.propMapOld).toBe(false);

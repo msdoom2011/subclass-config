@@ -266,7 +266,7 @@ Subclass.Property.Type.Collection.Collection = (function()
      */
     Collection.prototype.issetItem = function(key)
     {
-        return !!this.getManager().getItems().hasOwnProperty(key);
+        return this.getManager().getItems().hasOwnProperty(key);
     };
 
     /**

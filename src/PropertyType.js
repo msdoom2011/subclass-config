@@ -301,7 +301,8 @@ Subclass.Property.PropertyType = (function()
     PropertyType.prototype.generateGetter = function(propertyName)
     {
         return function () {
-            return this.getProperty(propertyName)._value;
+            //return this.getProperty(propertyName)._value;
+            return this.getProperty(propertyName).getValue();
         };
     };
 
@@ -316,7 +317,7 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.generateSetter = function(propName)
     {
-        var $this = this;
+        //var $this = this;
 
         if (!this.isWritable()) {
             return function() {
@@ -324,21 +325,23 @@ Subclass.Property.PropertyType = (function()
             }
         }
         return function(value) {
-            var property = this.getProperty(propName);
+            this.getProperty(propName).setValue(value);
 
-            if (property.isLocked()) {
-                return console.warn(
-                    'Trying to set new value for the ' +
-                    'property ' + property + ' that is locked for write.'
-                );
-            }
-            var oldValue = property.getData();
-            var newValue = value;
-
-            $this.validateValue(value);
-            property.modify();
-            property._value = value;
-            property.invokeWatchers(newValue, oldValue);
+            //var property = this.getProperty(propName);
+            //
+            //if (property.isLocked()) {
+            //    return console.warn(
+            //        'Trying to set new value for the ' +
+            //        'property ' + property + ' that is locked for write.'
+            //    );
+            //}
+            //var oldValue = property.getData();
+            //var newValue = value;
+            //
+            //$this.validateValue(value);
+            //property.modify();
+            //property._value = value;
+            //property.invokeWatchers(newValue, oldValue);
         };
     };
 

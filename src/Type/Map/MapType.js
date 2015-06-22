@@ -196,50 +196,55 @@ Subclass.Property.Type.Map.MapType = function()
     //    };
     //};
 
-    /**
-     * @inheritDoc
-     */
-    MapType.prototype.generateSetter = function(propName)
-    {
-        var $this = this;
-
-        return function(value) {
-            var property = this.getProperty(propName);
-
-            if (property.isLocked()) {
-                return console.warn(
-                    'Trying to set new value for the ' +
-                    'property ' + property + ' that is locked for write.'
-                );
-            }
-            var childrenContext = property.getValue();
-            var oldValue = property.getData();
-            var newValue = value;
-
-            if (!Subclass.Tools.isEqual(oldValue, newValue)) {
-                property.modify();
-            }
-            $this.validateValue(value);
-
-            if (value !== null) {
-                if (childrenContext === null) {
-                    property.resetValue();
-                    childrenContext = property.getValue();
-                }
-                for (var childName in value) {
-                    if (value.hasOwnProperty(childName)) {
-                        childrenContext.getProperty(childName).setValue(value[childName]);
-                    }
-                }
-            } else {
-                property._value = null;
-            }
-
-            // Invoking watchers
-
-            property.invokeWatchers(newValue, oldValue);
-        };
-    };
+    ///**
+    // * @inheritDoc
+    // */
+    //MapType.prototype.generateSetter = function(propName)
+    //{
+    //    var $this = this;
+    //
+    //    if (!this.isWritable()) {
+    //        return function() {
+    //            Subclass.Error.create('Property ' + this.getProperty(propName) + ' is not writable.');
+    //        }
+    //    }
+    //    return function(value) {
+    //        var property = this.getProperty(propName);
+    //
+    //        if (property.isLocked()) {
+    //            return console.warn(
+    //                'Trying to set new value for the ' +
+    //                'property ' + property + ' that is locked for write.'
+    //            );
+    //        }
+    //        var childrenContext = property.getValue();
+    //        var oldValue = property.getData();
+    //        var newValue = value;
+    //
+    //        if (!Subclass.Tools.isEqual(oldValue, newValue)) {
+    //            property.modify();
+    //        }
+    //        $this.validateValue(value);
+    //
+    //        if (value !== null) {
+    //            if (childrenContext === null) {
+    //                property.resetValue();
+    //                childrenContext = property.getValue();
+    //            }
+    //            for (var childName in value) {
+    //                if (value.hasOwnProperty(childName)) {
+    //                    childrenContext.getProperty(childName).setValue(value[childName]);
+    //                }
+    //            }
+    //        } else {
+    //            property._value = null;
+    //        }
+    //
+    //        // Invoking watchers
+    //
+    //        property.invokeWatchers(newValue, oldValue);
+    //    };
+    //};
 
     /**
      * Returns default values for all properties in schema

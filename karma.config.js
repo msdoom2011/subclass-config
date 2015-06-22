@@ -37,6 +37,7 @@ module.exports = function(config) {
       "src/Type/Function/*.js",
       "src/Type/Mixed/*.js",
       "src/Type/Untyped/*.js",
+      "src/Type/Constructor/*.js",
       "src/Type/Map/MapType.js",
       "src/Type/Map/*.js",
       //"src/Type/Constructor/*.js",
@@ -55,6 +56,8 @@ module.exports = function(config) {
       //"tests/plugs/app-second-plugin.js",
       "tests/app/app.js",
       "tests/app/**/*.js",
+      //"tests/app/classes/BaseDefinition.js",
+      //"tests/app/classes/StandardDefinition.js",
       "tests/main.js",
       "tests/def_base.js",
       "tests/def_standard.js",
@@ -70,6 +73,7 @@ module.exports = function(config) {
       "tests/types/mixed.js",
       "tests/types/untyped.js",
       "tests/types/map.js"
+
       //"tests/types/**/*.js"
     ],
 
