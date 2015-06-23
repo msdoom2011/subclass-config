@@ -61,7 +61,13 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
 
             var constructor = this.getConstruct();
 
-            if (typeof value != 'object' && !(value instanceof constructor)) {
+            if (
+                value !== null
+                && (
+                    typeof value != 'object'
+                    || !(value instanceof constructor)
+                )
+            ) {
                 Subclass.Error.create('InvalidPropertyValue')
                     .property(this)
                     .received(value)

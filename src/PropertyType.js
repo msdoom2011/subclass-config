@@ -787,7 +787,7 @@ Subclass.Property.PropertyType = (function()
 
             } catch (e) {
                 console.error(
-                    'The default value was not specified for property "' + this + '". \n' +
+                    'The default value was not specified for property ' + this + '. \n' +
                     'The standard default value "' + this.getEmptyValue() + '" was used but it is not relevant. \n' +
                     'You should specify appropriate default value or mark this property as nullable.'
                 );

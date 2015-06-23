@@ -56,8 +56,6 @@ module.exports = function(config) {
       //"tests/plugs/app-second-plugin.js",
       "tests/app/app.js",
       "tests/app/**/*.js",
-      //"tests/app/classes/BaseDefinition.js",
-      //"tests/app/classes/StandardDefinition.js",
       "tests/main.js",
       "tests/def_base.js",
       "tests/def_standard.js",
@@ -72,6 +70,7 @@ module.exports = function(config) {
       "tests/types/function.js",
       "tests/types/mixed.js",
       "tests/types/untyped.js",
+      "tests/types/constructor.js",
       "tests/types/map.js"
 
       //"tests/types/**/*.js"

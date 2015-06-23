@@ -1,4 +1,4 @@
-describe("Testing array property type with its", function() {
+describe("Testing constructor property type with its", function() {
 
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
     var prop = classInst.getProperty('propConstructor');
@@ -8,50 +8,38 @@ describe("Testing array property type with its", function() {
     });
 
     it ("default value", function() {
-        var value = prop.getDefaultValue();
-        expect(Array.isArray(value)).toBe(true);
-        expect(value.length).toBe(3);
-        expect(value).toContain(10);
-        expect(value).toContain(20);
-        expect(value).toContain(30);
+        expect(prop.getDefaultValue().getMilliseconds()).toBe(0);
     });
 
     it ("value", function() {
-        var value = classInst.getPropArray();
-        expect(Array.isArray(value)).toBe(true);
-        expect(value.length).toBe(3);
-        expect(value).toContain(40);
-        expect(value).toContain(50);
-        expect(value).toContain(60);
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(100);
+        expect(prop.getValue().getMilliseconds()).toBe(100);
     });
 
     it ("ability to set the new value", function() {
-        classInst.setPropArray([100]);
-        expect(classInst.getPropArray().length).toBe(1);
-        expect(classInst.getPropArray()).toContain(100);
-        expect(function() { classInst.setPropArray("100"); }).toThrow();
-        expect(function() { classInst.setPropArray(true); }).toThrow();
+        classInst.setPropConstructor(new Date(200));
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(200);
+        expect(function() { classInst.setPropConstructor("false date"); }).toThrow();
+        expect(function() { classInst.setPropConstructor(true); }).toThrow();
+        expect(function() { classInst.setPropConstructor({}); }).toThrow();
+        expect(function() { classInst.setPropConstructor([]); }).toThrow();
     });
 
     it ("nullable", function() {
-        classInst.setPropArray(null);
-        expect(classInst.getPropArray()).toBe(null);
-        classInst.setPropArray([50]);
-        expect(classInst.getPropArray().length).toBe(1);
-        expect(classInst.getPropArray()).toContain(50);
+        classInst.setPropConstructor(null);
+        expect(classInst.getPropConstructor()).toBe(null);
+        classInst.setPropConstructor(new Date(100));
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(100);
     });
 
     it ("ability to lock its writable capability", function() {
         expect(prop.isLocked()).toBe(false);
         prop.lock();
-        classInst.setPropArray([60]);
-        expect(Array.isArray(classInst.getPropArray())).toBe(true);
-        expect(classInst.getPropArray().length).toBe(1);
-        expect(classInst.getPropArray()).toContain(50);
+        classInst.setPropConstructor(new Date(300));
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(100);
         prop.unlock();
-        classInst.setPropArray([60]);
-        expect(classInst.getPropArray().length).toBe(1);
-        expect(classInst.getPropArray()).toContain(60);
+        classInst.setPropConstructor(new Date(300));
+        expect(classInst.getPropConstructor().getMilliseconds()).toBe(300);
     });
 
     it ("modifying state after manipulations", function() {
@@ -59,8 +47,8 @@ describe("Testing array property type with its", function() {
     });
 
     it ("watchers", function() {
-        expect(classInst.changedPropArray).toBe(true);
-        expect(classInst.propArrayOld).toContain(50);
-        expect(classInst.propArrayNew).toContain(60);
+        expect(classInst.changedPropConstructor).toBe(true);
+        expect(classInst.propConstructorOld.getMilliseconds()).toBe(100);
+        expect(classInst.propConstructorNew.getMilliseconds()).toBe(300);
     });
 });
