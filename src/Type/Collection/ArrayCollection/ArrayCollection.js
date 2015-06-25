@@ -65,6 +65,9 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.addItem = function(value)
     {
+        if (arguments.length == 2) {
+            value = arguments[1];
+        }
         this.getManager().createItem(String(this.getLength()), value);
     };
 
@@ -120,7 +123,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         var $this = this;
         var value = false;
 
-        this.eachItem(function(item, index) {
+        this.eachItem(function(index, item) {
             if (index == key) {
                 value = ArrayCollection.$parent.prototype.removeItem.call($this, key);
             }
@@ -196,7 +199,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         var manager = this.getManager();
         var $this = this;
 
-        this.eachItem(true, function(item, index) {
+        this.eachItem(true, function(index, item) {
             var newName = String(index + 1);
             var context = manager.getItems();
             var itemProto = manager.getItemProp(index);
@@ -290,7 +293,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         var lengthHalf = Math.ceil(length / 2);
         var $this = this;
 
-        this.eachItem(function(item, index) {
+        this.eachItem(function(index, item) {
             if (index >= lengthHalf) {
                 return false;
             }
@@ -310,7 +313,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         var itemsOrder = [];
         var orderedIndexes = [];
 
-        this.eachItem(function(item, index) {
+        this.eachItem(function(index, item) {
             items[index] = item;
             itemsOrder[index] = item;
         });
@@ -344,7 +347,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     {
         var items = [];
 
-        this.eachItem(function(item, index) {
+        this.eachItem(function(index, item) {
             items[index] = item;
         });
 
@@ -369,8 +372,8 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         }
         var items = [];
 
-        this.eachItem(function(itemValue, itemKey) {
-            if (testCallback(itemValue, itemKey) === true) {
+        this.eachItem(function(itemKey, itemValue) {
+            if (testCallback(itemKey, itemValue) === true) {
                 items[parseInt(itemKey)] = itemValue;
             }
         });
@@ -418,7 +421,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         }
 
         keys.every(function(key) {
-            if (callback.call($this, items[key], key) === false) {
+            if (callback.call($this, key, items[key]) === false) {
                 return false;
             }
             return true;

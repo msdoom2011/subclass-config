@@ -111,7 +111,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
         var collection = this.getCollection();
         var collectionItems = {};
 
-        collection.eachItem(function(item, itemName) {
+        collection.eachItem(function(itemName, item) {
             collectionItems[itemName] = collection.getItemData(itemName);
         });
 

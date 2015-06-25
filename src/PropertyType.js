@@ -5,6 +5,7 @@ Subclass.Property.PropertyType = (function()
 {
     /**
      * @param {Subclass.Property.PropertyManager} propertyManager
+     * @param {string} propertyName
      * @param {Object} definitionData
      * @constructor
      */
@@ -34,7 +35,6 @@ Subclass.Property.PropertyType = (function()
                 .apply()
             ;
         }
-
 
         /**
          * An instance of property manager
@@ -287,9 +287,9 @@ Subclass.Property.PropertyType = (function()
         var constructor = this.constructor.getPropertyClass();
 
         return Subclass.Tools.createClassInstance(
-            constructor,
-            propertyName,
-            this
+            constructor,    // class constructor function
+            propertyName,   // the name of creating property
+            this            // the definition of creating property
         );
     };
 

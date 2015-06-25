@@ -149,9 +149,10 @@ Subclass.Property.Property = function()
             Subclass.Error.create('Can\'t rename property ' + this + ' because it uses accessor functions.');
         }
 
-        this.detach(context);
+        definition.detach(context, this._name);
+        definition.attach(context, newName);
+
         this._name = newName;
-        this.attach(context);
         this.setValue(value);
     };
 

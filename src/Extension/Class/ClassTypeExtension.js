@@ -221,17 +221,6 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
         var properties = {};
 
         /**
-         * Checks if property is typed
-         *
-         * @param {string} propertyName
-         * @returns {boolean}
-         */
-        context.issetProperty = function (propertyName)
-        {
-            return properties.hasOwnProperty(propertyName);
-        };
-
-        /**
          * Returns property api object
          *
          * @param {string} propertyName
@@ -240,6 +229,17 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
         context.getProperty = function (propertyName)
         {
             return properties[propertyName];
+        };
+
+        /**
+         * Checks if property is typed
+         *
+         * @param {string} propertyName
+         * @returns {boolean}
+         */
+        context.issetProperty = function (propertyName)
+        {
+            return properties.hasOwnProperty(propertyName);
         };
 
         /**

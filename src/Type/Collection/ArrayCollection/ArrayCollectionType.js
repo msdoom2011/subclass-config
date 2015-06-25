@@ -99,10 +99,8 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.prototype.alterCollection = function(collection)
+    ArrayCollectionType.prototype.onResetValue = function(collection)
     {
-        var $this = this;
-
         Object.defineProperty(collection, 'length', {
             enumerable: false,
             set: function() {},
@@ -111,14 +109,14 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
             }
         });
     };
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.prototype.addCollectionItem = function(collection, key, value)
-    {
-        collection.addItem(value);
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.prototype.addCollectionItem = function(collection, key, value)
+    //{
+    //    collection.addItem(value);
+    //};
 
     /**
      * @inheritDoc
@@ -128,7 +126,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         var collection = this.getCollection();
         var collectionItems = [];
 
-        collection.eachItem(function(item, itemName) {
+        collection.eachItem(function(itemName, item) {
             collectionItems[itemName] = collection.getItemData(itemName);
         });
 
