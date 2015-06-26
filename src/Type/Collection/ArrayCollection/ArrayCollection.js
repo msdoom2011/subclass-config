@@ -5,13 +5,11 @@
 Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 {
     /**
-     * @param {CollectionType} property
-     * @param {Object} context
-     * @constructor
+     * @inheritDoc
      */
-    function ArrayCollection(property, context)
+    function ArrayCollection()
     {
-        ArrayCollection.$parent.call(this, property, context);
+        ArrayCollection.$parent.apply(this, arguments);
     }
 
     ArrayCollection.$parent = Subclass.Property.Type.Collection.Collection;
@@ -25,7 +23,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
             Subclass.Error.create('InvalidArgument')
                 .argument('the collection items for property ' + this.getProperty(), false)
                 .received(items)
-                .expected('a plain object')
+                .expected('an array')
                 .apply()
             ;
         }
@@ -68,7 +66,10 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         if (arguments.length == 2) {
             value = arguments[1];
         }
-        this.getManager().createItem(String(this.getLength()), value);
+        this._items.attachItem(
+            String(this.getLength()),
+            value
+        );
     };
 
     /**
@@ -107,7 +108,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 'in property ' + this.getProperty() + '.'
             );
         }
-        return this.getManager().getItems()[index];
+        return this._items.getItem(index).getValue();
     };
 
     /**
@@ -119,21 +120,26 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     {
         key = parseInt(key);
 
-        var manager = this.getManager();
+        var items = this._items.getItems();
         var $this = this;
         var value = false;
 
-        this.eachItem(function(index, item) {
+        this.eachItem(function(index) {
             if (index == key) {
                 value = ArrayCollection.$parent.prototype.removeItem.call($this, key);
             }
             if (index > key) {
-                var newName = String(index - 1);
-                var context = manager.getItems();
-                var itemProp = manager.getItemProp(index);
+                var newKey = String(index - 1);
+                var itemProperty = $this._items.getItem(index);
 
-                itemProp.rename(newName, context);
-                manager.getItemProps()[newName] = itemProp;
+                itemProperty.rename(newKey);
+                items[newKey] = itemProperty;
+
+                //var context = manager.getItems();
+                //var itemProp = manager.getItemProp(index);
+                //
+                //itemProp.rename(newName, context);
+                //manager.getItemProps()[newName] = itemProp;
             }
         });
 
@@ -153,7 +159,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 .apply()
             ;
         }
-        return this.getManager().getItems().hasOwnProperty(String(key));
+        return this._items.issetItem(String(key));
     };
 
     /**
@@ -196,16 +202,22 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.unshift = function(value)
     {
-        var manager = this.getManager();
+        //var manager = this.getManager();
+        var items = this._items.getItems();
         var $this = this;
 
-        this.eachItem(true, function(index, item) {
-            var newName = String(index + 1);
-            var context = manager.getItems();
-            var itemProto = manager.getItemProp(index);
+        this.eachItem(true, function(index) {
+            var newKey = String(index + 1);
+            var itemProperty = $this._items.getItem(index);
 
-            itemProto.rename(newName, context);
-            manager.getItemProps()[newName] = itemProto;
+            itemProperty.rename(newKey);
+            items[newKey] = itemProperty;
+
+            //var context = manager.getItems();
+            //var itemProto = manager.getItemProp(index);
+            //
+            //itemProto.rename(newName, context);
+            //manager.getItemProps()[newName] = itemProto;
         });
 
         this.setItem(0, value);
@@ -256,32 +268,58 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.swapItems = function(index1, index2)
     {
+        //var extraIndex = this.getLength();
+        //var manager = this.getManager();
+        //var items = manager.getItems();
+        //var itemProps = manager.getItemProps();
+        //
+        //// Renaming item with index1 to extraIndex
+        //
+        //var itemProp1 = manager.getItemProp(index1);
+        //itemProp1.rename(String(extraIndex), items);
+        //itemProps[extraIndex] = itemProp1;
+        //
+        //// Renaming item with index2 to index1
+        //
+        //var itemProp2 = manager.getItemProp(index2);
+        //itemProp2.rename(String(index1), items);
+        //itemProps[index1] = itemProp2;
+        //
+        //// Renaming item with extraIndex to index2
+        //
+        //var itemPropExtra = manager.getItemProp(extraIndex);
+        //itemPropExtra.rename(String(index2), items);
+        //itemProps[index2] = itemPropExtra;
+        //
+        //// Removing collection item with extraIndex
+        //
+        //ArrayCollection.$parent.prototype.removeItem.call(this, extraIndex);
+
+
+        var items = this._items.getItems();
         var extraIndex = this.getLength();
-        var manager = this.getManager();
-        var items = manager.getItems();
-        var itemProps = manager.getItemProps();
 
         // Renaming item with index1 to extraIndex
 
-        var itemProp1 = manager.getItemProp(index1);
-        itemProp1.rename(String(extraIndex), items);
-        itemProps[extraIndex] = itemProp1;
+        var itemProperty1 = this._items.getItem(index1);
+        itemProperty1.rename(String(extraIndex));
+        items[extraIndex] = itemProperty1;
 
         // Renaming item with index2 to index1
 
-        var itemProp2 = manager.getItemProp(index2);
-        itemProp2.rename(String(index1), items);
-        itemProps[index1] = itemProp2;
+        var itemProperty2 = this._items.getItem(index2);
+        itemProperty2.rename(String(index1));
+        items[index1] = itemProperty2;
 
         // Renaming item with extraIndex to index2
 
-        var itemPropExtra = manager.getItemProp(extraIndex);
-        itemPropExtra.rename(String(index2), items);
-        itemProps[index2] = itemPropExtra;
+        var itemPropertyExtra = this._items.getItem(extraIndex);
+        itemPropertyExtra.rename(String(index2));
+        items[index2] = itemPropertyExtra;
 
         // Removing collection item with extraIndex
 
-        ArrayCollection.$parent.prototype.removeItem.call(this, extraIndex);
+        this.removeItem.call(this, extraIndex);
     };
 
     /**
@@ -404,16 +442,17 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
             reverse = false;
         }
 
-        var items = this.getManager().getItems();
-        var keysAll = Object.keys(items);
+        //var items = this.getManager().getItems();
+        //var keysAll = Object.keys(this._items.getItems());
+        var keys = Object.keys(this._items.getItems());
         var $this = this;
-        var keys = [];
+        //var keys = [];
 
-        keysAll.map(function(keyName) {
-            if (keyName.match(/^[0-9]+$/i)) {
-                keys.push(parseInt(keyName));
-            }
-        });
+        //keysAll.map(function(keyName) {
+        //    if (keyName.match(/^[0-9]+$/i)) {
+        //        keys.push(parseInt(keyName));
+        //    }
+        //});
         keys.sort();
 
         if (reverse) {
@@ -421,34 +460,46 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         }
 
         keys.every(function(key) {
-            if (callback.call($this, key, items[key]) === false) {
+            if (callback.call($this, key, $this._items.getItem(key).getValue()) === false) {
                 return false;
             }
             return true;
         });
     };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollection.prototype.getLength = function()
+    //{
+    //    var keys = Object.keys(this._items.getItems());
+    //    var numericKeys = [];
+    //
+    //    for (var i = 0; i < keys.length; i++) {
+    //        var numKey = parseInt(keys[i]);
+    //
+    //        if (!isNaN(numKey)) {
+    //            numericKeys.push(numKey);
+    //        }
+    //    }
+    //    if (!numericKeys.length) {
+    //        return 0;
+    //    }
+    //    numericKeys.sort();
+    //
+    //    return numericKeys[numericKeys.length - 1] + 1;
+    //};
 
-    /**
-     * @inheritDoc
-     */
-    ArrayCollection.prototype.getLength = function()
+    ArrayCollection.prototype.getData = function()
     {
-        var keys = Object.keys(this.getManager().getItems());
-        var numericKeys = [];
+        var collectionItems = [];
+        var $this = this;
 
-        for (var i = 0; i < keys.length; i++) {
-            var numKey = parseInt(keys[i]);
+        this.eachItem(function(key) {
+            collectionItems[key] = $this._items.getItem(key).getData();
+        });
 
-            if (!isNaN(numKey)) {
-                numericKeys.push(numKey);
-            }
-        }
-        if (!numericKeys.length) {
-            return 0;
-        }
-        numericKeys.sort();
-
-        return numericKeys[numericKeys.length - 1] + 1;
+        return collectionItems;
     };
 
     return ArrayCollection;

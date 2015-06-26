@@ -95,21 +95,23 @@ Subclass.Property.Type.Mixed.MixedType = (function()
      */
     MixedType.prototype.addAllowedType = function(typeDefinition)
     {
+        typeDefinition.defaultless = true;
+
         this._allowedTypes.push(this.getPropertyManager().createProperty(
             "mixedProperty",
-            typeDefinition
-            //this.getContextClass(),
-            //this.getContextProperty()
+            typeDefinition,
+            this.getContextClass(),
+            this
         ));
     };
-
-    /**
-     * @inheritDoc
-     */
-    MixedType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : false;
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MixedType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : false;
+    //};
 
     /**
      * @inheritDoc
@@ -246,7 +248,7 @@ Subclass.Property.Type.Mixed.MixedType = (function()
      */
     MixedType.prototype.getBaseData = function()
     {
-        var basePropertyDefinition = MixedType.$parent.prototype.getBaseData.call(this);
+        var baseData = MixedType.$parent.prototype.getBaseData.apply(this, arguments);
 
         /**
          * Allows to specify allowed types of property value.
@@ -254,9 +256,14 @@ Subclass.Property.Type.Mixed.MixedType = (function()
          *
          * @type {Object[]}
          */
-        basePropertyDefinition.allows = [];
+        baseData.allows = [];
 
-        return basePropertyDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.default = null;
+
+        return baseData;
     };
 
     /**

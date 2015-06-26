@@ -4,7 +4,7 @@
  */
 Subclass.Property.Type.Map.Map = function()
 {
-    function Map(property)
+    function Map()
     {
         // Do nothing
     }
@@ -36,7 +36,7 @@ Subclass.Property.Type.Map.Map = function()
      */
     Map.prototype.issetProperty = function(childName)
     {
-        return this._children.hasOwnProperty(childName);
+        return this.getChildren().hasOwnProperty(childName);
     };
 
     /**

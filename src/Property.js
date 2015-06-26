@@ -129,6 +129,7 @@ Subclass.Property.Property = function()
     Property.prototype.rename = function(newName)
     {
         var context = this.getContext();
+        var isAttached = this.isAttached();
 
         if (!newName || typeof newName != 'string') {
             Subclass.Error.create(
@@ -136,7 +137,7 @@ Subclass.Property.Property = function()
                 'It must be a string.'
             );
         }
-        if (Object.isSealed(context)) {
+        if (isAttached && Object.isSealed(context)) {
             Subclass.Error.create(
                 'Can\'t rename property ' + this + '. ' +
                 'The context object is sealed.'
@@ -149,8 +150,10 @@ Subclass.Property.Property = function()
             Subclass.Error.create('Can\'t rename property ' + this + ' because it uses accessor functions.');
         }
 
-        definition.detach(context, this._name);
-        definition.attach(context, newName);
+        if (isAttached) {
+            definition.detach(context, this._name);
+            definition.attach(context, newName);
+        }
 
         this._name = newName;
         this.setValue(value);
@@ -415,6 +418,24 @@ Subclass.Property.Property = function()
         for (var i = 0; i < watchers.length; i++) {
             watchers[i].call(context, newValue, oldValue, this);
         }
+    };
+
+    Property.prototype.isAttached = function()
+    {
+        var context = this.getContext();
+
+        if (this.getDefinition().isAccessors()) {
+            var getterName = Subclass.Tools.generateGetterName(this.getName());
+
+            if (context[getterName] !== undefined) {
+                return true;
+            }
+        } else {
+            if (context[this.getName()] !== undefined) {
+                return true;
+            }
+        }
+        return false;
     };
 
     /**

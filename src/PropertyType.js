@@ -436,7 +436,11 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.getEmptyValue = function()
     {
-        return null;
+        return this.isNullable() && this.getDefault() == undefined
+            ? null
+            : this.getDefault()
+        ;
+        //return null;
     };
 
     /**
@@ -476,6 +480,48 @@ Subclass.Property.PropertyType = (function()
         return this.getData().default;
     };
 
+    PropertyType.prototype.validateDefaultless = function(value)
+    {
+        if (typeof value !== 'boolean') {
+            Subclass.Error.create('InvalidPropertyOption')
+                .option('defaultless')
+                .property(this)
+                .received(value)
+                .expected('a boolean')
+                .apply()
+            ;
+        }
+    };
+
+    /**
+     * Sets the "defaultless" property option
+     *
+     * @param {boolean} value
+     */
+    PropertyType.prototype.setDefaultless = function(value)
+    {
+        this.validateDefaultless(value);
+        this.getData().defaultless = value;
+    };
+
+    /**
+     * Returns the "defaultless" property option value
+     *
+     * @returns {*}
+     */
+    PropertyType.prototype.getDefaultless = function()
+    {
+        return this.getData().defaultless;
+    };
+
+    /**
+     * @alias Subclass.Property.PropertyType#getDefaultless
+     */
+    PropertyType.prototype.isDefaultless = function()
+    {
+        return this.getDefaultless();
+    };
+
     /**
      * Validates "watcher" attribute value
      *
@@ -486,8 +532,8 @@ Subclass.Property.PropertyType = (function()
         if (watcher !== null && typeof watcher != 'function') {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('watcher')
-                .received(watcher)
                 .property(this)
+                .received(watcher)
                 .expected('a funciton or null')
                 .apply()
             ;
@@ -549,12 +595,14 @@ Subclass.Property.PropertyType = (function()
      *
      * @returns {(boolean|null)}
      */
-    PropertyType.prototype.isAccessors = function()
+    PropertyType.prototype.getAccessors = function()
     {
         var isAccessors = this.getData().accessors;
 
         return isAccessors !== null ? isAccessors : true;
     };
+
+    PropertyType.prototype.isAccessors = PropertyType.prototype.getAccessors;
 
     /**
      * Validates "writable" attribute value
@@ -670,11 +718,21 @@ Subclass.Property.PropertyType = (function()
             type: null,
 
             /**
+             * Reports whether the default value will be ignored by default
+             *
+             * If its true and the current property is nullable
+             * the default value will be null too.
+             *
+             * @type {boolean}
+             */
+            defaultless: false,
+
+            /**
              * Default value of property
              *
-             * @type {(*|null)}
+             * @type {(*|undefined)}
              */
-            default: null,
+            default: undefined,
 
             /**
              * Value of property
@@ -764,6 +822,11 @@ Subclass.Property.PropertyType = (function()
 
         this._data = this.getBaseData();
 
+        if (emptyDefaultValue && this.getDefault() !== undefined) {
+            definition.default = this.getDefault();
+            emptyDefaultValue = false;
+        }
+
         for (var attrName in definition) {
             if (
                 !definition.hasOwnProperty(attrName)
@@ -780,6 +843,11 @@ Subclass.Property.PropertyType = (function()
         }
 
         // Setting default value
+
+        if (this.isNullable() && this.isDefaultless()) {
+            emptyDefaultValue = false;
+            definition.default = null;
+        }
 
         if (emptyDefaultValue) {
             try {

@@ -1,35 +1,19 @@
 /**
- * @namespace
- */
-Subclass.Property.Type.Collection.ArrayCollection = {};
-
-/**
  * @class
  * @extends {Subclass.Property.Type.Collection.CollectionType}
  */
-Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
+Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionType = (function()
 {
     /*************************************************/
     /*   Describing property type "ArrayCollection"  */
     /*************************************************/
 
     /**
-     * @param {Subclass.Property.PropertyManager} propertyManager
-     * @param {string} propertyName
-     * @param {Object} propertyDefinition
-     * @param {ClassType} contextClass
-     * @extends {PropertyType}
-     * @constructor
+     * @inheritDoc
      */
-    function ArrayCollectionType(propertyManager, propertyName, propertyDefinition, contextClass)
+    function ArrayCollectionType()
     {
-        ArrayCollectionType.$parent.call(
-            this,
-            propertyManager,
-            propertyName,
-            propertyDefinition,
-            contextClass
-        );
+        ArrayCollectionType.$parent.apply(this, arguments);
     }
 
     ArrayCollectionType.$parent = Subclass.Property.Type.Collection.CollectionType;
@@ -37,78 +21,131 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.getPropertyTypeName = function()
+    ArrayCollectionType.getName = function()
     {
         return "arrayCollection";
     };
 
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.parseRelatedClasses = function(propertyDefinition)
+    //{
+    //    if (
+    //        !propertyDefinition.proto
+    //        || typeof propertyDefinition.proto != 'object'
+    //        || !propertyDefinition.proto.type
+    //    ) {
+    //        return;
+    //    }
+    //    var propDef = propertyDefinition.proto;
+    //    var propertyType = Subclass.Property.PropertyManager.getPropertyType(propDef.type);
+    //
+    //    if (!propertyType.parseRelatedClasses) {
+    //        return;
+    //    }
+    //    return propertyType.parseRelatedClasses(propDef);
+    //};
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.getDefinitionClass = function()
+    //{
+    //    return Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionDefinition;
+    //};
+
+    ArrayCollectionType.getPropertyClass = function()
+    {
+        return Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionProperty;
+    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : [];
+    //};
+
     /**
      * @inheritDoc
+     * @retruns {(string|null)}
      */
-    ArrayCollectionType.parseRelatedClasses = function(propertyDefinition)
+    ArrayCollectionType.prototype.validateValue = function(value)
     {
-        if (
-            !propertyDefinition.proto
-            || typeof propertyDefinition.proto != 'object'
-            || !propertyDefinition.proto.type
-        ) {
+        ArrayCollectionType.$parent.prototype.validateValue.apply(this, arguments);
+
+        if (value === null) {
             return;
         }
-        var propDef = propertyDefinition.proto;
-        var propertyType = Subclass.Property.PropertyManager.getPropertyType(propDef.type);
 
-        if (!propertyType.parseRelatedClasses) {
-            return;
+        if (!value || typeof value != 'object' || !Array.isArray(value)) {
+            Subclass.Error.create('InvalidPropertyValue')
+                .property(this.getProperty())
+                .received(value)
+                .expected('an array')
+                .apply()
+            ;
         }
-        return propertyType.parseRelatedClasses(propDef);
     };
+
+    ArrayCollectionType.prototype.validateDefault = ArrayCollectionType.prototype.validateValue;
 
     /**
      * @inheritDoc
      */
-    ArrayCollectionType.getDefinitionClass = function()
+    ArrayCollectionType.prototype.getBaseData = function()
     {
-        return Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionDefinition;
+        var baseData = ArrayCollectionType.$parent.prototype.getBaseData.apply(this, arguments);
+
+        /**
+         * @inheritDoc
+         */
+        baseData.default = [];
+
+        return baseData;
     };
 
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.getEmptyDefinition = function()
-    {
-        return this.$parent.getEmptyDefinition();
-    };
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.normalizeDefinition = function(definition)
-    {
-        return this.$parent.normalizeDefinition(definition);
-    };
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.prototype.getCollectionClass = function()
-    {
-        return Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection;
-    };
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.prototype.onResetValue = function(collection)
-    {
-        Object.defineProperty(collection, 'length', {
-            enumerable: false,
-            set: function() {},
-            get: function() {
-                return collection.getLength();
-            }
-        });
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.getEmptyDefinition = function()
+    //{
+    //    return this.$parent.getEmptyDefinition();
+    //};
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.normalizeDefinition = function(definition)
+    //{
+    //    return this.$parent.normalizeDefinition(definition);
+    //};
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.prototype.getCollectionClass = function()
+    //{
+    //    return Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection;
+    //};
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.prototype.onResetValue = function(collection)
+    //{
+    //    Object.defineProperty(collection, 'length', {
+    //        enumerable: false,
+    //        set: function() {},
+    //        get: function() {
+    //            return collection.getLength();
+    //        }
+    //    });
+    //};
     //
     ///**
     // * @inheritDoc
@@ -117,21 +154,21 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     //{
     //    collection.addItem(value);
     //};
-
-    /**
-     * @inheritDoc
-     */
-    ArrayCollectionType.prototype.getData = function(context)
-    {
-        var collection = this.getCollection();
-        var collectionItems = [];
-
-        collection.eachItem(function(itemName, item) {
-            collectionItems[itemName] = collection.getItemData(itemName);
-        });
-
-        return collectionItems;
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ArrayCollectionType.prototype.getData = function(context)
+    //{
+    //    var collection = this.getCollection();
+    //    var collectionItems = [];
+    //
+    //    collection.eachItem(function(itemName, item) {
+    //        collectionItems[itemName] = collection.getItemData(itemName);
+    //    });
+    //
+    //    return collectionItems;
+    //};
     //
     ///**
     // * @inheritDoc

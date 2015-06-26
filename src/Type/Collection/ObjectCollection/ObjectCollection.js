@@ -5,13 +5,11 @@
 Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function()
 {
     /**
-     * @param {CollectionType} property
-     * @param {Object} context
-     * @constructor
+     * @inheritDoc
      */
-    function ObjectCollection(property, context)
+    function ObjectCollection()
     {
-        ObjectCollection.$parent.call(this, property, context);
+        ObjectCollection.$parent.apply(this, arguments);
     }
 
     ObjectCollection.$parent = Subclass.Property.Type.Collection.Collection;
@@ -23,42 +21,57 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
      */
     ObjectCollection.prototype.normalizeItem = function(itemName)
     {
-        var item = this.getItemData(itemName);
-        var manager = this.getManager();
+        //var item = this.getItemData(itemName);
+        //var manager = this.getManager();
+        var itemData = this._items.getItem(itemName).getData();
 
-        if (this.getProperty().getProto().constructor.getPropertyTypeName() != 'map') {
-            return item;
+        if (
+            this.getProperty().getProto().constructor.getPropertyTypeName() != 'map'
+            || !itemData.extends
+        ) {
+            return itemData;
         }
-        if (!item.extends) {
-            return item;
-        }
-        if (!this.issetItem(item.extends)) {
+        if (!this.issetItem(itemData.extends)) {
             Subclass.Error.create(
                 'Trying to extend object collection element "' + itemName + '" ' +
-                'by non existent another collection element with key "' + item.extends + '".'
+                'by non existent another collection element with key "' + itemData.extends + '".'
             );
         }
-        var parentItem = Subclass.Tools.copy(this.normalizeItem(item.extends));
-        item.extends = null;
+        var parentItem = Subclass.Tools.copy(this.normalizeItem(itemData.extends));
+        itemData.extends = null;
 
-        for (var propName in item) {
-            if (!item.hasOwnProperty(propName)) {
+        for (var propName in itemData) {
+            if (!itemData.hasOwnProperty(propName)) {
                 continue;
             }
-            var itemChild = manager.getItemProp(itemName).getChild(propName);
-            var itemChildContext = this.getItem(itemName);
+            //var itemChild = manager.getItemProp(itemName).getChild(propName);
+            var itemChild = this._items.getItem(itemName).getChild(propName);
 
-            if (itemChild.isDefaultValue(itemChildContext)) {
-                delete item[propName];
+            if (itemChild.isDefaultValue()) {
+                delete itemData[propName];
             }
         }
 
-        item = Subclass.Tools.extendDeep(parentItem, item);
-        this.setItem(itemName, item);
+        itemData = Subclass.Tools.extendDeep(parentItem, itemData);
+        this.setItem(itemName, itemData);
 
-        return item;
+        return itemData;
     };
 
+    /**
+     * @inheritDoc
+     */
+    ObjectCollection.prototype.getData = function()
+    {
+        var collectionItems = {};
+        var $this = this;
+
+        this.eachItem(function(itemName) {
+            collectionItems[itemName] = $this._items.getItem(itemName).getData();
+        });
+
+        return collectionItems;
+    };
 
     return ObjectCollection;
 

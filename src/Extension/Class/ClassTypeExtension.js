@@ -257,7 +257,6 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                 properties[propName] = allClassProperties[propName].createInstance(propName);
                 properties[propName].setContext(context);
                 properties[propName].resetValue(false);
-                //properties[propName].unModify();
             }
         }
     };

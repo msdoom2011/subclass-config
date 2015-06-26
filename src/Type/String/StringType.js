@@ -26,14 +26,14 @@ Subclass.Property.Type.String.StringType = (function()
     {
         return 'string';
     };
-
-    /**
-     * @inheritDoc
-     */
-    StringType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : "";
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //StringType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : "";
+    //};
 
     /**
      * @inheritDoc
@@ -227,32 +227,37 @@ Subclass.Property.Type.String.StringType = (function()
      */
     StringType.prototype.getBaseData = function()
     {
-        var baseDefinition = StringType.$parent.prototype.getBaseData.call(this);
+        var baseData = StringType.$parent.prototype.getBaseData.apply(this, arguments);
 
         /**
          * @inheritDoc
          */
-        baseDefinition.nullable = false;
+        baseData.nullable = false;
 
         /**
          * Regular expression that property value will match
          * @type {(RegExp|null)}
          */
-        baseDefinition.pattern = null;
+        baseData.pattern = null;
 
         /**
          * Specified max string length if it isn't null
          * @type {(number|null)}
          */
-        baseDefinition.maxLength = null;
+        baseData.maxLength = null;
 
         /**
          * Specifies min string length if it isn't null
          * @type {(number|null)}
          */
-        baseDefinition.minLength = null;
+        baseData.minLength = null;
 
-        return baseDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.default = "";
+
+        return baseData;
     };
 
 

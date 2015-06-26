@@ -40,12 +40,9 @@ module.exports = function(config) {
       "src/Type/Constructor/*.js",
       "src/Type/Map/MapType.js",
       "src/Type/Map/*.js",
-      //"src/Type/Constructor/*.js",
-      //"src/Type/Collection/CollectionType.js",
-      //"src/Type/Collection/CollectionManager.js",
-      //"src/Type/Collection/*.js",
-      //"src/Type/Collection/*Collection/*Type.js",
-      //"src/Type/Collection/*Collection/*.js",
+      "src/Type/Collection/CollectionType.js",
+      "src/Type/Collection/*.js",
+      "src/Type/Collection/**/*",
       //"src/Type/**/*.js",
       "src/*.js",
 
@@ -71,7 +68,8 @@ module.exports = function(config) {
       "tests/types/mixed.js",
       "tests/types/untyped.js",
       "tests/types/constructor.js",
-      "tests/types/map.js"
+      "tests/types/map.js",
+      "tests/types/collectionArray.js"
 
       //"tests/types/**/*.js"
     ],

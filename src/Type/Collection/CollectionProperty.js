@@ -30,18 +30,6 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
         /**
          * @inheritDoc
          */
-        getData: function()
-        {
-            var value = this.getValue();
-
-            if (value !== null) {
-                return value.getData();
-            }
-        },
-
-        /**
-         * @inheritDoc
-         */
         setValue: function(value, markAsModified)
         {
             if (markAsModified !== false) {
@@ -66,9 +54,10 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
             this.getDefinition().validateValue(value);
 
             if (value !== null) {
-                if (collection === null) {
-                    this.resetValue(markAsModified);
-                    return;
+                if (!collection) {
+                    this._value = collection = this.createCollection();
+                    //this.resetValue(markAsModified);
+                    //collection = this.getValue();
                 }
                 collection.replaceItems(value);
                 collection.normalizeItems();
@@ -83,7 +72,6 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 this.invokeWatchers(newValue, oldValue);
             }
         },
-
         /**
          * @inheritDoc
          */
@@ -92,16 +80,36 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
             if (markAsModified !== false) {
                 markAsModified = true;
             }
+            if (markAsModified) {
+                this.modify();
+            }
+            var value = this.getDefaultValue();
+
+            if (value !== null) {
+                value = this.createCollection();
+            }
+
+            this._value = value;
+        },
+
+        /**
+         * @inheritDoc
+         */
+        createCollection: function()
+        {
+            //if (markAsModified !== false) {
+            //    markAsModified = true;
+            //}
 
             var propertyDefinition = this.getDefinition();
-            var defaultValue = propertyDefinition.getDefaultValue();
+            var defaultValue = propertyDefinition.getDefault();
             var protoInstance = propertyDefinition.getProtoInstance();
-            var collectionConstructor = this.getCollectionClass();
+            var collectionConstructor = this.constructor.getCollectionClass();
             var collection = Subclass.Tools.createClassInstance(collectionConstructor, this);
 
             // Altering collection
 
-            this.onResetValue(collection);
+            this.onCreateCollection(collection);
 
             // Setting default value
 
@@ -117,9 +125,9 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 }
                 collection.normalizeItems();
             }
-            if (markAsModified) {
-                this.modify();
-            }
+            //if (markAsModified) {
+            //    this.modify();
+            //}
             Object.seal(collection);
 
             return collection;
@@ -131,9 +139,22 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
          * @param {Subclass.Property.Type.Collection} collection
          *      The instance of property collection
          */
-        onResetValue: function(collection)
+        onCreateCollection: function(collection)
         {
             // Do something
+        },
+
+        /**
+         * @inheritDoc
+         */
+        getData: function()
+        {
+            var value = this.getValue();
+
+            if (value !== null) {
+                return value.getData();
+            }
+            return null;
         }
     };
 

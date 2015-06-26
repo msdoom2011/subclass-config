@@ -26,24 +26,33 @@ Subclass.Property.Type.Boolean.BooleanType = (function()
     {
         return "boolean";
     };
-
-    /**
-     * @inheritDoc
-     */
-    BooleanType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : false;
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //BooleanType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : false;
+    //};
 
     /**
      * @inheritDoc
      */
     BooleanType.prototype.getBaseData = function()
     {
-        var basePropertyDefinition = BooleanType.$parent.prototype.getBaseData.call(this);
-            basePropertyDefinition.nullable = false;
+        var baseData = BooleanType.$parent.prototype.getBaseData.apply(this, arguments);
 
-        return basePropertyDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.nullable = false;
+
+        /**
+         * @inheritDoc
+         */
+        baseData.default = false;
+
+        return baseData;
     };
 
     /**

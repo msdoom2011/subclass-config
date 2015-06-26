@@ -26,14 +26,14 @@ Subclass.Property.Type.Object.ObjectType = function()
     {
         return "object";
     };
-
-    /**
-     * @inheritDoc
-     */
-    ObjectType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : {};
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //ObjectType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : {};
+    //};
 
     /**
      * @inheritDoc
@@ -62,10 +62,19 @@ Subclass.Property.Type.Object.ObjectType = function()
      */
     ObjectType.prototype.getBaseData = function()
     {
-        var basePropertyDefinition = ObjectType.$parent.prototype.getBaseData.call(this);
-        basePropertyDefinition.nullable = false;
+        var baseData = ObjectType.$parent.prototype.getBaseData.apply(this, arguments);
 
-        return basePropertyDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.nullable = false;
+
+        /**
+         * @inheritDoc
+         */
+        baseData.default = {};
+
+        return baseData;
     };
 
     /*************************************************/

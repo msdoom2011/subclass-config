@@ -26,14 +26,14 @@ Subclass.Property.Type.Function.FunctionType = (function()
     {
         return "function";
     };
-
-    /**
-     * @inheritDoc
-     */
-    FunctionType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : function() {};
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //FunctionType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : function() {};
+    //};
 
     /**
      * @inheritDoc
@@ -57,6 +57,21 @@ Subclass.Property.Type.Function.FunctionType = (function()
      * @inheritDoc
      */
     FunctionType.prototype.validateDefault = FunctionType.prototype.validateValue;
+
+    /**
+     * @inheritDoc
+     */
+    FunctionType.prototype.getBaseData = function()
+    {
+        var baseData = FunctionType.$parent.prototype.getBaseData.apply(this, arguments);
+
+        /**
+         * @inheritDoc
+         */
+        baseData['default'] = function() {};
+
+        return baseData;
+    };
 
 
     /*************************************************/

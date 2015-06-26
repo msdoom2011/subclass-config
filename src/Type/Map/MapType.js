@@ -175,14 +175,14 @@ Subclass.Property.Type.Map.MapType = function()
     {
         return this._children.hasOwnProperty(childPropName);
     };
-
-    /**
-     * @inheritDoc
-     */
-    MapType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : {};
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //MapType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : {};
+    //};
     //
     ///**
     // * @inheritDoc
@@ -422,20 +422,25 @@ Subclass.Property.Type.Map.MapType = function()
      */
     MapType.prototype.getBaseData = function()
     {
-        var baseDefinition = MapType.$parent.prototype.getBaseData.call(this);
+        var baseData = MapType.$parent.prototype.getBaseData.call(this);
 
         /**
          * Defines available properties in value
          * @type {null}
          */
-        baseDefinition.schema = null;
+        baseData.schema = null;
 
         /**
          * @inheritDoc
          */
-        baseDefinition.nullable = false;
+        baseData.nullable = false;
 
-        return baseDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.default = {};
+
+        return baseData;
     };
 
     /**

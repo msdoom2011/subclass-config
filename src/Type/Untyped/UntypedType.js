@@ -27,6 +27,21 @@ Subclass.Property.Type.Untyped.UntypedType = (function()
         return "untyped";
     };
 
+    /**
+     * @inheritDoc
+     */
+    UntypedType.prototype.getBaseData = function()
+    {
+        var baseData = UntypedType.$parent.prototype.getBaseData.apply(this, arguments);
+
+        /**
+         * @inheritDoc
+         */
+        baseData.default = null;
+
+        return baseData;
+    };
+
 
     /*************************************************/
     /*        Registering new property type          */

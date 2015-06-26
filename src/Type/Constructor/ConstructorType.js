@@ -132,7 +132,7 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
          */
         getBaseData: function()
         {
-            var data = ConstructorType.$parent.prototype.getBaseData.call(this);
+            var baseData = ConstructorType.$parent.prototype.getBaseData.apply(this, arguments);
 
             /**
              * Is used to specify the constructor of object instances which current property should store.
@@ -142,14 +142,19 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
              *
              * @type {Function}
              */
-            data.construct = null;
+            baseData.construct = null;
 
             /**
              * @inheritDoc
              */
-            data.nullable = true;
+            baseData.nullable = true;
 
-            return data;
+            /**
+             * @inheritDoc
+             */
+            baseData.default = null;
+
+            return baseData;
         }
     };
 

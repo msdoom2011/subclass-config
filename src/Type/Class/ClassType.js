@@ -185,16 +185,21 @@ Subclass.Property.Type.Class.ClassType = (function()
      */
     ClassType.prototype.getBaseData = function()
     {
-        var basePropertyDefinition = ClassType.$parent.prototype.getBaseData.call(this);
+        var baseData = ClassType.$parent.prototype.getBaseData.apply(this, arguments);
 
         /**
          * Allows to specify name of class which value must implement.
          *
          * @type {String}
          */
-        basePropertyDefinition.className = null;
+        baseData.className = null;
 
-        return basePropertyDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.default = null;
+
+        return baseData;
     };
 
     /*************************************************/

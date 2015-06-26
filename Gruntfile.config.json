@@ -16,10 +16,8 @@
       "<%= config.lib.dir.src %>/Type/Map/MapType.js",
       "<%= config.lib.dir.src %>/Type/Map/*.js",
       "<%= config.lib.dir.src %>/Type/Collection/CollectionType.js",
-      "<%= config.lib.dir.src %>/Type/Collection/CollectionManager.js",
       "<%= config.lib.dir.src %>/Type/Collection/*.js",
-      "<%= config.lib.dir.src %>/Type/Collection/*Collection/*Type.js",
-      "<%= config.lib.dir.src %>/Type/Collection/*Collection/*.js",
+      "<%= config.lib.dir.src %>/Type/Collection/**/*",
       "<%= config.lib.dir.src %>/Type/**/*.js",
       "<%= config.lib.dir.src %>/**/*.js"
     ],

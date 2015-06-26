@@ -292,9 +292,10 @@ Subclass.Property.Type.Map.MapProperty = function()
         this.getDefinition().validateValue(value);
 
         if (value !== null) {
-            if (childrenContext === null) {
-                this.resetValue(markAsModified);
-                childrenContext = this.getValue();
+            if (!childrenContext) {
+                this._value = childrenContext = this.createMap();
+                //this.resetValue(markAsModified);
+                //childrenContext = this.getValue();
             }
             for (var childName in value) {
                 if (value.hasOwnProperty(childName)) {
@@ -313,6 +314,80 @@ Subclass.Property.Type.Map.MapProperty = function()
         if (markAsModified) {
             this.invokeWatchers(newValue, oldValue);
         }
+    };
+
+    /**
+     * @inheritDoc
+     */
+    MapProperty.prototype.resetValue = function(markAsModified)
+    {
+        if (markAsModified !== false) {
+            markAsModified = true;
+        }
+        if (markAsModified) {
+            this.modify();
+        }
+        var value = this.getDefaultValue();
+
+        if (value !== null) {
+            value = this.createMap();
+        }
+
+        this._value = value;
+    };
+
+    /**
+     * Creates the map instance
+     */
+    MapProperty.prototype.createMap = function()
+    {
+        var $this = this;
+
+        //if (markAsModified !== false) {
+        //    markAsModified = true;
+        //}
+
+        function Map()
+        {
+            // Hack for the grunt-contrib-uglify plugin
+            return Map.name;
+        }
+
+        Map.$parent = Subclass.Property.Type.Map.Map;
+
+        /**
+         * @inheritDoc
+         */
+        Map.prototype.getProperty = function(childName)
+        {
+            if (!arguments.length) {
+                return $this;
+            }
+            return this.getChildren()[childName];
+        };
+
+        // Creating instance of map
+
+        var mapInst = Subclass.Tools.createClassInstance(Map);
+
+        // Attaching map children
+
+        var children = this.getChildren();
+
+        for (var childName in children) {
+            if (children.hasOwnProperty(childName)) {
+                children[childName].getDefinition().attach(Map.prototype, childName);
+                children[childName].setContext(mapInst);
+                children[childName].resetValue(false);
+            }
+        }
+        //if (markAsModified) {
+        //    this.modify();
+        //}
+
+        Object.seal(mapInst);
+
+        return mapInst;
     };
 
     /**
@@ -361,59 +436,6 @@ Subclass.Property.Type.Map.MapProperty = function()
         //}
         //
         //return valueClear;
-    };
-
-    /**
-     * @inheritDoc
-     */
-    MapProperty.prototype.resetValue = function(markAsModified)
-    {
-        var $this = this;
-
-        if (markAsModified !== false) {
-            markAsModified = true;
-        }
-
-        function Map()
-        {
-            // Hack for the grunt-contrib-uglify plugin
-            return Map.name;
-        }
-
-        Map.$parent = Subclass.Property.Type.Map.Map;
-
-        /**
-         * @inheritDoc
-         */
-        Map.prototype.getProperty = function(childName)
-        {
-            if (!arguments.length) {
-                return $this;
-            }
-            return this.getChildren()[childName];
-        };
-
-        // Creating instance of map
-
-        var mapInst = Subclass.Tools.createClassInstance(Map);
-
-        // Attaching map children
-
-        var children = this.getChildren();
-
-        for (var childName in children) {
-            if (children.hasOwnProperty(childName)) {
-                children[childName].getDefinition().attach(Map.prototype, childName);
-                children[childName].setContext(mapInst);
-                children[childName].resetValue(markAsModified);
-            }
-        }
-        if (markAsModified) {
-            this.modify();
-        }
-
-        Object.seal(mapInst);
-        this._value = mapInst;
     };
     //
     ///**

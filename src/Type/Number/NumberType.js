@@ -27,14 +27,14 @@ Subclass.Property.Type.Number.NumberType = (function()
     {
         return "number";
     };
-
-    /**
-     * @inheritDoc
-     */
-    NumberType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : 0;
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //NumberType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : 0;
+    //};
 
     /**
      * @inheritDoc
@@ -181,26 +181,31 @@ Subclass.Property.Type.Number.NumberType = (function()
      */
     NumberType.prototype.getBaseData = function()
     {
-        var baseDefinition = NumberType.$parent.prototype.getBaseData.call(this);
+        var baseData = NumberType.$parent.prototype.getBaseData.apply(this, arguments);
 
         /**
          * Specified max number value if it isn't null
          * @type {(number|null)}
          */
-        baseDefinition.maxValue = null;
+        baseData.maxValue = null;
 
         /**
          * Specifies min number value if it isn't null
          * @type {(number|null)}
          */
-        baseDefinition.minValue = null;
+        baseData.minValue = null;
 
         /**
          * @inheritDoc
          */
-        baseDefinition.nullable = false;
+        baseData.nullable = false;
 
-        return baseDefinition;
+        /**
+         * @inheritDoc
+         */
+        baseData.default = 0;
+
+        return baseData;
     };
 
     /**

@@ -4,6 +4,16 @@
 Subclass.Property.Type.Collection = {};
 
 /**
+ * @namespace
+ */
+Subclass.Property.Type.Collection.ArrayCollection = {};
+
+/**
+ * @namespace
+ */
+Subclass.Property.Type.Collection.ObjectCollection = {};
+
+/**
  * @class
  * @extends {Subclass.Property.PropertyType}
  */
@@ -50,6 +60,27 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     }
 
     CollectionType.$parent = Subclass.Property.PropertyType;
+
+    /**
+     * @inheritDoc
+     */
+    CollectionType.parseRelatedClasses = function(propertyDefinition)
+    {
+        if (
+            !propertyDefinition.proto
+            || typeof propertyDefinition.proto != 'object'
+            || !propertyDefinition.proto.type
+        ) {
+            return;
+        }
+        var propDef = propertyDefinition.proto;
+        var propertyType = Subclass.Property.PropertyManager.getPropertyType(propDef.type);
+
+        if (!propertyType.parseRelatedClasses) {
+            return;
+        }
+        return propertyType.parseRelatedClasses(propDef);
+    };
 
     /**
      * @inheritDoc
@@ -124,15 +155,15 @@ Subclass.Property.Type.Collection.CollectionType = (function()
     //{
     //    return Subclass.Property.Type.Collection.Collection;
     //};
-
-    /**
-     * @inheritDoc
-     */
-    CollectionType.prototype.getEmptyValue = function()
-    {
-        return this.isNullable() ? null : {};
-    };
-
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //CollectionType.prototype.getEmptyValue = function()
+    //{
+    //    return this.isNullable() ? null : {};
+    //};
+    //
     ///**
     //* Sets prototype of collection items
     //*
@@ -444,15 +475,15 @@ Subclass.Property.Type.Collection.CollectionType = (function()
      */
     CollectionType.prototype.getBaseData = function()
     {
-        var baseDefinition = CollectionType.$parent.prototype.getBaseData.apply(this, arguments);
+        var baseData = CollectionType.$parent.prototype.getBaseData.apply(this, arguments);
 
         /**
          * The definition of property to which every collection element should match.
          * @type {null}
          */
-        baseDefinition.proto = null;
+        baseData.proto = null;
 
-        return baseDefinition;
+        return baseData;
     };
 
     return CollectionType;

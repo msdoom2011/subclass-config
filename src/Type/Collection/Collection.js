@@ -30,7 +30,12 @@ Subclass.Property.Type.Collection.Collection = function()
          * @type {Object.<Subclass.Property.Property>}
          * @private
          */
-        this._items = {};
+        this._items = null;
+
+
+        // Initializing operations
+
+        this._resetItems();
 
         ///**
         // * List of collection items
@@ -62,6 +67,7 @@ Subclass.Property.Type.Collection.Collection = function()
     {
         return Subclass.Property.Type.Collection.CollectionItems;
     };
+
     //
     ///**
     // * Returns collection property instance to which current collection belongs to.
@@ -109,24 +115,33 @@ Subclass.Property.Type.Collection.Collection = function()
     //    );
     //};
 
-    /**
-     * Attaches the new item to collection
-     *
-     * @param {string} key
-     * @param {*} value
-     * @returns {*}
-     */
-    Collection.prototype._attachItem = function(key, value)
+    Collection.prototype._resetItems = function()
     {
-        var collectionItemProtoInstance = this.getProtoInstance();
-        this._items[key] = collectionItemProtoInstance.createInstance(key);
-
-        if (value !== undefined) {
-            this._items[key].setValue(value);
-        }
-
-        return this[key];
+        var itemsConstructor = this.constructor.getCollectionItemsClass();
+        this._items = Subclass.Tools.createClassInstance(itemsConstructor, this);
     };
+
+    ///**
+    // * Attaches the new item to collection
+    // *
+    // * @param {string} key
+    // * @param {*} value
+    // * @returns {*}
+    // * @private
+    // */
+    //Collection.prototype._attachItem = function(key, value)
+    //{
+    //    var collectionItemProtoInstance = this._property.getDefinition().getProtoInstance();
+    //    this._items[key] = collectionItemProtoInstance.createInstance(key);
+    //    this._items[key].setContext(this._items);
+    //    this._items[key].resetValue(false);
+    //
+    //    if (value !== undefined) {
+    //        this._items[key].setValue(value, false);
+    //    }
+    //
+    //    return this[key];
+    //};
 
     /**
      * Adds new item to collection
@@ -147,7 +162,7 @@ Subclass.Property.Type.Collection.Collection = function()
         if (normalize !== false) {
             normalize = true;
         }
-        this._attachItem(key, value);
+        this._items.attachItem(key, value);
 
         if (normalize) {
             this.normalizeItem(key);
@@ -206,10 +221,10 @@ Subclass.Property.Type.Collection.Collection = function()
             normalize = true;
         }
         if (this.issetItem(key)) {
-            this._items[key].setValue(value);
+            this._items.getItem(key).setValue(value);
 
         } else {
-            this._attachItem(key, value);
+            this._items.attachItem(key, value);
         }
         if (normalize) {
             this.normalizeItem(key);
@@ -259,7 +274,7 @@ Subclass.Property.Type.Collection.Collection = function()
                 'in property ' + this._property + '.'
             );
         }
-        return this._items[key].getValue();
+        return this._items.getItem(key).getValue();
     };
 
     /**
@@ -269,8 +284,8 @@ Subclass.Property.Type.Collection.Collection = function()
      */
     Collection.prototype.removeItem = function(key)
     {
-        var value = this.getItemData(key);
-        delete this._items[key];
+        var value = this._items.getItem(key).getData();
+        this._items.removeItem(key);
 
         return value;
     };
@@ -283,7 +298,7 @@ Subclass.Property.Type.Collection.Collection = function()
     Collection.prototype.removeItems = function()
     {
         var data = this.getData();
-        this._items = {};
+        this._resetItems();
 
         return data;
     };
@@ -296,7 +311,7 @@ Subclass.Property.Type.Collection.Collection = function()
      */
     Collection.prototype.issetItem = function(key)
     {
-        return this._items.hasOwnProperty(key);
+        return this._items.issetItem(key);
     };
 
     /**
@@ -319,12 +334,13 @@ Subclass.Property.Type.Collection.Collection = function()
             ;
         }
         //var items = this.getManager().getItems();
+        var items = this._items.getItems();
 
-        for (var key in this._items) {
-            if (!this._items.hasOwnProperty(key)) {
+        for (var key in items) {
+            if (!items.hasOwnProperty(key)) {
                 continue;
             }
-            if (callback(key, this._items[key].getValue()) === false) {
+            if (callback(key, items[key].getValue()) === false) {
                 break;
             }
         }
@@ -431,7 +447,7 @@ Subclass.Property.Type.Collection.Collection = function()
      */
     Collection.prototype.getLength = function()
     {
-        return Object.keys(this._items).length;
+        return this._items.getLength();
     };
 
     /**
