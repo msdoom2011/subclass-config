@@ -21,7 +21,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     {
         if (!Array.isArray(items)) {
             Subclass.Error.create('InvalidArgument')
-                .argument('the collection items for property ' + this.getProperty(), false)
+                .argument('the collection items for property ' + this._property, false)
                 .received(items)
                 .expected('an array')
                 .apply()
@@ -38,7 +38,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     {
         if (!Array.isArray(items)) {
             Subclass.Error.create('InvalidArgument')
-                .argument('the items for array collection in property ' + this.getProperty(), false)
+                .argument('the items for array collection in property ' + this._property, false)
                 .received(items)
                 .expected('an array')
                 .apply()
@@ -51,10 +51,9 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         }
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
-                this.addItem(items[key], false);
+                this.addItem(items[key]);
             }
         }
-        this.normalizeItems();
     };
 
     /**
@@ -75,14 +74,33 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     /**
      * @inheritDoc
      */
-    ArrayCollection.prototype.setItems = ArrayCollection.prototype.addItems;
+    ArrayCollection.prototype.setItems = function(items)
+    {
+        if (!Array.isArray(items)) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the items for array collection in property ' + this._property, false)
+                .received(items)
+                .expected('an array')
+                .apply()
+            ;
+        }
+        for (var i = 0; i < items.length; i++) {
+            if (this.issetItem(i)) {
+                this.setItem(i, items[i]);
+            } else {
+                this.addItem(items[i]);
+            }
+        }
+    };
 
     /**
      * @inheritDoc
      */
-    ArrayCollection.prototype.setItem = function(key, value, normalize)
+    ArrayCollection.prototype.setItem = function(key, value)
     {
-        if (isNaN(parseInt(key))) {
+        key = parseInt(key);
+
+        if (isNaN(key)) {
             Subclass.Error.create('InvalidArgument')
                 .argument('the index of array collection item', false)
                 .received(key)
@@ -90,8 +108,13 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 .apply()
             ;
         }
-        return ArrayCollection.$parent.prototype.setItem.call(
-            this, String(key), value, normalize
+        if (this.length < key) {
+            for (var i = this.length; i < key; i++) {
+                this.addItem();
+            }
+        }
+        ArrayCollection.$parent.prototype.setItem.call(
+            this, String(key), value
         );
     };
 
@@ -105,10 +128,54 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         if (!this.issetItem(index)) {
             Subclass.Error.create(
                 'Trying to get non existent array element with index "' + index + '" ' +
-                'in property ' + this.getProperty() + '.'
+                'in property ' + this._property + '.'
             );
         }
         return this._items.getItem(index).getValue();
+    };
+
+    /**
+     * Removes collection items
+     *
+     * @param {number} [indexStart]
+     *      The index of collection item from which (including it)
+     *      the other collection items further will be removed
+     *
+     * @param {number} [length]
+     *      The length of collection items which will be removed
+     *      from the indexStart (including collection item with start index)
+     */
+    ArrayCollection.prototype.removeItems = function(indexStart, length)
+    {
+        if (!arguments.length) {
+            return ArrayCollection.$parent.prototype.removeItems.call(this);
+        }
+        if (!this.issetItem(indexStart)) {
+            return;
+        }
+        if (arguments.length == 1) {
+            length = this.length;
+        }
+        if (length < 0) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the length of items to remove', false)
+                .expected('a positive number')
+                .received(length)
+                .apply()
+            ;
+        }
+        var indexEnd = indexStart + length - 1;
+        var i;
+
+        if (indexEnd >= this.length - 1) {
+            for (i = this.length - 1; i >= indexStart; i--) {
+                this.removeItem(i);
+            }
+        } else {
+            for (i = 0; i < length; i++) {
+                this.removeItem(indexStart);
+            }
+        }
     };
 
     /**
@@ -121,27 +188,26 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         key = parseInt(key);
 
         var items = this._items.getItems();
+        var length = this.length;
         var $this = this;
         var value = false;
 
         this.eachItem(function(index) {
             if (index == key) {
                 value = ArrayCollection.$parent.prototype.removeItem.call($this, key);
-            }
-            if (index > key) {
+
+            } else if (index > key) {
                 var newKey = String(index - 1);
                 var itemProperty = $this._items.getItem(index);
 
                 itemProperty.rename(newKey);
                 items[newKey] = itemProperty;
-
-                //var context = manager.getItems();
-                //var itemProp = manager.getItemProp(index);
-                //
-                //itemProp.rename(newName, context);
-                //manager.getItemProps()[newName] = itemProp;
             }
         });
+
+        if (this.length == length) {
+            this.pop();
+        }
 
         return value;
     };
@@ -174,7 +240,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.pop = function()
     {
-        var length = this.getLength();
+        var length = this.length;
 
         if (!length) {
             return null;
@@ -189,7 +255,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.shift = function()
     {
-        var length = this.getLength();
+        var length = this.length;
 
         if (!length) {
             return null;
@@ -202,7 +268,6 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.unshift = function(value)
     {
-        //var manager = this.getManager();
         var items = this._items.getItems();
         var $this = this;
 
@@ -212,14 +277,9 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 
             itemProperty.rename(newKey);
             items[newKey] = itemProperty;
-
-            //var context = manager.getItems();
-            //var itemProto = manager.getItemProp(index);
-            //
-            //itemProto.rename(newName, context);
-            //manager.getItemProps()[newName] = itemProto;
         });
 
+        delete $this._items.removeItem(0);
         this.setItem(0, value);
     };
 
@@ -230,8 +290,8 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     {
         var key = ArrayCollection.$parent.prototype.indexOf.call(this, value, reverse);
 
-        if (key === false) {
-            return key;
+        if (key === null) {
+            return -1;
         }
         return parseInt(key);
     };
@@ -244,7 +304,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.lastIndexOf = function(value)
     {
-        this.indexOf(value, true);
+        return this.indexOf(value, true);
     };
 
     /**
@@ -268,34 +328,6 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
      */
     ArrayCollection.prototype.swapItems = function(index1, index2)
     {
-        //var extraIndex = this.getLength();
-        //var manager = this.getManager();
-        //var items = manager.getItems();
-        //var itemProps = manager.getItemProps();
-        //
-        //// Renaming item with index1 to extraIndex
-        //
-        //var itemProp1 = manager.getItemProp(index1);
-        //itemProp1.rename(String(extraIndex), items);
-        //itemProps[extraIndex] = itemProp1;
-        //
-        //// Renaming item with index2 to index1
-        //
-        //var itemProp2 = manager.getItemProp(index2);
-        //itemProp2.rename(String(index1), items);
-        //itemProps[index1] = itemProp2;
-        //
-        //// Renaming item with extraIndex to index2
-        //
-        //var itemPropExtra = manager.getItemProp(extraIndex);
-        //itemPropExtra.rename(String(index2), items);
-        //itemProps[index2] = itemPropExtra;
-        //
-        //// Removing collection item with extraIndex
-        //
-        //ArrayCollection.$parent.prototype.removeItem.call(this, extraIndex);
-
-
         var items = this._items.getItems();
         var extraIndex = this.getLength();
 
@@ -375,7 +407,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     };
 
     /**
-     * Selects a part of an array, and returns the new array
+     * Selects a part of an array, and returns the new array with selected items
      *
      * @param {number} start
      * @param {number} end
@@ -393,11 +425,11 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
     };
 
     /**
-     * Filters collection using passed callback function
-     *
-     * @param testCallback
-     * @returns {(Array|Object)}
-     */
+    * Filters collection using passed callback function
+    *
+    * @param testCallback
+    * @returns {(Array|Object)}
+    */
     ArrayCollection.prototype.filter = function(testCallback)
     {
         if (!testCallback || typeof testCallback !== 'function') {
@@ -412,7 +444,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 
         this.eachItem(function(itemKey, itemValue) {
             if (testCallback(itemKey, itemValue) === true) {
-                items[parseInt(itemKey)] = itemValue;
+                items.push(itemValue);
             }
         });
 
@@ -442,17 +474,8 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
             reverse = false;
         }
 
-        //var items = this.getManager().getItems();
-        //var keysAll = Object.keys(this._items.getItems());
         var keys = Object.keys(this._items.getItems());
         var $this = this;
-        //var keys = [];
-
-        //keysAll.map(function(keyName) {
-        //    if (keyName.match(/^[0-9]+$/i)) {
-        //        keys.push(parseInt(keyName));
-        //    }
-        //});
         keys.sort();
 
         if (reverse) {
@@ -460,35 +483,12 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         }
 
         keys.every(function(key) {
-            if (callback.call($this, key, $this._items.getItem(key).getValue()) === false) {
+            if (callback(parseInt(key), $this._items.getItem(key).getValue()) === false) {
                 return false;
             }
             return true;
         });
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ArrayCollection.prototype.getLength = function()
-    //{
-    //    var keys = Object.keys(this._items.getItems());
-    //    var numericKeys = [];
-    //
-    //    for (var i = 0; i < keys.length; i++) {
-    //        var numKey = parseInt(keys[i]);
-    //
-    //        if (!isNaN(numKey)) {
-    //            numericKeys.push(numKey);
-    //        }
-    //    }
-    //    if (!numericKeys.length) {
-    //        return 0;
-    //    }
-    //    numericKeys.sort();
-    //
-    //    return numericKeys[numericKeys.length - 1] + 1;
-    //};
 
     ArrayCollection.prototype.getData = function()
     {

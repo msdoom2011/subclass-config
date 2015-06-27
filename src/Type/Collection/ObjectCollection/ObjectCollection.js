@@ -26,7 +26,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         var itemData = this._items.getItem(itemName).getData();
 
         if (
-            this.getProperty().getProto().constructor.getPropertyTypeName() != 'map'
+            this._property.getProto().constructor.getName() != 'map'
             || !itemData.extends
         ) {
             return itemData;

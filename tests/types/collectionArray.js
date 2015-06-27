@@ -1,4 +1,4 @@
-describe("Testing number property type with its", function() {
+describe("Testing array collection property type with its", function() {
 
     var classInst = app.getClass('Class/AdvancedDefinition').createInstance();
     var prop = classInst.getProperty('propStringCollectionArray');
@@ -51,129 +51,217 @@ describe("Testing number property type with its", function() {
         expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('item4');
     });
 
-    //it ("ability to throw error if trying to set value which is less then allowed minimum", function() {
-    //    expect(function() { classInst.setPropNumber(-100); }).toThrow();
-    //    expect(classInst.getPropNumber()).toBe(50);
-    //});
-    //
-    //it ("ability to throw error if trying to set value which is more then allowed maximum", function() {
-    //    expect(function() { classInst.setPropNumber(200); }).toThrow();
-    //    expect(classInst.getPropNumber()).toBe(50);
-    //});
-    //
-    //it ("ability to lock its writable capability", function() {
-    //    expect(prop.isLocked()).toBe(false);
-    //    prop.lock();
-    //    classInst.setPropNumber(60);
-    //    expect(classInst.getPropNumber()).toBe(50);
-    //    prop.unlock();
-    //    classInst.setPropNumber(60);
-    //    expect(classInst.getPropNumber()).toBe(60);
-    //});
-    //
-    //it ("modifying state after manipulations", function() {
-    //    expect(prop.isModified()).toBe(true);
-    //});
-    //
-    //it ("watchers", function() {
-    //    expect(classInst.changedPropNumber).toBe(true);
-    //    expect(classInst.propNumberOld).toBe(50);
-    //    expect(classInst.propNumberNew).toBe(60);
-    //});
-});
+    it ("manipulations with collection items", function() {
+        var prop = classInst.getPropStringCollectionArray();
 
-//console.log('');
-//console.log('============= arrayCollection property ==============');
-//
-//var arrayCollection = inst.getTypedArrayCollection();
-//console.log(arrayCollection);
-//
-//arrayCollection.psix = '1111';
-//arrayCollection.addItem("psix");
-//console.log(arrayCollection.getData());
-//
-//var filteredItems = arrayCollection.filter(function(element, index) {
-//    if (element.match(/^str/)) {
-//        return true;
-//    }
-//});
-//console.log(filteredItems);
-//
-//var removeArrayItem = arrayCollection.indexOf('psix');
-//
-//console.log(removeArrayItem);
-//
-//arrayCollection.removeItem(removeArrayItem);
-//console.log(arrayCollection.getData());
-//
-//var removeArrayItemIndex = arrayCollection.indexOf(function(element, index) {
-//    if (element.match(/^str/)) {
-//        return true;
-//    }
-//});
-//
-//console.log(removeArrayItemIndex);
-//
-//arrayCollection.removeItem(removeArrayItemIndex);
-//console.log(arrayCollection.getData());
-//
-//arrayCollection.addItems(["new1", "new2"]);
-//console.log(arrayCollection.getData());
-//
-//arrayCollection.addItem("psix222");
-//console.log(arrayCollection.getData());
-//
-//var psixElemIndex = arrayCollection.indexOf("psix222");
-//console.log(arrayCollection.getItem(psixElemIndex));
-//console.log(arrayCollection.getData());
-//
-//arrayCollection.removeItems();
-//console.log(arrayCollection.getData());
-//
-//inst.setTypedArrayCollection(null);
-//console.log(inst.getTypedArrayCollection());
-//
-//inst.setTypedArrayCollection(["psixNew1", "psixNew2", "psixNew3", "psixNew4"]);
-//console.log(inst.getTypedArrayCollection().getData());
-//
-//arrayCollection.unshift("unshifted");
-//arrayCollection.push("pushed");
-//
-//console.log(arrayCollection.getData());
-//
-//console.log(arrayCollection.shift());
-//console.log(arrayCollection.pop());
-//
-//console.log(arrayCollection.getData());
-//console.log(arrayCollection.length);
-//
-//arrayCollection.reverse();
-//console.log('reversed:', arrayCollection.getData());
-//
-//arrayCollection.sort();
-//console.log('sorted:', arrayCollection.getData());
-//
-//arrayCollection.sort(function(a, b) {
-//    console.log(a,b);
-//
-//    if (a > b) {
-//        return -1;
-//    } else if (a < b) {
-//        return 1;
-//    }
-//    return 0;
-//});
-//
-//console.log('custom sorted:', arrayCollection.getData());
-//console.log('joined:', arrayCollection.join(", "));
-//console.log('sliced from 1 up to 3:', arrayCollection.slice(1,3));
-//
-//arrayCollection.reverse();
-//console.log('reversed to start:', arrayCollection.getData());
-//
-//
-//console.log('');
-//console.log('============= arrayCollectionOfMap property ==============');
-//
-//var arrayCollectionOfMap = inst.getTypedArrayCollectionOfMap();
-//console.log(arrayCollectionOfMap);
+        // removing all
+        prop.removeItems();
+        expect(prop.length).toBe(0);
+
+        // add items
+        prop.addItems(['item1', 'item2', 'item3']);
+        expect(prop.length).toBe(3);
+        expect(prop.getItem(0)).toBe('item1');
+        expect(prop.getItem(1)).toBe('item2');
+        expect(prop.getItem(2)).toBe('item3');
+
+        // add item
+        prop.addItem('item4');
+        expect(prop.length).toBe(4);
+        expect(prop.getItem(3)).toBe('item4');
+
+        // push item
+        prop.push('item5');
+        expect(prop.length).toBe(5);
+        expect(prop.getItem(4)).toBe('item5');
+
+        // pop item
+        expect(prop.pop()).toBe('item5');
+        expect(prop.length).toBe(4);
+
+        // unshift item
+        prop.unshift('item0');
+        expect(prop.length).toBe(5);
+        expect(prop.getItem(0)).toBe('item0');
+        expect(prop.getItem(1)).toBe('item1');
+        expect(prop.getItem(2)).toBe('item2');
+        expect(prop.getItem(3)).toBe('item3');
+        expect(prop.getItem(4)).toBe('item4');
+
+        // shift item
+        expect(prop.shift()).toBe('item0');
+        expect(prop.length).toBe(4);
+
+        // remove one item
+        prop.removeItem(3);
+        expect(prop.length).toBe(3);
+        expect(prop.issetItem(3)).toBe(false);
+        expect(function() { prop.getItem(3); }).toThrow();
+
+        // set one item
+        prop.setItem(0, 'item100');
+        expect(prop.getItem(0)).toBe('item100');
+        prop.setItem(0, 'item1');
+        prop.setItem(10, 'item10');
+        expect(prop.length).toBe(11);
+        expect(prop.getItem(4)).toBe('');
+        expect(prop.getItem(7)).toBe('');
+
+        // removing a few items
+        prop.removeItems(7, 2);
+        expect(prop.length).toBe(9);
+        expect(prop.getItem(8)).toBe('item10');
+        prop.removeItems(3);
+        expect(prop.length).toBe(3);
+        expect(prop.getItem(prop.length - 1)).toBe('item3');
+
+        // set a few items
+        prop.setItems(['item11', 'item22', 'item33', 'item44']);
+        expect(prop.length).toBe(4);
+        expect(prop.getItem(0)).toBe('item11');
+        expect(prop.getItem(1)).toBe('item22');
+        expect(prop.getItem(2)).toBe('item33');
+        expect(prop.getItem(3)).toBe('item44');
+
+        // replace items
+        prop.replaceItems(['item1', 'item2', 'item3']);
+        expect(prop.length).toBe(3);
+        expect(prop.getItem(0)).toBe('item1');
+        expect(prop.getItem(1)).toBe('item2');
+        expect(prop.getItem(2)).toBe('item3');
+
+        // each items
+        prop.eachItem(function(key, value) {
+            switch(key) {
+                case 0:
+                    expect(value).toBe('item1');
+                    break;
+                case 1:
+                    expect(value).toBe('item2');
+                    break;
+                case 2:
+                    expect(value).toBe('item3');
+                    break;
+                default:
+                    console.log(key, value);
+                    expect(true).toBe(false);
+                    break;
+            }
+        });
+
+        // indexOf method
+        prop.unshift('item1');
+        expect(prop.indexOf('unexistent')).toBe(-1);
+        expect(prop.indexOf('item1')).toBe(0);
+        expect(prop.indexOf('item2')).toBe(2);
+        expect(prop.indexOf(function(key, value) {
+            return value == 'item2';
+        })).toBe(2);
+
+        // lastIndexOf method
+        expect(prop.lastIndexOf('unexistent')).toBe(-1);
+        expect(prop.lastIndexOf('item1')).toBe(1);
+        expect(prop.lastIndexOf('item2')).toBe(2);
+        expect(prop.lastIndexOf(function(key, value) {
+            return value == 'item2';
+        })).toBe(2);
+        prop.shift();
+
+        // join method
+        expect(prop.join()).toBe('item1,item2,item3');
+        expect(prop.join('. ')).toBe('item1. item2. item3');
+
+        // swap items method
+        prop.swapItems(0, 2);
+        expect(prop.getItem(0)).toBe('item3');
+        expect(prop.getItem(2)).toBe('item1');
+        prop.swapItems(0, 2);
+        expect(prop.getItem(0)).toBe('item1');
+        expect(prop.getItem(2)).toBe('item3');
+        prop.swapItems(1, 2);
+        expect(prop.getItem(1)).toBe('item3');
+        expect(prop.getItem(2)).toBe('item2');
+        prop.swapItems(1, 2);
+        expect(prop.getItem(1)).toBe('item2');
+        expect(prop.getItem(2)).toBe('item3');
+
+        // reverse items order
+        prop.reverse();
+        expect(prop.getItem(0)).toBe('item3');
+        expect(prop.getItem(1)).toBe('item2');
+        expect(prop.getItem(2)).toBe('item1');
+        prop.reverse();
+        expect(prop.getItem(0)).toBe('item1');
+        expect(prop.getItem(1)).toBe('item2');
+        expect(prop.getItem(2)).toBe('item3');
+
+        // sort items
+        prop.sort(function(a, b) {
+            if (a > b) {
+                return -1;
+            } else if (a < b) {
+                return 1;
+            }
+            return 0;
+        });
+        expect(prop.getItem(0)).toBe('item3');
+        expect(prop.getItem(1)).toBe('item2');
+        expect(prop.getItem(2)).toBe('item1');
+        prop.reverse();
+
+        // slice method
+        var slicedArr = prop.slice(1, 2);
+        expect(slicedArr.length).toBe(1);
+        expect(slicedArr).toContain('item2');
+
+        // filter method
+        var filterResult = prop.filter(function(key, value) {
+            return value == 'item2' || key == 2;
+        });
+        expect(filterResult.length).toBe(2);
+        expect(filterResult).toContain('item2');
+        expect(filterResult).toContain('item3');
+
+        // getting data
+        var propData = prop.getData();
+        expect(propData.length).toBe(3);
+        expect(propData).toContain('item1');
+        expect(propData).toContain('item2');
+        expect(propData).toContain('item3');
+
+    });
+
+    it ("ability to lock its writable capability", function() {
+        expect(prop.isLocked()).toBe(false);
+        prop.lock();
+
+        classInst.setPropStringCollectionArray(['str1', 'str2']);
+        expect(classInst.getPropStringCollectionArray().length).toBe(3);
+        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('item1');
+        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('item2');
+        expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('item3');
+
+        prop.unlock();
+        classInst.setPropStringCollectionArray(['str1', 'str2']);
+        expect(classInst.getPropStringCollectionArray().length).toBe(2);
+        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
+        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
+    });
+
+    it ("modifying state after manipulations", function() {
+        expect(prop.isModified()).toBe(true);
+    });
+
+    it ("watchers", function() {
+        expect(classInst.changedPropStringCollectionArray).toBe(true);
+
+        expect(classInst.propStringCollectionArrayOld.length).toBe(3);
+        expect(classInst.propStringCollectionArrayOld[0]).toBe('item1');
+        expect(classInst.propStringCollectionArrayOld[1]).toBe('item2');
+        expect(classInst.propStringCollectionArrayOld[2]).toBe('item3');
+
+        expect(classInst.propStringCollectionArrayNew.length).toBe(2);
+        expect(classInst.propStringCollectionArrayNew[0]).toBe('str1');
+        expect(classInst.propStringCollectionArrayNew[1]).toBe('str2');
+    });
+});

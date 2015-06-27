@@ -59,19 +59,19 @@ describe("Checking", function() {
         expect(Object.keys(propMap.mapObject).length).toBe(0);
         expect(propMap.mapClass).toBe(null);
         expect(propMap.mapEnum).toBe('male');
-        expect(propMap.mapFunction).toBe(null);
+        expect(typeof propMap.mapFunction).toBe('function');
         expect(propMap.mapMixed).toBe(null);
 
         var mapMap = propMap.mapMap;
         expect(mapMap).not.toBe(null);
         expect(mapMap.mapMapNumber).toBe(0);
-        expect(mapMap.mapMapString).toBe(null);
+        expect(mapMap.mapMapString).toBe('');
         expect(mapMap.mapMapBoolean).toBe(false);
         expect(mapMap.mapMapArray.length).toBe(1);
         expect(Object.keys(mapMap.mapMapObject).length).toBe(0);
         expect(mapMap.mapMapClass).toBe(null);
         expect(mapMap.mapMapEnum).toBe('male');
-        expect(mapMap.mapMapFunction).toBe(null);
+        expect(typeof mapMap.mapMapFunction).toBe('function');
         expect(mapMap.mapMapMixed).toBe(null);
 
     });

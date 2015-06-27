@@ -9,25 +9,25 @@ describe("Testing map property type with its", function() {
         }
         if (!mapMapOnly) {
             expect(prop.mapNumber).toBe(10);
-            expect(prop.mapString).toBe(null);
+            expect(prop.mapString).toBe('');
             expect(prop.mapBoolean).toBe(false);
             expect(prop.mapArray.length).toBe(0);
             expect(Object.keys(prop.mapObject).length).toBe(0);
             expect(prop.mapClass).toBe(null);
             expect(prop.mapEnum).toBe('male');
-            expect(prop.mapFunction).toBe(null);
+            expect(typeof prop.mapFunction).toBe('function');
             expect(prop.mapMixed).toBe(null);
         }
 
         var propMap = prop.mapMap;
         expect(propMap.mapMapNumber).toBe(0);
-        expect(propMap.mapMapString).toBe(null);
+        expect(propMap.mapMapString).toBe('');
         expect(propMap.mapMapBoolean).toBe(false);
         expect(propMap.mapMapArray.length).toBe(0);
         expect(Object.keys(propMap.mapMapObject).length).toBe(0);
         expect(propMap.mapMapClass).toBe(null);
         expect(propMap.mapMapEnum).toBe('male');
-        expect(propMap.mapMapFunction).toBe(null);
+        expect(typeof propMap.mapMapFunction).toBe('function');
         expect(propMap.mapMapMixed).toBe(null);
     }
 
@@ -173,19 +173,19 @@ describe("Testing map property type with its", function() {
         expect(Object.keys(prop.mapObject).length).toBe(0);
         expect(prop.mapClass).toBe(null);
         expect(prop.mapEnum).toBe('male');
-        expect(prop.mapFunction).toBe(null);
+        expect(typeof prop.mapFunction).toBe('function');
         expect(prop.mapMixed).toBe(null);
 
         var propMap = prop.mapMap;
         expect(propMap.mapMapNumber).toBe(0);
-        expect(propMap.mapMapString).toBe(null);
+        expect(propMap.mapMapString).toBe('');
         expect(propMap.mapMapBoolean).toBe(false);
         expect(propMap.mapMapArray.length).toBe(1);
         expect(propMap.mapMapArray).toContain(10);
         expect(Object.keys(propMap.mapMapObject).length).toBe(0);
         expect(propMap.mapMapClass).toBe(null);
         expect(propMap.mapMapEnum).toBe('male');
-        expect(propMap.mapMapFunction).toBe(null);
+        expect(typeof propMap.mapMapFunction).toBe('function');
         expect(propMap.mapMapMixed).toBe(null);
     });
 

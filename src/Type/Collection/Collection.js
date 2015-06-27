@@ -365,7 +365,7 @@ Subclass.Property.Type.Collection.Collection = function()
     Collection.prototype.indexOf = function(value, reverse)
     {
         var testCallback = typeof value == 'function' ? value : false;
-        var key = false;
+        var key = null;
 
         if (reverse !== true) {
             reverse = false;
