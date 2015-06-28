@@ -41,14 +41,14 @@ describe("Checking", function() {
         expect(classInst.getPropConstructor().getMilliseconds()).toBe(100);
         expect(classInst.getProperty('propConstructor').getDefaultValue().getMilliseconds()).toBe(0);
 
-        //expect(classInst.getPropStringCollectionArray().length).toBe(3);
-        //expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
-        //expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
-        //expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('str3');
-        //
-        //expect(classInst.getProperty('propStringCollectionArray').getDefaultValue().length).toBe(2);
-        //expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('foo');
-        //expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('bar');
+        expect(classInst.getPropStringCollectionArray().length).toBe(3);
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('str1');
+        expect(classInst.getPropStringCollectionArray().get(1)).toBe('str2');
+        expect(classInst.getPropStringCollectionArray().get(2)).toBe('str3');
+
+        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue().length).toBe(2);
+        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('foo');
+        expect(classInst.getProperty('propStringCollectionArray').getDefaultValue()).toContain('bar');
 
         var propMap = classInst.getPropMap();
         expect(propMap).not.toBe(null);

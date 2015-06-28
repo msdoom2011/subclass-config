@@ -69,7 +69,7 @@ Subclass.Property.Type.Collection.CollectionItems = function()
             return 'property';
         },
 
-        attachItem: function (key, value)
+        attach: function (key, value)
         {
             var collectionItemProtoInstance = this._collection._property.getDefinition().getProtoInstance();
 
@@ -92,12 +92,24 @@ Subclass.Property.Type.Collection.CollectionItems = function()
             return this._items;
         },
 
-        getItem: function(key)
+        /**
+         * Returns collection item property
+         *
+         * @param {(string|number)} key
+         * @returns {Subclass.Property.Property}
+         */
+        get: function(key)
         {
             return this.getProperty(key);
         },
 
-        issetItem: function(key)
+        /**
+         * Checks whether collection item with specified key exists
+         *
+         * @param {(string|number)} key
+         * @returns {boolean}
+         */
+        isset: function(key)
         {
             return this.issetProperty(key);
         },
@@ -107,7 +119,7 @@ Subclass.Property.Type.Collection.CollectionItems = function()
          *
          * @param {string} key
          */
-        removeItem: function(key)
+        remove: function(key)
         {
             delete this.getItems()[key];
         },
@@ -121,7 +133,7 @@ Subclass.Property.Type.Collection.CollectionItems = function()
 
             for (var key in items) {
                 if (items.hasOwnProperty(key)) {
-                    this.removeItem(key);
+                    this.remove(key);
                 }
             }
         },

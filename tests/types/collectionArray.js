@@ -15,9 +15,9 @@ describe("Testing array collection property type with its", function() {
 
     it ("value", function() {
         expect(classInst.getPropStringCollectionArray().length).toBe(3);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
-        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
-        expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('str3');
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('str1');
+        expect(classInst.getPropStringCollectionArray().get(1)).toBe('str2');
+        expect(classInst.getPropStringCollectionArray().get(2)).toBe('str3');
 
         var data = classInst.getPropStringCollectionArray().getData();
         expect(data.length).toBe(3);
@@ -29,8 +29,8 @@ describe("Testing array collection property type with its", function() {
     it ("ability to set new value", function() {
         classInst.setPropStringCollectionArray([ "item1", "item2" ]);
         expect(classInst.getPropStringCollectionArray().length).toBe(2);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('item1');
-        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('item2');
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('item1');
+        expect(classInst.getPropStringCollectionArray().get(1)).toBe('item2');
 
         expect(function() { classInst.setPropStringCollectionArray("60"); }).toThrow();
         expect(function() { classInst.setPropStringCollectionArray(true); }).toThrow();
@@ -41,14 +41,14 @@ describe("Testing array collection property type with its", function() {
         expect(classInst.getPropStringCollectionArray() === null).toBe(true);
 
         classInst.setPropStringCollectionArray([]);
-        classInst.getPropStringCollectionArray().addItem('item10');
+        classInst.getPropStringCollectionArray().add('item10');
         expect(classInst.getPropStringCollectionArray().length).toBe(1);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('item10');
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('item10');
 
         classInst.setPropStringCollectionArray([ 'item3', 'item4' ]);
         expect(classInst.getPropStringCollectionArray().length).toBe(2);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('item3');
-        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('item4');
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('item3');
+        expect(classInst.getPropStringCollectionArray().get(1)).toBe('item4');
     });
 
     it ("manipulations with collection items", function() {
@@ -61,19 +61,19 @@ describe("Testing array collection property type with its", function() {
         // add items
         prop.addItems(['item1', 'item2', 'item3']);
         expect(prop.length).toBe(3);
-        expect(prop.getItem(0)).toBe('item1');
-        expect(prop.getItem(1)).toBe('item2');
-        expect(prop.getItem(2)).toBe('item3');
+        expect(prop.get(0)).toBe('item1');
+        expect(prop.get(1)).toBe('item2');
+        expect(prop.get(2)).toBe('item3');
 
         // add item
-        prop.addItem('item4');
+        prop.add('item4');
         expect(prop.length).toBe(4);
-        expect(prop.getItem(3)).toBe('item4');
+        expect(prop.get(3)).toBe('item4');
 
         // push item
         prop.push('item5');
         expect(prop.length).toBe(5);
-        expect(prop.getItem(4)).toBe('item5');
+        expect(prop.get(4)).toBe('item5');
 
         // pop item
         expect(prop.pop()).toBe('item5');
@@ -82,56 +82,56 @@ describe("Testing array collection property type with its", function() {
         // unshift item
         prop.unshift('item0');
         expect(prop.length).toBe(5);
-        expect(prop.getItem(0)).toBe('item0');
-        expect(prop.getItem(1)).toBe('item1');
-        expect(prop.getItem(2)).toBe('item2');
-        expect(prop.getItem(3)).toBe('item3');
-        expect(prop.getItem(4)).toBe('item4');
+        expect(prop.get(0)).toBe('item0');
+        expect(prop.get(1)).toBe('item1');
+        expect(prop.get(2)).toBe('item2');
+        expect(prop.get(3)).toBe('item3');
+        expect(prop.get(4)).toBe('item4');
 
         // shift item
         expect(prop.shift()).toBe('item0');
         expect(prop.length).toBe(4);
 
         // remove one item
-        prop.removeItem(3);
+        prop.remove(3);
         expect(prop.length).toBe(3);
-        expect(prop.issetItem(3)).toBe(false);
-        expect(function() { prop.getItem(3); }).toThrow();
+        expect(prop.isset(3)).toBe(false);
+        expect(function() { prop.get(3); }).toThrow();
 
         // set one item
-        prop.setItem(0, 'item100');
-        expect(prop.getItem(0)).toBe('item100');
-        prop.setItem(0, 'item1');
-        prop.setItem(10, 'item10');
+        prop.set(0, 'item100');
+        expect(prop.get(0)).toBe('item100');
+        prop.set(0, 'item1');
+        prop.set(10, 'item10');
         expect(prop.length).toBe(11);
-        expect(prop.getItem(4)).toBe('');
-        expect(prop.getItem(7)).toBe('');
+        expect(prop.get(4)).toBe('');
+        expect(prop.get(7)).toBe('');
 
         // removing a few items
         prop.removeItems(7, 2);
         expect(prop.length).toBe(9);
-        expect(prop.getItem(8)).toBe('item10');
+        expect(prop.get(8)).toBe('item10');
         prop.removeItems(3);
         expect(prop.length).toBe(3);
-        expect(prop.getItem(prop.length - 1)).toBe('item3');
+        expect(prop.get(prop.length - 1)).toBe('item3');
 
         // set a few items
         prop.setItems(['item11', 'item22', 'item33', 'item44']);
         expect(prop.length).toBe(4);
-        expect(prop.getItem(0)).toBe('item11');
-        expect(prop.getItem(1)).toBe('item22');
-        expect(prop.getItem(2)).toBe('item33');
-        expect(prop.getItem(3)).toBe('item44');
+        expect(prop.get(0)).toBe('item11');
+        expect(prop.get(1)).toBe('item22');
+        expect(prop.get(2)).toBe('item33');
+        expect(prop.get(3)).toBe('item44');
 
         // replace items
         prop.replaceItems(['item1', 'item2', 'item3']);
         expect(prop.length).toBe(3);
-        expect(prop.getItem(0)).toBe('item1');
-        expect(prop.getItem(1)).toBe('item2');
-        expect(prop.getItem(2)).toBe('item3');
+        expect(prop.get(0)).toBe('item1');
+        expect(prop.get(1)).toBe('item2');
+        expect(prop.get(2)).toBe('item3');
 
         // each items
-        prop.eachItem(function(key, value) {
+        prop.forEach(function(value, key) {
             switch(key) {
                 case 0:
                     expect(value).toBe('item1');
@@ -143,7 +143,6 @@ describe("Testing array collection property type with its", function() {
                     expect(value).toBe('item3');
                     break;
                 default:
-                    console.log(key, value);
                     expect(true).toBe(false);
                     break;
             }
@@ -154,7 +153,7 @@ describe("Testing array collection property type with its", function() {
         expect(prop.indexOf('unexistent')).toBe(-1);
         expect(prop.indexOf('item1')).toBe(0);
         expect(prop.indexOf('item2')).toBe(2);
-        expect(prop.indexOf(function(key, value) {
+        expect(prop.indexOf(function(value, key) {
             return value == 'item2';
         })).toBe(2);
 
@@ -162,7 +161,7 @@ describe("Testing array collection property type with its", function() {
         expect(prop.lastIndexOf('unexistent')).toBe(-1);
         expect(prop.lastIndexOf('item1')).toBe(1);
         expect(prop.lastIndexOf('item2')).toBe(2);
-        expect(prop.lastIndexOf(function(key, value) {
+        expect(prop.lastIndexOf(function(value, key) {
             return value == 'item2';
         })).toBe(2);
         prop.shift();
@@ -172,28 +171,28 @@ describe("Testing array collection property type with its", function() {
         expect(prop.join('. ')).toBe('item1. item2. item3');
 
         // swap items method
-        prop.swapItems(0, 2);
-        expect(prop.getItem(0)).toBe('item3');
-        expect(prop.getItem(2)).toBe('item1');
-        prop.swapItems(0, 2);
-        expect(prop.getItem(0)).toBe('item1');
-        expect(prop.getItem(2)).toBe('item3');
-        prop.swapItems(1, 2);
-        expect(prop.getItem(1)).toBe('item3');
-        expect(prop.getItem(2)).toBe('item2');
-        prop.swapItems(1, 2);
-        expect(prop.getItem(1)).toBe('item2');
-        expect(prop.getItem(2)).toBe('item3');
+        prop.swap(0, 2);
+        expect(prop.get(0)).toBe('item3');
+        expect(prop.get(2)).toBe('item1');
+        prop.swap(0, 2);
+        expect(prop.get(0)).toBe('item1');
+        expect(prop.get(2)).toBe('item3');
+        prop.swap(1, 2);
+        expect(prop.get(1)).toBe('item3');
+        expect(prop.get(2)).toBe('item2');
+        prop.swap(1, 2);
+        expect(prop.get(1)).toBe('item2');
+        expect(prop.get(2)).toBe('item3');
 
         // reverse items order
         prop.reverse();
-        expect(prop.getItem(0)).toBe('item3');
-        expect(prop.getItem(1)).toBe('item2');
-        expect(prop.getItem(2)).toBe('item1');
+        expect(prop.get(0)).toBe('item3');
+        expect(prop.get(1)).toBe('item2');
+        expect(prop.get(2)).toBe('item1');
         prop.reverse();
-        expect(prop.getItem(0)).toBe('item1');
-        expect(prop.getItem(1)).toBe('item2');
-        expect(prop.getItem(2)).toBe('item3');
+        expect(prop.get(0)).toBe('item1');
+        expect(prop.get(1)).toBe('item2');
+        expect(prop.get(2)).toBe('item3');
 
         // sort items
         prop.sort(function(a, b) {
@@ -204,9 +203,9 @@ describe("Testing array collection property type with its", function() {
             }
             return 0;
         });
-        expect(prop.getItem(0)).toBe('item3');
-        expect(prop.getItem(1)).toBe('item2');
-        expect(prop.getItem(2)).toBe('item1');
+        expect(prop.get(0)).toBe('item3');
+        expect(prop.get(1)).toBe('item2');
+        expect(prop.get(2)).toBe('item1');
         prop.reverse();
 
         // slice method
@@ -215,7 +214,7 @@ describe("Testing array collection property type with its", function() {
         expect(slicedArr).toContain('item2');
 
         // filter method
-        var filterResult = prop.filter(function(key, value) {
+        var filterResult = prop.filter(function(value, key) {
             return value == 'item2' || key == 2;
         });
         expect(filterResult.length).toBe(2);
@@ -237,15 +236,15 @@ describe("Testing array collection property type with its", function() {
 
         classInst.setPropStringCollectionArray(['str1', 'str2']);
         expect(classInst.getPropStringCollectionArray().length).toBe(3);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('item1');
-        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('item2');
-        expect(classInst.getPropStringCollectionArray().getItem(2)).toBe('item3');
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('item1');
+        expect(classInst.getPropStringCollectionArray().get(1)).toBe('item2');
+        expect(classInst.getPropStringCollectionArray().get(2)).toBe('item3');
 
         prop.unlock();
         classInst.setPropStringCollectionArray(['str1', 'str2']);
         expect(classInst.getPropStringCollectionArray().length).toBe(2);
-        expect(classInst.getPropStringCollectionArray().getItem(0)).toBe('str1');
-        expect(classInst.getPropStringCollectionArray().getItem(1)).toBe('str2');
+        expect(classInst.getPropStringCollectionArray().get(0)).toBe('str1');
+        expect(classInst.getPropStringCollectionArray().get(1)).toBe('str2');
     });
 
     it ("modifying state after manipulations", function() {

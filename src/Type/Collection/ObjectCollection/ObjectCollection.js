@@ -19,11 +19,9 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
      *
      * @returns {Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection}
      */
-    ObjectCollection.prototype.normalizeItem = function(itemName)
+    ObjectCollection.prototype.normalize = function(itemName)
     {
-        //var item = this.getItemData(itemName);
-        //var manager = this.getManager();
-        var itemData = this._items.getItem(itemName).getData();
+        var itemData = this._items.get(itemName).getData();
 
         if (
             this._property.getProto().constructor.getName() != 'map'
@@ -31,21 +29,20 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         ) {
             return itemData;
         }
-        if (!this.issetItem(itemData.extends)) {
+        if (!this.isset(itemData.extends)) {
             Subclass.Error.create(
                 'Trying to extend object collection element "' + itemName + '" ' +
                 'by non existent another collection element with key "' + itemData.extends + '".'
             );
         }
-        var parentItem = Subclass.Tools.copy(this.normalizeItem(itemData.extends));
+        var parentItem = Subclass.Tools.copy(this.normalize(itemData.extends));
         itemData.extends = null;
 
         for (var propName in itemData) {
             if (!itemData.hasOwnProperty(propName)) {
                 continue;
             }
-            //var itemChild = manager.getItemProp(itemName).getChild(propName);
-            var itemChild = this._items.getItem(itemName).getChild(propName);
+            var itemChild = this._items.get(itemName).getChild(propName);
 
             if (itemChild.isDefaultValue()) {
                 delete itemData[propName];
@@ -53,7 +50,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         }
 
         itemData = Subclass.Tools.extendDeep(parentItem, itemData);
-        this.setItem(itemName, itemData);
+        this.set(itemName, itemData);
 
         return itemData;
     };
@@ -66,8 +63,8 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         var collectionItems = {};
         var $this = this;
 
-        this.eachItem(function(itemName) {
-            collectionItems[itemName] = $this._items.getItem(itemName).getData();
+        this.forEach(function(itemValue, itemName) {
+            collectionItems[itemName] = $this._items.get(itemName).getData();
         });
 
         return collectionItems;

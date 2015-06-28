@@ -36,137 +36,27 @@ Subclass.Property.Type.Collection.Collection = function()
         // Initializing operations
 
         this._resetItems();
-
-        ///**
-        // * List of collection items
-        // *
-        // * @type {Subclass.Property.Type.Collection.CollectionItems}
-        // * @private
-        // */
-        //this._items = Subclass.Tools.createClassInstance(Collection.getCollectionItemsClass(), this);
-
-        //
-        ///**
-        // * Collection property context
-        // *
-        // * @type {Object}
-        // * @private
-        // */
-        //this._context = property.getContext();
-        //
-        ///**
-        // * Instance of collection manager
-        // *
-        // * @type {Subclass.Property.Type.Collection.CollectionManager}
-        // * @private
-        // */
-        //this._manager = Subclass.Tools.createClassInstance(Subclass.Property.Type.Collection.CollectionManager, this);
     }
 
+    /**
+     * Returns constructor of collection items class
+     *
+     * @returns {Subclass.Property.Type.Collection.CollectionItems|*}
+     */
     Collection.getCollectionItemsClass = function()
     {
         return Subclass.Property.Type.Collection.CollectionItems;
     };
 
-    //
-    ///**
-    // * Returns collection property instance to which current collection belongs to.
-    // *
-    // * @returns {Subclass.Property.Type.Collection.CollectionProperty}
-    // */
-    //Collection.prototype.getProperty = function()
-    //{
-    //    return this._property;
-    //};
-    //
-    ///**
-    // * Returns context object
-    // *
-    // * @returns {Object}
-    // */
-    //Collection.prototype.getContext = function()
-    //{
-    //    return this._context;
-    //};
-    //
-    ///**
-    // * Returns instance of collection manager
-    // *
-    // * @returns {Subclass.Property.Type.Collection.CollectionManager}
-    // */
-    //Collection.prototype.getManager = function()
-    //{
-    //    return this._manager;
-    //};
-    //
-    ///**
-    // * Returns clear data of collection item
-    // *
-    // * @param key
-    // * @returns {*|PropertyType}
-    // */
-    //Collection.prototype.getItemData = function(key)
-    //{
-    //    var manager = this.getManager();
-    //
-    //    return manager.getItemProp(key).getValue(
-    //        manager.getItems(),
-    //        true
-    //    );
-    //};
-
+    /**
+     * Resets the collection items creating the new collection items class instance
+     *
+     * @private
+     */
     Collection.prototype._resetItems = function()
     {
         var itemsConstructor = this.constructor.getCollectionItemsClass();
         this._items = Subclass.Tools.createClassInstance(itemsConstructor, this);
-    };
-
-    ///**
-    // * Attaches the new item to collection
-    // *
-    // * @param {string} key
-    // * @param {*} value
-    // * @returns {*}
-    // * @private
-    // */
-    //Collection.prototype._attachItem = function(key, value)
-    //{
-    //    var collectionItemProtoInstance = this._property.getDefinition().getProtoInstance();
-    //    this._items[key] = collectionItemProtoInstance.createInstance(key);
-    //    this._items[key].setContext(this._items);
-    //    this._items[key].resetValue(false);
-    //
-    //    if (value !== undefined) {
-    //        this._items[key].setValue(value, false);
-    //    }
-    //
-    //    return this[key];
-    //};
-
-    /**
-     * Adds new item to collection
-     *
-     * @param {(string|number)} key
-     * @param {*} value
-     * @param {boolean} [normalize=true]
-     */
-    Collection.prototype.addItem = function(key, value, normalize)
-    {
-        if (this.issetItem(key)) {
-            console.warn(
-                'Trying to add already existent collection item with key "' + key + '" ' +
-                'to property ' + this._property + '.'
-            );
-            return;
-        }
-        if (normalize !== false) {
-            normalize = true;
-        }
-        this._items.attachItem(key, value);
-
-        if (normalize) {
-            this.normalizeItem(key);
-        }
     };
 
     /**
@@ -178,7 +68,7 @@ Subclass.Property.Type.Collection.Collection = function()
      * @param {*} items
      * @returns {boolean}
      */
-    Collection.prototype.validateItems = function(items)
+    Collection.prototype._validateItems = function(items)
     {
         if (!Subclass.Tools.isPlainObject(items)) {
             Subclass.Error.create('InvalidArgument')
@@ -192,17 +82,43 @@ Subclass.Property.Type.Collection.Collection = function()
     };
 
     /**
+     * Adds new item to collection
+     *
+     * @param {(string|number)} key
+     * @param {*} value
+     * @param {boolean} [normalize=true]
+     */
+    Collection.prototype.add = function(key, value, normalize)
+    {
+        if (this.isset(key)) {
+            console.warn(
+                'Trying to add already existent collection item with key "' + key + '" ' +
+                'to property ' + this._property + '.'
+            );
+            return;
+        }
+        if (normalize !== false) {
+            normalize = true;
+        }
+        this._items.attach(key, value);
+
+        if (normalize) {
+            this.normalize(key);
+        }
+    };
+
+    /**
      * Adds new items to collection
      *
      * @param {Object} items
      */
     Collection.prototype.addItems = function(items)
     {
-        this.validateItems(items);
+        this._validateItems(items);
 
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
-                this.addItem(key, items[key], false);
+                this.add(key, items[key], false);
             }
         }
         this.normalizeItems();
@@ -215,19 +131,19 @@ Subclass.Property.Type.Collection.Collection = function()
      * @param {*} value
      * @param {boolean} [normalize=true]
      */
-    Collection.prototype.setItem = function(key, value, normalize)
+    Collection.prototype.set = function(key, value, normalize)
     {
         if (normalize !== false) {
             normalize = true;
         }
-        if (this.issetItem(key)) {
-            this._items.getItem(key).setValue(value);
+        if (this.isset(key)) {
+            this._items.get(key).setValue(value);
 
         } else {
-            this._items.attachItem(key, value);
+            this._items.attach(key, value);
         }
         if (normalize) {
-            this.normalizeItem(key);
+            this.normalize(key);
         }
     };
 
@@ -238,11 +154,11 @@ Subclass.Property.Type.Collection.Collection = function()
      */
     Collection.prototype.setItems = function(items)
     {
-        this.validateItems(items);
+        this._validateItems(items);
 
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
-                this.setItem(key, items[key], false);
+                this.set(key, items[key], false);
             }
         }
         this.normalizeItems();
@@ -255,7 +171,7 @@ Subclass.Property.Type.Collection.Collection = function()
      */
     Collection.prototype.replaceItems = function(items)
     {
-        this.validateItems(items);
+        this._validateItems(items);
         this.removeItems();
         this.setItems(items);
     };
@@ -266,15 +182,15 @@ Subclass.Property.Type.Collection.Collection = function()
      * @param {(string|number)} key
      * @returns {*}
      */
-    Collection.prototype.getItem = function(key)
+    Collection.prototype.get = function(key)
     {
-        if (!this.issetItem(key)) {
+        if (!this.isset(key)) {
             Subclass.Error.create(
                 'Trying to get non existent collection item with key "' + key + '" ' +
                 'in property ' + this._property + '.'
             );
         }
-        return this._items.getItem(key).getValue();
+        return this._items.get(key).getValue();
     };
 
     /**
@@ -282,10 +198,10 @@ Subclass.Property.Type.Collection.Collection = function()
      *
      * @param {(string|number)} key
      */
-    Collection.prototype.removeItem = function(key)
+    Collection.prototype.remove = function(key)
     {
-        var value = this._items.getItem(key).getData();
-        this._items.removeItem(key);
+        var value = this._items.get(key).getData();
+        this._items.remove(key);
 
         return value;
     };
@@ -309,9 +225,9 @@ Subclass.Property.Type.Collection.Collection = function()
      * @param {(string|number)} key
      * @returns {boolean}
      */
-    Collection.prototype.issetItem = function(key)
+    Collection.prototype.isset = function(key)
     {
-        return this._items.issetItem(key);
+        return this._items.isset(key);
     };
 
     /**
@@ -320,7 +236,7 @@ Subclass.Property.Type.Collection.Collection = function()
      * @param {Function} callback
      *      Function that will perform each collection item
      */
-    Collection.prototype.eachItem = function(callback)
+    Collection.prototype.forEach = function(callback)
     {
         if (arguments.length == 2 && typeof arguments[1] == 'function') {
             callback = arguments[1];
@@ -333,14 +249,13 @@ Subclass.Property.Type.Collection.Collection = function()
                 .apply()
             ;
         }
-        //var items = this.getManager().getItems();
         var items = this._items.getItems();
 
         for (var key in items) {
             if (!items.hasOwnProperty(key)) {
                 continue;
             }
-            if (callback(key, items[key].getValue()) === false) {
+            if (callback(items[key].getValue(), key) === false) {
                 break;
             }
         }
@@ -371,10 +286,10 @@ Subclass.Property.Type.Collection.Collection = function()
             reverse = false;
         }
 
-        this.eachItem(reverse, function(itemKey, itemValue) {
+        this.forEach(reverse, function(itemValue, itemKey) {
             if ((
                     testCallback
-                    && testCallback(itemKey, itemValue) === true
+                    && testCallback(itemValue, itemKey) === true
                 ) || (
                     !testCallback
                     && value == itemValue
@@ -406,8 +321,8 @@ Subclass.Property.Type.Collection.Collection = function()
         }
         var items = {};
 
-        this.eachItem(function(itemKey, itemValue) {
-            if (testCallback(itemKey, itemValue) === true) {
+        this.forEach(function(itemValue, itemKey) {
+            if (testCallback(itemValue, itemKey) === true) {
                 items[itemKey] = itemValue;
             }
         });
@@ -422,8 +337,8 @@ Subclass.Property.Type.Collection.Collection = function()
     {
         var $this = this;
 
-        this.eachItem(function(itemName, item) {
-            $this.normalizeItem(itemName);
+        this.forEach(function(itemValue, itemKey) {
+            $this.normalize(itemKey);
         });
     };
 
@@ -433,11 +348,11 @@ Subclass.Property.Type.Collection.Collection = function()
      * @param itemName
      * @returns {*}
      */
-    Collection.prototype.normalizeItem = function(itemName)
+    Collection.prototype.normalize = function(itemName)
     {
         // Do something
 
-        return this.getItem(itemName);
+        return this.get(itemName);
     };
 
     /**
@@ -462,6 +377,22 @@ Subclass.Property.Type.Collection.Collection = function()
             .method('getData')
             .apply()
         ;
+    };
+
+    /**
+     * @inheritDoc
+     */
+    Collection.prototype.toString = function()
+    {
+        return this.getData().toString();
+    };
+
+    /**
+     * @inheritDoc
+     */
+    Collection.prototype.valueOf = function()
+    {
+        return this.getData();
     };
 
     return Collection;

@@ -343,10 +343,6 @@ Subclass.Property.Type.Map.MapProperty = function()
     {
         var $this = this;
 
-        //if (markAsModified !== false) {
-        //    markAsModified = true;
-        //}
-
         function Map()
         {
             // Hack for the grunt-contrib-uglify plugin
@@ -381,9 +377,6 @@ Subclass.Property.Type.Map.MapProperty = function()
                 children[childName].resetValue(false);
             }
         }
-        //if (markAsModified) {
-        //    this.modify();
-        //}
 
         Object.seal(mapInst);
 

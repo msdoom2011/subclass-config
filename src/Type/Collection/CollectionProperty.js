@@ -121,7 +121,7 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                     if (!propertyDefinition.isWritable()) {
                         protoInstance.getDefinition().setWritable(false);
                     }
-                    collection.addItem(propName, defaultValue[propName]);
+                    collection.add(propName, defaultValue[propName]);
                 }
                 collection.normalizeItems();
             }

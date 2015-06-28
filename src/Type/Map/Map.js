@@ -93,5 +93,21 @@ Subclass.Property.Type.Map.Map = function()
         return this.getProperty().getData();
     };
 
+    /**
+     * @inheritDoc
+     */
+    Map.prototype.toString = function()
+    {
+        return this.getData().toString();
+    };
+
+    /**
+     * @inheritDoc
+     */
+    Map.prototype.valueOf = function()
+    {
+        return this.getData();
+    };
+
     return Map;
 }();
