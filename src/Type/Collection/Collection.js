@@ -100,6 +100,11 @@ Subclass.Property.Type.Collection.Collection = function()
         if (normalize !== false) {
             normalize = true;
         }
+        this._property
+            .getDefinition()
+            .getProtoInstance()
+            .validateValue(value)
+        ;
         this._items.attach(key, value);
 
         if (normalize) {
@@ -140,6 +145,11 @@ Subclass.Property.Type.Collection.Collection = function()
             this._items.get(key).setValue(value);
 
         } else {
+            this._property
+                .getDefinition()
+                .getProtoInstance()
+                .validateValue(value)
+            ;
             this._items.attach(key, value);
         }
         if (normalize) {

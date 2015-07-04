@@ -83,7 +83,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionType = (functio
 
         if (!value || typeof value != 'object' || !Array.isArray(value)) {
             Subclass.Error.create('InvalidPropertyValue')
-                .property(this.getProperty())
+                .property(this)
                 .received(value)
                 .expected('an array')
                 .apply()

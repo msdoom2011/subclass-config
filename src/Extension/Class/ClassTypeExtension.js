@@ -31,7 +31,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
             this._properties = {};
         });
 
-        classInst.getEvent('onCreateAfter').addListener(function(evt, classConstructor)
+        classInst.getEvent('onCreateClassAfter').addListener(function(evt, classConstructor)
         {
             this.attachProperties(classConstructor.prototype);
         });

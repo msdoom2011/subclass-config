@@ -153,7 +153,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
      */
     ObjectCollectionType.prototype.processData = function()
     {
-        var propertyManager = this.getProperty().getPropertyManager();
+        var propertyManager = this.getPropertyManager();
         var proto = propertyManager.normalizeTypeDefinition(this.getProto());
 
         // Adding "extends" parameter to property "schema"

@@ -7,12 +7,6 @@ describe("Testing array collection property type with its", function() {
         expect(prop.isModified()).toBe(false);
     });
 
-    it ("default value", function() {
-        expect(prop.getDefaultValue().length).toBe(2);
-        expect(prop.getDefaultValue()).toContain('foo');
-        expect(prop.getDefaultValue()).toContain('bar');
-    });
-
     it ("value", function() {
         expect(classInst.getPropStringCollectionArray().length).toBe(3);
         expect(classInst.getPropStringCollectionArray().get(0)).toBe('str1');
@@ -67,6 +61,7 @@ describe("Testing array collection property type with its", function() {
 
         // add item
         prop.add('item4');
+        expect(function() { prop.add(true); }).toThrow();
         expect(prop.length).toBe(4);
         expect(prop.get(3)).toBe('item4');
 
@@ -249,6 +244,12 @@ describe("Testing array collection property type with its", function() {
 
     it ("modifying state after manipulations", function() {
         expect(prop.isModified()).toBe(true);
+    });
+
+    it ("default value", function() {
+        expect(prop.getDefaultValue().length).toBe(2);
+        expect(prop.getDefaultValue()).toContain('foo');
+        expect(prop.getDefaultValue()).toContain('bar');
     });
 
     it ("watchers", function() {

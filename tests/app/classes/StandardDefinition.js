@@ -54,6 +54,10 @@ app.registerClass('Class/StandardDefinition',
     propStringCollectionArrayOld: false,
     propStringCollectionArrayNew: false,
 
+    changedPropMapCollectionArray: false,
+    propMapCollectionArrayOld: false,
+    propMapCollectionArrayNew: false,
+
     $_properties: {
 
         propNumber: {
@@ -274,6 +278,35 @@ app.registerClass('Class/StandardDefinition',
                 this.propStringCollectionArrayOld = oldValue;
                 this.propStringCollectionArrayNew = newValue;
             }
+        },
+
+        propMapCollectionArray: {
+            type: "arrayCollection",
+            proto: { type: "map", schema: {
+                propMapNumber: { type: "number" },
+                propMapString: { type: "string" },
+                propMapMap: { type: "map", schema: {
+                    mapMapString: { type: "string" }
+                }}
+            }},
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: [
+                {
+                    propMapNumber: 10,
+                    propMapString: "string value",
+                    propMapMap: {
+                        mapMapString: "map string value"
+                    }
+                }
+            ],
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropMapCollectionArray = true;
+                this.propMapCollectionArrayOld = oldValue;
+                this.propMapCollectionArrayNew = newValue;
+            }
         }
 
         //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
@@ -294,13 +327,5 @@ app.registerClass('Class/StandardDefinition',
         //    { type: "number" },
         //    { type: "string" }
         //]}},
-        //
-        //propMapCollectionArray: { type: "arrayCollection", proto: { type: "map", schema: {
-        //    propMapNumber: { type: "number" },
-        //    propMapString: { type: "string" },
-        //    propMapMap: { type: "map", schema: {
-        //        mapMapString: { type: "string" }
-        //    }}
-        //}}}
     }
 });

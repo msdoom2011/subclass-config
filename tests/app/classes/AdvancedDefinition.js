@@ -234,6 +234,60 @@ app.registerClass('Class/AdvancedDefinition',
                 this.propStringCollectionArrayOld = oldValue;
                 this.propStringCollectionArrayNew = newValue;
             }
+        },
+
+
+        propMapCollectionArray: {
+            type: "arrayCollection",
+            proto: { type: "map", schema: {
+                propMapNumber: { type: "number" },
+                propMapString: { type: "string" },
+                propMapMap: { type: "map", schema: {
+                    mapMapString: { type: "string" }
+                }}
+            }},
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: [
+                {
+                    propMapNumber: 10,
+                    propMapString: "string value",
+                    propMapMap: {
+                        mapMapString: "map string value"
+                    }
+                },
+                {
+                    propMapNumber: 20,
+                    propMapString: "string value 2",
+                    propMapMap: {
+                        mapMapString: "map string value 2"
+                    }
+                }
+            ],
+            value: [
+                {
+                    propMapNumber: 1000,
+                    propMapString: "string value 1000",
+                    propMapMap: {
+                        mapMapString: "map string value 1000"
+                    }
+                },
+                {
+                    propMapNumber: 1001,
+                    propMapString: "string value 1001",
+                    propMapMap: {
+                        mapMapString: "map string value 1001"
+                    }
+                }
+            ],
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropMapCollectionArray = true;
+                this.propMapCollectionArrayOld = oldValue;
+                this.propMapCollectionArrayNew = newValue;
+            }
         }
+
     }
 });

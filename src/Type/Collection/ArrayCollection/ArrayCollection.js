@@ -65,6 +65,13 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
         if (arguments.length == 2) {
             value = arguments[1];
         }
+        if (arguments.length) {
+            this._property
+                .getDefinition()
+                .getProtoInstance()
+                .validateValue(value)
+            ;
+        }
         this._items.attach(
             String(this.getLength()),
             value
