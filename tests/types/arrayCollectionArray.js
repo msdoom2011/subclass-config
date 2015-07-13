@@ -560,3 +560,4 @@ describe("Testing array collection property type with its", function() {
         expect(classInst.propArrayCollectionCollectionArrayNew[1][0]).toBe('str2');
     });
 });
+
