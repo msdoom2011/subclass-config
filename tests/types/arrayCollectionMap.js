@@ -295,10 +295,10 @@ describe("Testing array collection property type with its", function() {
             return value.propMapMap.mapMapString == 'item2' || key == 2;
         });
         expect(filterResult.length).toBe(2);
-        expect(Array.isArray(slicedArr)).toBe(true);
-        expect(slicedArr[0].propMapMap.mapMapString).toBe('item2');
-        slicedArr[0].propMapNumber = 100;
-        expect(function() { slicedArr[0].propMapNumber = "100"; }).toThrow();
+        expect(Array.isArray(filterResult)).toBe(true);
+        expect(filterResult[0].propMapMap.mapMapString).toBe('item2');
+        filterResult[0].propMapNumber = 100;
+        expect(function() { filterResult[0].propMapNumber = "100"; }).toThrow();
 
         // getting data
         var propData = prop.getData();

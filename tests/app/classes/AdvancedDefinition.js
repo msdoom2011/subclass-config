@@ -287,7 +287,28 @@ app.registerClass('Class/AdvancedDefinition',
                 this.propMapCollectionArrayOld = oldValue;
                 this.propMapCollectionArrayNew = newValue;
             }
-        }
+        },
 
+        propArrayCollectionCollectionArray: {
+            type: "arrayCollection",
+            proto: { type: "arrayCollection", proto: { type: 'string', default: "default_str" } },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: [
+                [ 'str11', 'str12', 'str13'],
+                [ 'str21', 'str22', 'str23']
+            ],
+            value: [
+                [ 'item11', 'item12', 'item13'],
+                [ 'item21', 'item22', 'item23']
+            ],
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropArrayCollectionCollectionArray = true;
+                this.propArrayCollectionCollectionArrayOld = oldValue;
+                this.propArrayCollectionCollectionArrayNew = newValue;
+            }
+        }
     }
 });

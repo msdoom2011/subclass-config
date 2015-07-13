@@ -121,6 +121,11 @@ app.registerClass('Class/BaseDefinition',
             propMapMap: { type: "map", schema: {
                 mapMapString: { type: "string" }
             }}
-        }}}
+        }}},
+
+        propArrayCollectionCollectionArray: { type: "arrayCollection", proto: {
+            type: "arrayCollection",
+            proto: { type: "string" }
+        }}
     }
 });

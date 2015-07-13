@@ -70,7 +70,8 @@ module.exports = function(config) {
       "tests/types/constructor.js",
       "tests/types/map.js",
       "tests/types/arrayCollectionString.js",
-      "tests/types/arrayCollectionMap.js"
+      "tests/types/arrayCollectionMap.js",
+      "tests/types/arrayCollectionArray.js"
 
       //"tests/types/**/*.js"
     ],

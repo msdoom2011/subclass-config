@@ -58,6 +58,10 @@ app.registerClass('Class/StandardDefinition',
     propMapCollectionArrayOld: false,
     propMapCollectionArrayNew: false,
 
+    changedPropArrayCollectionCollectionArray: false,
+    propArrayCollectionCollectionArrayOld: false,
+    propArrayCollectionCollectionArrayNew: false,
+
     $_properties: {
 
         propNumber: {
@@ -306,6 +310,24 @@ app.registerClass('Class/StandardDefinition',
                 this.changedPropMapCollectionArray = true;
                 this.propMapCollectionArrayOld = oldValue;
                 this.propMapCollectionArrayNew = newValue;
+            }
+        },
+
+        propArrayCollectionCollectionArray: {
+            type: "arrayCollection",
+            proto: { type: "arrayCollection", proto: { type: 'string' } },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: [
+                [ 'str11', 'str12', 'str13'],
+                [ 'str21', 'str22', 'str23']
+            ],
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropArrayCollectionCollectionArray = true;
+                this.propArrayCollectionCollectionArrayOld = oldValue;
+                this.propArrayCollectionCollectionArrayNew = newValue;
             }
         }
 
