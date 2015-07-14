@@ -120,7 +120,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
         }
         if (!value || typeof value != 'object' || !Subclass.Tools.isPlainObject(value)) {
             Subclass.Error.create('InvalidPropertyValue')
-                .property(this.getProperty())
+                .property(this)
                 .received(value)
                 .expected('a plain object')
                 .apply()

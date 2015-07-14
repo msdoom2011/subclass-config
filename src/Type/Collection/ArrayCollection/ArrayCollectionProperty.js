@@ -21,23 +21,23 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollectionProperty = func
     {
         return Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection;
     };
-
-    ArrayCollectionProperty.prototype = {
-
-        /**
-         * @inheritDoc
-         */
-        onCreateCollection: function(collection)
-        {
-            Object.defineProperty(collection, 'length', {
-                enumerable: false,
-                set: function() {},
-                get: function() {
-                    return collection.getLength();
-                }
-            });
-        }
-    };
+    //
+    //ArrayCollectionProperty.prototype = {
+    //
+    //    /**
+    //     * @inheritDoc
+    //     */
+    //    onCreateCollection: function(collection)
+    //    {
+    //        Object.defineProperty(collection, 'length', {
+    //            enumerable: false,
+    //            set: function() {},
+    //            get: function() {
+    //                return collection.getLength();
+    //            }
+    //        });
+    //    }
+    //};
 
     return ArrayCollectionProperty;
 }();

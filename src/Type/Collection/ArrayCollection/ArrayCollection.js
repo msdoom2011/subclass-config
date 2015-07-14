@@ -44,11 +44,11 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 .apply()
             ;
         }
-        var itemsNew = {};
-
-        for (var i = 0; i < items.length; i++) {
-            itemsNew[String(i)] = items[i];
-        }
+        //var itemsNew = {};
+        //
+        //for (var i = 0; i < items.length; i++) {
+        //    itemsNew[String(i)] = items[i];
+        //}
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
                 this.add(items[key]);
@@ -76,6 +76,10 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
             String(this.getLength()),
             value
         );
+
+        if (this.isInitialized()) {
+            this._property.modify();
+        }
     };
 
     /**
@@ -183,6 +187,9 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 this.remove(indexStart);
             }
         }
+        if (this.isInitialized()) {
+            this._property.modify();
+        }
     };
 
     /**
@@ -214,6 +221,9 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
 
         if (this.length == length) {
             this.pop();
+        }
+        if (this.isInitialized()) {
+            this._property.modify();
         }
 
         return value;

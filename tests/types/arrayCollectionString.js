@@ -5,6 +5,10 @@ describe("Testing array collection property type with its", function() {
 
     it ("modifying state before manipulations", function() {
         expect(prop.isModified()).toBe(false);
+
+        prop.getValue().add('str4');
+        expect(prop.isModified()).toBe(true);
+        prop.getValue().pop();
     });
 
     it ("value", function() {

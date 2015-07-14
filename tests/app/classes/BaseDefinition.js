@@ -94,6 +94,8 @@ app.registerClass('Class/BaseDefinition',
             }}
         }},
 
+        // Array Collection
+
         propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
 
         propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
@@ -124,6 +126,43 @@ app.registerClass('Class/BaseDefinition',
         }}},
 
         propArrayCollectionCollectionArray: { type: "arrayCollection", proto: {
+            type: "arrayCollection",
+            proto: { type: "string" }
+        }},
+
+
+        // Object Collection
+
+        propStringCollectionObject: { type: "objectCollection", proto: { type: "string" } },
+
+        propNumberCollectionObject: { type: "objectCollection", proto: { type: "number" } },
+
+        propBooleanCollectionObject: { type: "objectCollection", proto: { type: "boolean" } },
+
+        propArrayCollectionObject: { type: "objectCollection", proto: { type: "array" } },
+
+        propObjectCollectionObject: { type: "objectCollection", proto: { type: "object" } },
+
+        propClassCollectionObject: { type: "objectCollection", proto: { type: "class", className: "Class/AppClass" } },
+
+        propEnumCollectionObject: { type: "objectCollection", proto: { type: "enum", allows: [ "male", "female" ] } },
+
+        propFunctionCollectionObject: { type: "objectCollection", proto: { type: "function" } },
+
+        propMixedCollectionObject: { type: "objectCollection", proto: { type: "mixed", allows: [
+            { type: "number" },
+            { type: "string" }
+        ]}},
+
+        propMapCollectionObject: { type: "objectCollection", proto: { type: "map", schema: {
+            propMapNumber: { type: "number" },
+            propMapString: { type: "string" },
+            propMapMap: { type: "map", schema: {
+                mapMapString: { type: "string" }
+            }}
+        }}},
+
+        propArrayCollectionCollectionObject: { type: "objectCollection", proto: {
             type: "arrayCollection",
             proto: { type: "string" }
         }}

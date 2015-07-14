@@ -24,7 +24,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         var itemData = this._items.get(itemName).getData();
 
         if (
-            this._property.getProto().constructor.getName() != 'map'
+            this._property.getDefinition().getProto().type != 'map'
             || !itemData.extends
         ) {
             return itemData;
@@ -53,6 +53,16 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         this.set(itemName, itemData);
 
         return itemData;
+    };
+
+    /**
+     * Returns all collection items keys
+     *
+     * @returns {string[]}
+     */
+    ObjectCollection.prototype.keys = function()
+    {
+        return Object.keys(this._items.getItems());
     };
 
     /**

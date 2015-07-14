@@ -16,7 +16,7 @@ Subclass.Property.Type.Map.MapProperty = function()
         MapProperty.$parent.apply(this, arguments);
 
         /**
-         * @type {Object.<PropertyType>}
+         * @type {Object.<Subclass.Property.Property>}
          * @private
          */
         this._children = {};
@@ -167,17 +167,6 @@ Subclass.Property.Type.Map.MapProperty = function()
     //{
     //    this._isNull = isNull;
     //};
-
-    /**
-     * Returns all map child properties
-     *
-     * @returns {Object.<Subclass.Property.Property>}
-     */
-    MapProperty.prototype.getChildren = function()
-    {
-        return this._children;
-    };
-
     //
     ///**
     // * Returns list of children properties instances
@@ -263,6 +252,27 @@ Subclass.Property.Type.Map.MapProperty = function()
             ;
         }
         this._children = children;
+    };
+
+    /**
+     * Returns all map child properties
+     *
+     * @returns {Object.<Subclass.Property.Property>}
+     */
+    MapProperty.prototype.getChildren = function()
+    {
+        return this._children;
+    };
+
+    /**
+     * Returns map child property by its name
+     *
+     * @param {string} childName
+     * @returns {Subclass.Property.Property}
+     */
+    MapProperty.prototype.getChild = function(childName)
+    {
+        return this._children[childName];
     };
 
     /**

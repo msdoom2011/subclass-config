@@ -221,6 +221,9 @@ app.registerClass('Class/AdvancedDefinition',
             }
         },
 
+
+        // Array Collection
+
         propStringCollectionArray: {
             type: "arrayCollection",
             proto: { type: "string" },
@@ -308,6 +311,115 @@ app.registerClass('Class/AdvancedDefinition',
                 this.changedPropArrayCollectionCollectionArray = true;
                 this.propArrayCollectionCollectionArrayOld = oldValue;
                 this.propArrayCollectionCollectionArrayNew = newValue;
+            }
+        },
+
+
+        // Object Collection
+
+        propStringCollectionObject: {
+            type: "objectCollection",
+            proto: { type: "string" },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: {
+                "item1": "foo",
+                "item2": "bar"
+            },
+            value: {
+                "item1": "str1",
+                "item2": "str2",
+                "item3": "str3"
+            },
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropStringCollectionObject = true;
+                this.propStringCollectionObjectOld = oldValue;
+                this.propStringCollectionObjectNew = newValue;
+            }
+        },
+
+
+        propMapCollectionObject: {
+            type: "objectCollection",
+            proto: { type: "map", schema: {
+                propMapNumber: { type: "number" },
+                propMapString: { type: "string" },
+                propMapMap: { type: "map", schema: {
+                    mapMapString: { type: "string" }
+                }}
+            }},
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: {
+                "item1": {
+                    propMapNumber: 1000,
+                    propMapString: "string value 1000",
+                    propMapMap: {
+                        mapMapString: "map string value 1000"
+                    }
+                },
+                "item2": {
+                    propMapNumber: 20,
+                    propMapString: "string value 2000",
+                    propMapMap: {
+                        mapMapString: "map string value 2000"
+                    }
+                }
+            },
+            value: {
+                "item1": {
+                    propMapNumber: 10,
+                    propMapString: "string value",
+                    propMapMap: {
+                        mapMapString: "map string value"
+                    }
+                },
+                "item2": {
+                    extends: "item1",
+                    propMapNumber: 100
+                },
+                "item3": {
+                    extends: "item2",
+                    propMapMap: {
+                        mapMapString: "new map string value!!!"
+                    }
+                }
+            },
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropMapCollectionObject = true;
+                this.propMapCollectionObjectOld = oldValue;
+                this.propMapCollectionObjectNew = newValue;
+            }
+        },
+
+        propArrayCollectionCollectionObject: {
+            type: "objectCollection",
+            proto: {
+                type: "arrayCollection",
+                proto: {
+                    type: 'string',
+                    default: "default_str"
+                }
+            },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: {
+                "item1": ['str11', 'str12', 'str13'],
+                "item2": ['str21', 'str22', 'str23']
+            },
+            value: {
+                "item1": ['item11', 'item12', 'item13'],
+                "item2": ['item21', 'item22', 'item23']
+            },
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropArrayCollectionCollectionObject = true;
+                this.propArrayCollectionCollectionObjectOld = oldValue;
+                this.propArrayCollectionCollectionObjectNew = newValue;
             }
         }
     }

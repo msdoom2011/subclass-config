@@ -27,10 +27,20 @@ Subclass.Property.Type.Collection.Collection = function()
         this._property = property;
 
         /**
-         * @type {Object.<Subclass.Property.Property>}
+         * Instance of items collection manager
+         *
+         * @type {Object.<Subclass.Property.Type.Collection.CollectionItems>}
          * @private
          */
         this._items = null;
+
+        /**
+         * Reports whether current collection instance is initialized by default values
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._initialized = false;
 
 
         // Initializing operations
@@ -57,6 +67,24 @@ Subclass.Property.Type.Collection.Collection = function()
     {
         var itemsConstructor = this.constructor.getCollectionItemsClass();
         this._items = Subclass.Tools.createClassInstance(itemsConstructor, this);
+    };
+
+    /**
+     * Checks whether current items collection is initialized
+     *
+     * @returns {boolean}
+     */
+    Collection.prototype.isInitialized = function()
+    {
+        return this._initialized;
+    };
+
+    /**
+     * Makes current items collection initialized
+     */
+    Collection.prototype.setInitialized = function()
+    {
+        this._initialized = true;
     };
 
     /**
@@ -110,6 +138,9 @@ Subclass.Property.Type.Collection.Collection = function()
         if (normalize) {
             this.normalize(key);
         }
+        if (this.isInitialized()) {
+            this._property.modify();
+        }
     };
 
     /**
@@ -154,6 +185,9 @@ Subclass.Property.Type.Collection.Collection = function()
         }
         if (normalize) {
             this.normalize(key);
+        }
+        if (this.isInitialized()) {
+            this._property.modify();
         }
     };
 
@@ -213,6 +247,10 @@ Subclass.Property.Type.Collection.Collection = function()
         var value = this._items.get(key).getData();
         this._items.remove(key);
 
+        if (this.isInitialized()) {
+            this._property.modify();
+        }
+
         return value;
     };
 
@@ -225,6 +263,10 @@ Subclass.Property.Type.Collection.Collection = function()
     {
         var data = this.getData();
         this._resetItems();
+
+        if (this.isInitialized()) {
+            this._property.modify();
+        }
 
         return data;
     };

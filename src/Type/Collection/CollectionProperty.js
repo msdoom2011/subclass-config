@@ -56,8 +56,6 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
             if (value !== null) {
                 if (!collection) {
                     this._value = collection = this.createCollection();
-                    //this.resetValue(markAsModified);
-                    //collection = this.getValue();
                 }
                 collection.replaceItems(value);
                 collection.normalizeItems();
@@ -80,13 +78,13 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
             if (markAsModified !== false) {
                 markAsModified = true;
             }
-            if (markAsModified) {
-                this.modify();
-            }
             var value = this.getDefaultValue();
 
             if (value !== null) {
                 value = this.createCollection();
+            }
+            if (markAsModified) {
+                this.modify();
             }
 
             this._value = value;
@@ -97,10 +95,6 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
          */
         createCollection: function()
         {
-            //if (markAsModified !== false) {
-            //    markAsModified = true;
-            //}
-
             var propertyDefinition = this.getDefinition();
             var defaultValue = propertyDefinition.getDefault();
             var protoInstance = propertyDefinition.getProtoInstance();
@@ -109,7 +103,13 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
 
             // Altering collection
 
-            this.onCreateCollection(collection);
+            Object.defineProperty(collection, 'length', {
+                enumerable: false,
+                set: function() {},
+                get: function() {
+                    return collection.getLength();
+                }
+            });
 
             // Setting default value
 
@@ -125,24 +125,22 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 }
                 collection.normalizeItems();
             }
-            //if (markAsModified) {
-            //    this.modify();
-            //}
+
             Object.seal(collection);
 
             return collection;
         },
-
-        /**
-         * Alters property collection instance during the reset value operation
-         *
-         * @param {Subclass.Property.Type.Collection} collection
-         *      The instance of property collection
-         */
-        onCreateCollection: function(collection)
-        {
-            // Do something
-        },
+        //
+        ///**
+        // * Alters property collection instance during the reset value operation
+        // *
+        // * @param {Subclass.Property.Type.Collection} collection
+        // *      The instance of property collection
+        // */
+        //onCreateCollection: function(collection)
+        //{
+        //    // Do something
+        //},
 
         /**
          * @inheritDoc

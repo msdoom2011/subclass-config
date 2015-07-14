@@ -71,7 +71,9 @@ module.exports = function(config) {
       "tests/types/map.js",
       "tests/types/arrayCollectionString.js",
       "tests/types/arrayCollectionMap.js",
-      "tests/types/arrayCollectionArray.js"
+      "tests/types/arrayCollectionArray.js",
+      "tests/types/objectCollectionString.js",
+      "tests/types/objectCollectionMap.js"
 
       //"tests/types/**/*.js"
     ],

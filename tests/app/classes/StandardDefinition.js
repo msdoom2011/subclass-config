@@ -62,6 +62,18 @@ app.registerClass('Class/StandardDefinition',
     propArrayCollectionCollectionArrayOld: false,
     propArrayCollectionCollectionArrayNew: false,
 
+    changedPropStringCollectionObject: false,
+    propStringCollectionObjectOld: false,
+    propStringCollectionObjectNew: false,
+
+    changedPropMapCollectionObject: false,
+    propMapCollectionObjectOld: false,
+    propMapCollectionObjectNew: false,
+
+    changedPropArrayCollectionCollectionObject: false,
+    propArrayCollectionCollectionObjectOld: false,
+    propArrayCollectionCollectionObjectNew: false,
+
     $_properties: {
 
         propNumber: {
@@ -270,6 +282,9 @@ app.registerClass('Class/StandardDefinition',
             }
         },
 
+
+        // Array Collection
+
         propStringCollectionArray: {
             type: "arrayCollection",
             proto: { type: "string" },
@@ -329,25 +344,83 @@ app.registerClass('Class/StandardDefinition',
                 this.propArrayCollectionCollectionArrayOld = oldValue;
                 this.propArrayCollectionCollectionArrayNew = newValue;
             }
-        }
+        },
 
-        //propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
-        //
-        //propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" } },
-        //
-        //propArrayCollectionArray: { type: "arrayCollection", proto: { type: "array" } },
-        //
-        //propObjectCollectionArray: { type: "arrayCollection", proto: { type: "object" } },
-        //
-        //propClassCollectionArray: { type: "arrayCollection", proto: { type: "class", className: "Class/AppClass" } },
-        //
-        //propEnumCollectionArray: { type: "arrayCollection", proto: { type: "enum", allows: [ "male", "female" ] } },
-        //
-        //propFunctionCollectionArray: { type: "arrayCollection", proto: { type: "function" } },
-        //
-        //propMixedCollectionArray: { type: "arrayCollection", proto: { type: "mixed", allows: [
-        //    { type: "number" },
-        //    { type: "string" }
-        //]}},
+
+        // Object Collection
+
+        propStringCollectionObject: {
+            type: "objectCollection",
+            proto: { type: "string" },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: {
+                "item1": "foo",
+                "item2": "bar"
+            },
+            watcher: function(newValue, oldValue, property) {
+                this.changedPropStringCollectionObject = true;
+                this.propStringCollectionObjectOld = oldValue;
+                this.propStringCollectionObjectNew = newValue;
+            }
+        },
+
+        propMapCollectionObject: {
+            type: "objectCollection",
+            proto: { type: "map", schema: {
+                propMapNumber: { type: "number" },
+                propMapString: { type: "string" },
+                propMapMap: { type: "map", schema: {
+                    mapMapString: { type: "string" }
+                }}
+            }},
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: {
+                "item1": {
+                    propMapNumber: 10,
+                    propMapString: "string value",
+                    propMapMap: {
+                        mapMapString: "map string value"
+                    }
+                },
+                "item2": {
+                    extends: "item1",
+                    propMapNumber: 100
+                },
+                "item3": {
+                    extends: "item2",
+                    propMapMap: {
+                        mapMapString: "new map string value!!!"
+                    }
+                }
+            },
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropMapCollectionObject = true;
+                this.propMapCollectionObjectOld = oldValue;
+                this.propMapCollectionObjectNew = newValue;
+            }
+        },
+
+        propArrayCollectionCollectionObject: {
+            type: "objectCollection",
+            proto: { type: "arrayCollection", proto: { type: 'string' } },
+            writable: true,
+            accessors: true,
+            nullable: true,
+            default: {
+                "item1": ['str11', 'str12', 'str13'],
+                "item2": ['str21', 'str22', 'str23']
+            },
+            watcher: function(newValue, oldValue, property)
+            {
+                this.changedPropArrayCollectionCollectionObject = true;
+                this.propArrayCollectionCollectionObjectOld = oldValue;
+                this.propArrayCollectionCollectionObjectNew = newValue;
+            }
+        }
     }
 });
