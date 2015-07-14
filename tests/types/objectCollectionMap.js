@@ -9,7 +9,7 @@ describe("Testing array collection property type with its", function() {
 
     it ("value", function() {
         var value = classInst.getPropMapCollectionObject();
-        expect(value.length).toBe(2);
+        expect(value.length).toBe(3);
 
         expect(value.get("item1").propMapNumber).toBe(10);
         expect(value.get("item1").propMapString).toBe('string value');

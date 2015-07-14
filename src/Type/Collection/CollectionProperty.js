@@ -57,9 +57,14 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 if (!collection) {
                     this._value = collection = this.createCollection();
                 }
+                if (!markAsModified) {
+                    collection.denyModifying();
+                }
                 collection.replaceItems(value);
-                collection.normalizeItems();
 
+                if (!markAsModified) {
+                    collection.allowModifying();
+                }
             } else {
                 this._value = null;
             }
@@ -91,17 +96,40 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
         },
 
         /**
-         * @inheritDoc
+         * Creates the collection instance
          */
         createCollection: function()
         {
-            var propertyDefinition = this.getDefinition();
-            var defaultValue = propertyDefinition.getDefault();
-            var protoInstance = propertyDefinition.getProtoInstance();
             var collectionConstructor = this.constructor.getCollectionClass();
             var collection = Subclass.Tools.createClassInstance(collectionConstructor, this);
 
-            // Altering collection
+            // Initializing collection
+
+            this.initializeCollection(collection);
+            Object.seal(collection);
+
+            return collection;
+        },
+
+        /**
+         * Initializes the instance of collection
+         *
+         * @param collection
+         */
+        initializeCollection: function(collection)
+        {
+            var propertyDefinition = this.getDefinition();
+            var defaultValue = propertyDefinition.getDefault();
+
+            // Setting default value
+
+            collection.denyModifying();
+
+            if (defaultValue !== null) {
+                collection.addItems(defaultValue);
+            }
+
+            collection.allowModifying();
 
             Object.defineProperty(collection, 'length', {
                 enumerable: false,
@@ -110,37 +138,7 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                     return collection.getLength();
                 }
             });
-
-            // Setting default value
-
-            if (defaultValue !== null) {
-                for (var propName in defaultValue) {
-                    if (!defaultValue.hasOwnProperty(propName)) {
-                        continue;
-                    }
-                    if (!propertyDefinition.isWritable()) {
-                        protoInstance.getDefinition().setWritable(false);
-                    }
-                    collection.add(propName, defaultValue[propName]);
-                }
-                collection.normalizeItems();
-            }
-
-            Object.seal(collection);
-
-            return collection;
         },
-        //
-        ///**
-        // * Alters property collection instance during the reset value operation
-        // *
-        // * @param {Subclass.Property.Type.Collection} collection
-        // *      The instance of property collection
-        // */
-        //onCreateCollection: function(collection)
-        //{
-        //    // Do something
-        //},
 
         /**
          * @inheritDoc

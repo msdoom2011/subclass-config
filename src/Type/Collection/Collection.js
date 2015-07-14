@@ -35,12 +35,12 @@ Subclass.Property.Type.Collection.Collection = function()
         this._items = null;
 
         /**
-         * Reports whether current collection instance is initialized by default values
+         * Indicates whether current collection instance can be marked as modified
          *
          * @type {boolean}
          * @private
          */
-        this._initialized = false;
+        this._allowModifying = true;
 
 
         // Initializing operations
@@ -74,17 +74,25 @@ Subclass.Property.Type.Collection.Collection = function()
      *
      * @returns {boolean}
      */
-    Collection.prototype.isInitialized = function()
+    Collection.prototype.isAllowsModifying = function()
     {
-        return this._initialized;
+        return this._allowModifying;
     };
 
     /**
-     * Makes current items collection initialized
+     * Allows for current collection property to be marked as modified
      */
-    Collection.prototype.setInitialized = function()
+    Collection.prototype.allowModifying = function()
     {
-        this._initialized = true;
+        this._allowModifying = true;
+    };
+
+    /**
+     * Denies for current collection property to be marked as modified
+     */
+    Collection.prototype.denyModifying = function()
+    {
+        this._allowModifying = false;
     };
 
     /**
@@ -114,19 +122,15 @@ Subclass.Property.Type.Collection.Collection = function()
      *
      * @param {(string|number)} key
      * @param {*} value
-     * @param {boolean} [normalize=true]
      */
-    Collection.prototype.add = function(key, value, normalize)
+    Collection.prototype.add = function(key, value)
     {
         if (this.isset(key)) {
             console.warn(
                 'Trying to add already existent collection item with key "' + key + '" ' +
                 'to property ' + this._property + '.'
             );
-            return;
-        }
-        if (normalize !== false) {
-            normalize = true;
+            return false;
         }
         this._property
             .getDefinition()
@@ -135,10 +139,7 @@ Subclass.Property.Type.Collection.Collection = function()
         ;
         this._items.attach(key, value);
 
-        if (normalize) {
-            this.normalize(key);
-        }
-        if (this.isInitialized()) {
+        if (this.isAllowsModifying()) {
             this._property.modify();
         }
     };
@@ -154,10 +155,9 @@ Subclass.Property.Type.Collection.Collection = function()
 
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
-                this.add(key, items[key], false);
+                this.add(key, items[key]);
             }
         }
-        this.normalizeItems();
     };
 
     /**
@@ -165,15 +165,11 @@ Subclass.Property.Type.Collection.Collection = function()
      *
      * @param {(string|number)} key
      * @param {*} value
-     * @param {boolean} [normalize=true]
      */
-    Collection.prototype.set = function(key, value, normalize)
+    Collection.prototype.set = function(key, value)
     {
-        if (normalize !== false) {
-            normalize = true;
-        }
         if (this.isset(key)) {
-            this._items.get(key).setValue(value);
+            this._items.get(key).setValue(value, this.isAllowsModifying());
 
         } else {
             this._property
@@ -183,10 +179,7 @@ Subclass.Property.Type.Collection.Collection = function()
             ;
             this._items.attach(key, value);
         }
-        if (normalize) {
-            this.normalize(key);
-        }
-        if (this.isInitialized()) {
+        if (this.isAllowsModifying()) {
             this._property.modify();
         }
     };
@@ -202,10 +195,9 @@ Subclass.Property.Type.Collection.Collection = function()
 
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
-                this.set(key, items[key], false);
+                this.set(key, items[key]);
             }
         }
-        this.normalizeItems();
     };
 
     /**
@@ -247,7 +239,7 @@ Subclass.Property.Type.Collection.Collection = function()
         var value = this._items.get(key).getData();
         this._items.remove(key);
 
-        if (this.isInitialized()) {
+        if (this.isAllowsModifying()) {
             this._property.modify();
         }
 
@@ -264,7 +256,7 @@ Subclass.Property.Type.Collection.Collection = function()
         var data = this.getData();
         this._resetItems();
 
-        if (this.isInitialized()) {
+        if (this.isAllowsModifying()) {
             this._property.modify();
         }
 
@@ -380,31 +372,6 @@ Subclass.Property.Type.Collection.Collection = function()
         });
 
         return items;
-    };
-
-    /**
-     * Normalizes collection elements
-     */
-    Collection.prototype.normalizeItems = function()
-    {
-        var $this = this;
-
-        this.forEach(function(itemValue, itemKey) {
-            $this.normalize(itemKey);
-        });
-    };
-
-    /**
-     * Normalizes specified collection item
-     *
-     * @param itemName
-     * @returns {*}
-     */
-    Collection.prototype.normalize = function(itemName)
-    {
-        // Do something
-
-        return this.get(itemName);
     };
 
     /**

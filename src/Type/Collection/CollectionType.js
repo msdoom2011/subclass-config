@@ -226,6 +226,10 @@ Subclass.Property.Type.Collection.CollectionType = (function()
         this.getData().proto = proto;
         proto.accessors = false;
 
+        if (!this.isWritable()) {
+            proto.writable = false;
+        }
+
         this._protoInst = propertyManager.createProperty(
             'collectionItem',       // property name
             proto,                  // property definition

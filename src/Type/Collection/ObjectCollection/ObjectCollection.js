@@ -17,7 +17,84 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
     /**
      * @inheritDoc
      *
-     * @returns {Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection}
+     * @param {string} key
+     * @param {*} value
+     * @param {boolean} normalize
+     */
+    ObjectCollection.prototype.add = function(key, value, normalize)
+    {
+        if (ObjectCollection.$parent.prototype.add.apply(this, arguments) === false) {
+            return false;
+        }
+        if (normalize !== false) {
+            this.normalize(key);
+        }
+    };
+
+    /**
+     * @inheritDoc
+     */
+    ObjectCollection.prototype.addItems = function(items)
+    {
+        this._validateItems(items);
+
+        for (var key in items) {
+            if (items.hasOwnProperty(key)) {
+                this.add(key, items[key], false);
+            }
+        }
+        this.normalizeItems();
+    };
+
+    /**
+     * @inheritDoc
+     *
+     * @param {string} key
+     * @param {*} value
+     * @param {boolean} normalize
+     */
+    ObjectCollection.prototype.set = function(key, value, normalize)
+    {
+        if (ObjectCollection.$parent.prototype.set.apply(this, arguments) === false) {
+            return false;
+        }
+        if (normalize !== false) {
+            this.normalize(key);
+        }
+    };
+
+    /**
+     * @inheritDoc
+     */
+    ObjectCollection.prototype.setItems = function(items)
+    {
+        this._validateItems(items);
+
+        for (var key in items) {
+            if (items.hasOwnProperty(key)) {
+                this.set(key, items[key], false);
+            }
+        }
+        this.normalizeItems();
+    };
+
+    /**
+     * Normalizes collection elements
+     */
+    ObjectCollection.prototype.normalizeItems = function()
+    {
+        var $this = this;
+
+        this.forEach(function(itemValue, itemKey) {
+            $this.normalize(itemKey);
+        });
+    };
+
+    /**
+     * Normalizes specified collection item
+     *
+     * @param itemName
+     * @returns {*}
      */
     ObjectCollection.prototype.normalize = function(itemName)
     {
