@@ -26,14 +26,6 @@ Subclass.Property.Type.Array.ArrayType = (function()
     {
         return "array";
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ArrayType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : [];
-    //};
 
     /**
      * @inheritDoc
@@ -77,17 +69,6 @@ Subclass.Property.Type.Array.ArrayType = (function()
 
         return baseData;
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ArrayType.prototype.isEmpty = function(context)
-    //{
-    //    var isNullable = this.getDefinition().isNullable();
-    //    var value = this.getValue(context);
-    //
-    //    return (isNullable && value === null) || (!isNullable && value.length === 0);
-    //};
 
 
     /*************************************************/

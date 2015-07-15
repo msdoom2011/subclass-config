@@ -104,14 +104,6 @@ Subclass.Property.Type.Mixed.MixedType = (function()
             this
         ));
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //MixedType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : false;
-    //};
 
     /**
      * @inheritDoc

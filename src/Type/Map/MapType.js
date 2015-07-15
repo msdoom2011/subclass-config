@@ -21,12 +21,6 @@ Subclass.Property.Type.Map.MapType = function()
          * @private
          */
         this._children = {};
-        //
-        ///**
-        // * @type {boolean}
-        // * @private
-        // */
-        //this._isNull = true;
     }
 
     MapType.$parent = Subclass.Property.PropertyType;
@@ -175,94 +169,6 @@ Subclass.Property.Type.Map.MapType = function()
     {
         return this._children.hasOwnProperty(childPropName);
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //MapType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : {};
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //MapType.prototype.generateGetter = function()
-    //{
-    //    var $this = this;
-    //
-    //    return function() {
-    //        return this[$this.getNameHashed()];
-    //    };
-    //};
-
-    ///**
-    // * @inheritDoc
-    // */
-    //MapType.prototype.generateSetter = function(propName)
-    //{
-    //    var $this = this;
-    //
-    //    if (!this.isWritable()) {
-    //        return function() {
-    //            Subclass.Error.create('Property ' + this.getProperty(propName) + ' is not writable.');
-    //        }
-    //    }
-    //    return function(value) {
-    //        var property = this.getProperty(propName);
-    //
-    //        if (property.isLocked()) {
-    //            return console.warn(
-    //                'Trying to set new value for the ' +
-    //                'property ' + property + ' that is locked for write.'
-    //            );
-    //        }
-    //        var childrenContext = property.getValue();
-    //        var oldValue = property.getData();
-    //        var newValue = value;
-    //
-    //        if (!Subclass.Tools.isEqual(oldValue, newValue)) {
-    //            property.modify();
-    //        }
-    //        $this.validateValue(value);
-    //
-    //        if (value !== null) {
-    //            if (childrenContext === null) {
-    //                property.resetValue();
-    //                childrenContext = property.getValue();
-    //            }
-    //            for (var childName in value) {
-    //                if (value.hasOwnProperty(childName)) {
-    //                    childrenContext.getProperty(childName).setValue(value[childName]);
-    //                }
-    //            }
-    //        } else {
-    //            property._value = null;
-    //        }
-    //
-    //        // Invoking watchers
-    //
-    //        property.invokeWatchers(newValue, oldValue);
-    //    };
-    //};
-    //
-    ///**
-    // * Returns default values for all properties in schema
-    // *
-    // * @returns {Object}
-    // */
-    //MapType.prototype.getDefaultValue = function()
-    //{
-    //    var defaultValue = {};
-    //    var children = this.getChildren();
-    //
-    //    for (var propName in children) {
-    //        if (children.hasOwnProperty(propName)) {
-    //            defaultValue[propName] = children[propName].getDefault();
-    //        }
-    //    }
-    //    return defaultValue;
-    //};
 
     /**
      * @inheritDoc
@@ -368,7 +274,6 @@ Subclass.Property.Type.Map.MapType = function()
         this.getData().schema = schema;
 
         var propertyManager = this.getPropertyManager();
-        //var defaultValue = {};
 
         for (var propName in schema) {
             if (!schema.hasOwnProperty(propName)) {
@@ -380,15 +285,7 @@ Subclass.Property.Type.Map.MapType = function()
                 schema[propName].writable = false;
             }
             this.addChild(propName, schema[propName]);
-
-            //defaultValue[propName] = property
-            //    .getChild(propName)
-            //    .getDefinition()
-            //    .getDefault()
-            //;
         }
-
-        //this._setDefaultValues(defaultValue);
     };
 
     /**
@@ -462,53 +359,6 @@ Subclass.Property.Type.Map.MapType = function()
             }
         }
     };
-
-    ///**
-    // * Sets default values for inner properties
-    // *
-    // * @param {*|Object} defaultValue
-    // * @private
-    // */
-    //MapType.prototype._setDefaultValues = function(defaultValue)
-    //{
-    //    if (defaultValue !== null && Subclass.Tools.isPlainObject(defaultValue)) {
-    //        var property = this.getProperty();
-    //
-    //        for (var propName in defaultValue) {
-    //            if (!defaultValue.hasOwnProperty(propName)) {
-    //                continue;
-    //            }
-    //            if (
-    //                defaultValue[propName]
-    //                && Subclass.Tools.isPlainObject(defaultValue[propName])
-    //                && property.hasChild(propName)
-    //                && property.getChild(propName).constructor.getPropertyTypeName() == "map"
-    //            ) {
-    //                property.getChild(propName)
-    //                    .getDefinition()
-    //                    ._setDefaultValues(defaultValue[propName])
-    //                ;
-    //            } else if (property.hasChild(propName)) {
-    //                property.getChild(propName)
-    //                    .getDefinition()
-    //                    .setDefault(defaultValue[propName])
-    //                ;
-    //            }
-    //        }
-    //    }
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //MapType.prototype.processData = function()
-    //{
-    //    MapType.$parent.prototype.processData.call(this);
-    //
-    //    if (this.getValue() != undefined || this.getDefault() !== null) {
-    //        this.getProperty().setIsNull(false);
-    //    }
-    //};
 
 
 

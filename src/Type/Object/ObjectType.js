@@ -26,14 +26,6 @@ Subclass.Property.Type.Object.ObjectType = function()
     {
         return "object";
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : {};
-    //};
 
     /**
      * @inheritDoc

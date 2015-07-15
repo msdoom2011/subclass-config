@@ -26,14 +26,6 @@ Subclass.Property.Type.Boolean.BooleanType = (function()
     {
         return "boolean";
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //BooleanType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : false;
-    //};
 
     /**
      * @inheritDoc

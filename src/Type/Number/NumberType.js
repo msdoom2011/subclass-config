@@ -27,14 +27,6 @@ Subclass.Property.Type.Number.NumberType = (function()
     {
         return "number";
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //NumberType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : 0;
-    //};
 
     /**
      * @inheritDoc

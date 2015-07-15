@@ -25,87 +25,11 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
     {
         return "objectCollection";
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.parseRelatedClasses = function(propertyDefinition)
-    //{
-    //    if (
-    //        !propertyDefinition.proto
-    //        || typeof propertyDefinition.proto != 'object'
-    //        || !propertyDefinition.proto.type
-    //    ) {
-    //        return;
-    //    }
-    //    var propDef = propertyDefinition.proto;
-    //    var propertyType = Subclass.Property.PropertyManager.getPropertyType(propDef.type);
-    //
-    //    if (!propertyType.parseRelatedClasses) {
-    //        return;
-    //    }
-    //    return propertyType.parseRelatedClasses(propDef);
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.getDefinitionClass = function()
-    //{
-    //    return Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionDefinition;
-    //};
 
     ObjectCollectionType.getPropertyClass = function()
     {
         return Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionProperty;
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.getEmptyDefinition = function()
-    //{
-    //    return this.$parent.getEmptyDefinition();
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.normalizeDefinition = function(definition)
-    //{
-    //    return this.$parent.normalizeDefinition(definition);
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.prototype.getCollectionClass = function()
-    //{
-    //    return Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection;
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.prototype.addCollectionItem = function(collection, key, value)
-    //{
-    //    collection.addItem(key, value, false);
-    //};
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //ObjectCollectionType.prototype.getData = function(context)
-    //{
-    //    var collection = this.getCollection();
-    //    var collectionItems = {};
-    //
-    //    collection.eachItem(function(itemName, item) {
-    //        collectionItems[itemName] = collection.getItemData(itemName);
-    //    });
-    //
-    //    return collectionItems;
-    //};
 
     /**
      * @inheritDoc

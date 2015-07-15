@@ -26,14 +26,6 @@ Subclass.Property.Type.String.StringType = (function()
     {
         return 'string';
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //StringType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : "";
-    //};
 
     /**
      * @inheritDoc

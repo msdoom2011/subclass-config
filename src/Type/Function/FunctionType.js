@@ -26,14 +26,6 @@ Subclass.Property.Type.Function.FunctionType = (function()
     {
         return "function";
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //FunctionType.prototype.getEmptyValue = function()
-    //{
-    //    return this.isNullable() ? null : function() {};
-    //};
 
     /**
      * @inheritDoc
