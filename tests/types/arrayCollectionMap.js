@@ -303,9 +303,9 @@ describe("Testing array collection property type with its", function() {
         // getting data
         var propData = prop.getData();
         expect(propData.length).toBe(3);
-        expect(propData[0].propMapMap.mapMapString).toContain('item1');
-        expect(propData[1].propMapMap.mapMapString).toContain('item2');
-        expect(propData[2].propMapMap.mapMapString).toContain('item3');
+        expect(propData[0].propMapMap.mapMapString).toBe('item1');
+        expect(propData[1].propMapMap.mapMapString).toBe('item2');
+        expect(propData[2].propMapMap.mapMapString).toBe('item3');
 
     });
 

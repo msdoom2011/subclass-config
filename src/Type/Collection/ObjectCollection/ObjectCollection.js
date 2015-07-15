@@ -113,7 +113,26 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
             );
         }
         var parentItem = Subclass.Tools.copy(this.normalize(itemData.extends));
-        itemData.extends = null;
+        delete itemData.extends;
+
+        function prepareItemData(itemProperty, itemData)
+        {
+            if (itemProperty.getType() == 'map') {
+                var children = itemProperty.getChildren();
+
+                for (var childName in children) {
+                    if (!children.hasOwnProperty(childName)) {
+                        continue;
+                    }
+                    if (!children[childName].isDefaultValue()) {
+                        prepareItemData(children[childName], itemData[childName]);
+
+                    } else {
+                        delete itemData[childName];
+                    }
+                }
+            }
+        }
 
         for (var propName in itemData) {
             if (!itemData.hasOwnProperty(propName)) {
@@ -123,6 +142,8 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
 
             if (itemChild.isDefaultValue()) {
                 delete itemData[propName];
+            } else {
+                prepareItemData(itemChild, itemData[propName]);
             }
         }
 

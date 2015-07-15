@@ -36,7 +36,7 @@ describe("Testing map property type with its", function() {
     });
 
     it ("default value", function() {
-        expect(Object.keys(prop.getDefaultValue()).length).toBe(1);
+        expect(Object.keys(prop.getDefaultValue()).length).toBe(10);
         expect(prop.getDefaultValue().mapNumber).toBe(10);
     });
 

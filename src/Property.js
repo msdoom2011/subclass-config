@@ -105,6 +105,16 @@ Subclass.Property.Property = function()
     };
 
     /**
+     * Returns the name of properties type
+     *
+     * @returns {string}
+     */
+    Property.prototype.getType = function()
+    {
+        return this.getDefinition().constructor.getName();
+    };
+
+    /**
      * Returns property name with names of context property
      *
      * @returns {string}

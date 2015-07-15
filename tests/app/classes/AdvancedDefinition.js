@@ -361,11 +361,15 @@ app.registerClass('Class/AdvancedDefinition',
                     }
                 },
                 "item2": {
-                    propMapNumber: 20,
-                    propMapString: "string value 2000",
+                    extends: "item1",
+                    propMapNumber: 2000,
                     propMapMap: {
                         mapMapString: "map string value 2000"
                     }
+                },
+                "item3": {
+                    extends: "item2",
+                    propMapString: "string value 3000"
                 }
             },
             value: {

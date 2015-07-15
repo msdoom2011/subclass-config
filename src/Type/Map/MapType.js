@@ -245,30 +245,24 @@ Subclass.Property.Type.Map.MapType = function()
     //        property.invokeWatchers(newValue, oldValue);
     //    };
     //};
-
-    /**
-     * Returns default values for all properties in schema
-     *
-     * @returns {Object}
-     */
-    MapType.prototype.getDefaultValue = function()
-    {
-        var defaultValue = {};
-        var children = this.getChildren();
-
-        for (var propName in children) {
-            if (children.hasOwnProperty(propName)) {
-                defaultValue[propName] = children[propName].getDefaultValue();
-            }
-            //if (children[propName].getDefaultValue) {
-            //    schemaValues[propName] = children[propName].getDefaultValue();
-            //
-            //} else {
-            //    schemaValues[propName] = children[propName].getDefaultValue();
-            //}
-        }
-        return defaultValue;
-    };
+    //
+    ///**
+    // * Returns default values for all properties in schema
+    // *
+    // * @returns {Object}
+    // */
+    //MapType.prototype.getDefaultValue = function()
+    //{
+    //    var defaultValue = {};
+    //    var children = this.getChildren();
+    //
+    //    for (var propName in children) {
+    //        if (children.hasOwnProperty(propName)) {
+    //            defaultValue[propName] = children[propName].getDefault();
+    //        }
+    //    }
+    //    return defaultValue;
+    //};
 
     /**
      * @inheritDoc

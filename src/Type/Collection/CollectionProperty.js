@@ -28,6 +28,22 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
     CollectionProperty.prototype = {
 
         /**
+         * Returns properties default value
+         *
+         * @returns {*}
+         */
+        getDefaultValue: function()
+        {
+            var defaultValue = this.getDefinition().getDefault();
+
+            if (!Subclass.Tools.isEmpty(defaultValue)) {
+                defaultValue = this.createCollection().getData();
+            }
+
+            return defaultValue;
+        },
+
+        /**
          * @inheritDoc
          */
         setValue: function(value, markAsModified)

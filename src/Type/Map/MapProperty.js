@@ -276,6 +276,24 @@ Subclass.Property.Type.Map.MapProperty = function()
     };
 
     /**
+     * Returns properties default value
+     *
+     * @returns {*}
+     */
+    MapProperty.prototype.getDefaultValue = function()
+    {
+        var children = this.getChildren();
+        var defaultValue = {};
+
+        for (var propName in children) {
+            if (children.hasOwnProperty(propName)) {
+                defaultValue[propName] = children[propName].getDefaultValue();
+            }
+        }
+        return defaultValue;
+    };
+
+    /**
      * @inheritDoc
      */
     MapProperty.prototype.setValue = function(value, markAsModified)
@@ -304,8 +322,6 @@ Subclass.Property.Type.Map.MapProperty = function()
         if (value !== null) {
             if (!childrenContext) {
                 this._value = childrenContext = this.createMap();
-                //this.resetValue(markAsModified);
-                //childrenContext = this.getValue();
             }
             for (var childName in value) {
                 if (value.hasOwnProperty(childName)) {
