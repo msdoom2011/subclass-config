@@ -7,7 +7,7 @@ Subclass.Class.Type.Config = {};
  * @class
  * @extends {Subclass.Class.ClassType}
  */
-Subclass.Class.Type.Config.Config = (function()
+Subclass.Class.Type.Config.Config = function()
 {
     /*************************************************/
     /*        Describing class type "Config"          */
@@ -29,20 +29,19 @@ Subclass.Class.Type.Config.Config = (function()
          * @private
          */
         this._includes = [];
+        //
+        ///**
+        // * List of config classes
+        // *
+        // * @type {Config[]}
+        // * @private
+        // */
+        //this._decorators = [];
 
-        /**
-         * List of config classes
-         *
-         * @type {Config[]}
-         * @private
-         */
-        this._decorators = [];
-
-        Config.$parent.call(this, classManager, className, classDefinition);
+        Config.$parent.apply(this, arguments);
     }
 
     Config.$parent = Subclass.Class.ClassType;
-
 
     /**
      * @inheritDoc
@@ -67,14 +66,14 @@ Subclass.Class.Type.Config.Config = (function()
     {
         return Subclass.Class.Type.Config.ConfigDefinition;
     };
-
-    /**
-     * @inheritDoc
-     */
-    Config.prototype.createConstructorOnGet = function()
-    {
-        return false;
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // */
+    //Config.prototype.createConstructorOnGet = function()
+    //{
+    //    return false;
+    //};
 
     /**
      * @inheritDoc
@@ -174,82 +173,82 @@ Subclass.Class.Type.Config.Config = (function()
         }
         return false;
     };
-
-    /**
-     * Returns all decorator config classes
-     *
-     * @returns {Config[]}
-     */
-    Config.prototype.getDecorators = function()
-    {
-        return this._decorators;
-    };
-
-    /**
-     * Adds decorator config class instance
-     *
-     * @param className
-     */
-    Config.prototype.addDecorator = function(className)
-    {
-        if (!className || typeof className != "string") {
-            Subclass.Error.create('InvalidArgument')
-                .argument("the name of config decorator class", false)
-                .received(className)
-                .expected("a name of existent config class")
-                .apply()
-            ;
-        }
-        if (!this.getClassManager().issetClass(className)) {
-            Subclass.Error.create(
-                'Trying to attach non existent decorator class "' + className + '" ' +
-                'to config class "' + this.getName() + '".'
-            );
-        }
-        var classObj = this.getClassManager().getClass(className);
-
-        this._decorators.push(classObj);
-    };
-
-    /**
-     * Checks whether current config class attached specified decorator class
-     *
-     * @param {string} className
-     * @returns {boolean}
-     */
-    Config.prototype.hasDecorator = function(className)
-    {
-        if (!className || typeof className != 'string') {
-            Subclass.Error.create('InvalidArgument')
-                .argument("the name of config decorator class", false)
-                .received(className)
-                .expected("a string")
-                .apply()
-            ;
-        }
-        var decorators = this.getDecorators();
-
-        for (var i = 0; i < decorators.length; i++) {
-            if (decorators[i].isInstanceOf(className)) {
-                return true;
-            }
-        }
-        if (this.hasParent()) {
-            var parent = this.getParent();
-
-            if (parent.hasDecorator) {
-                return parent.hasDecorator(className);
-            }
-        }
-        return false;
-    };
+    //
+    ///**
+    // * Returns all decorator config classes
+    // *
+    // * @returns {Config[]}
+    // */
+    //Config.prototype.getDecorators = function()
+    //{
+    //    return this._decorators;
+    //};
+    //
+    ///**
+    // * Adds decorator config class instance
+    // *
+    // * @param className
+    // */
+    //Config.prototype.addDecorator = function(className)
+    //{
+    //    if (!className || typeof className != "string") {
+    //        Subclass.Error.create('InvalidArgument')
+    //            .argument("the name of config decorator class", false)
+    //            .received(className)
+    //            .expected("a name of existent config class")
+    //            .apply()
+    //        ;
+    //    }
+    //    if (!this.getClassManager().issetClass(className)) {
+    //        Subclass.Error.create(
+    //            'Trying to attach non existent decorator class "' + className + '" ' +
+    //            'to config class "' + this.getName() + '".'
+    //        );
+    //    }
+    //    var classObj = this.getClassManager().getClass(className);
+    //
+    //    this._decorators.push(classObj);
+    //};
+    //
+    ///**
+    // * Checks whether current config class attached specified decorator class
+    // *
+    // * @param {string} className
+    // * @returns {boolean}
+    // */
+    //Config.prototype.hasDecorator = function(className)
+    //{
+    //    if (!className || typeof className != 'string') {
+    //        Subclass.Error.create('InvalidArgument')
+    //            .argument("the name of config decorator class", false)
+    //            .received(className)
+    //            .expected("a string")
+    //            .apply()
+    //        ;
+    //    }
+    //    var decorators = this.getDecorators();
+    //
+    //    for (var i = 0; i < decorators.length; i++) {
+    //        if (decorators[i].isInstanceOf(className)) {
+    //            return true;
+    //        }
+    //    }
+    //    if (this.hasParent()) {
+    //        var parent = this.getParent();
+    //
+    //        if (parent.hasDecorator) {
+    //            return parent.hasDecorator(className);
+    //        }
+    //    }
+    //    return false;
+    //};
 
     /*************************************************/
-    /*         Registering new class type            */
+    /*        Registering the new class type         */
     /*************************************************/
 
-    Subclass.Class.ClassManager.registerClassType(Config);
+    Subclass.ClassManager.registerClassType(Config);
 
     return Config;
 
-})();
+}();

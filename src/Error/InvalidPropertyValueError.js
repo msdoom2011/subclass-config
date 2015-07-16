@@ -7,7 +7,7 @@ Subclass.Property.Error.InvalidPropertyValueError = (function()
 {
     function InvalidPropertyValueError(message)
     {
-        InvalidPropertyValueError.$parent.call(this, message);
+        InvalidPropertyValueError.$parent.apply(this, arguments);
     }
 
     InvalidPropertyValueError.$parent = Subclass.Error.ErrorBase;

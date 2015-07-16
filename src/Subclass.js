@@ -5,7 +5,7 @@ Subclass.registerPlugin(function() {
 
     function PropertyPlugin()
     {
-        PropertyPlugin.$parent.call(this);
+        PropertyPlugin.$parent.apply(this, arguments);
     }
 
     PropertyPlugin.$parent = Subclass.SubclassPlugin;

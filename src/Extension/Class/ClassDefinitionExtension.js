@@ -253,6 +253,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                 }
             }
         }
+
         return properties;
     };
 

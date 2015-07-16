@@ -483,7 +483,7 @@ Subclass.Property.PropertyManager = (function()
     {
         if (!this.issetPropertyType(propertyTypeName)) {
             Subclass.Error.create(
-                'Trying to get non existed property type ' +
+                'Trying to get non existed data type ' +
                 'factory "' + propertyTypeName + '".'
             );
         }

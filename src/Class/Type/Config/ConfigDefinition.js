@@ -9,65 +9,65 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
      */
     function ConfigDefinition(classInst, classDefinition)
     {
-        ConfigDefinition.$parent.call(this, classInst, classDefinition);
+        ConfigDefinition.$parent.apply(this, arguments);
     }
 
     ConfigDefinition.$parent = Subclass.Class.ClassDefinition;
-
-    /**
-     * Validates "$_abstract" attribute value
-     *
-     * @param {*} value
-     * @throws {Error}
-     */
-    ConfigDefinition.prototype.validateAbstract = function(value)
-    {
-        Subclass.Error.create(
-            'The config "' + this.getClass().getName() + '" ' +
-            'can\'t contain any abstract methods.'
-        );
-    };
-
-    /**
-     * Validate "$_implements" attribute value
-     *
-     * @param {*} value
-     * @throws {Error}
-     */
-    ConfigDefinition.prototype.validateImplements = function(value)
-    {
-        Subclass.Error.create(
-            'The config "' + this.getClass().getName() + '" ' +
-            'can\'t implements any interfaces.'
-        );
-    };
-
-    /**
-     * Validate "$_static" attribute value
-     *
-     * @param {*} value
-     * @throws {Error}
-     */
-    ConfigDefinition.prototype.validateStatic = function(value)
-    {
-        Subclass.Error.create(
-            'The config "' + this.getClass().getName() + '" ' +
-            'can\'t contain any static properties and methods.'
-        );
-    };
-
-    /**
-     * Validates "$_traits" attribute value
-     *
-     * @param {*} value
-     * @throws {Error}
-     */
-    ConfigDefinition.prototype.validateTraits = function(value)
-    {
-        Subclass.Error.create(
-            'The config "' + this.getClass().getName() + '" can\'t contain any traits.'
-        );
-    };
+    //
+    ///**
+    // * Validates "$_abstract" attribute value
+    // *
+    // * @param {*} value
+    // * @throws {Error}
+    // */
+    //ConfigDefinition.prototype.validateAbstract = function(value)
+    //{
+    //    Subclass.Error.create(
+    //        'The config "' + this.getClass().getName() + '" ' +
+    //        'can\'t contain any abstract methods.'
+    //    );
+    //};
+    //
+    ///**
+    // * Validate "$_implements" attribute value
+    // *
+    // * @param {*} value
+    // * @throws {Error}
+    // */
+    //ConfigDefinition.prototype.validateImplements = function(value)
+    //{
+    //    Subclass.Error.create(
+    //        'The config "' + this.getClass().getName() + '" ' +
+    //        'can\'t implements any interfaces.'
+    //    );
+    //};
+    //
+    ///**
+    // * Validate "$_static" attribute value
+    // *
+    // * @param {*} value
+    // * @throws {Error}
+    // */
+    //ConfigDefinition.prototype.validateStatic = function(value)
+    //{
+    //    Subclass.Error.create(
+    //        'The config "' + this.getClass().getName() + '" ' +
+    //        'can\'t contain any static properties and methods.'
+    //    );
+    //};
+    //
+    ///**
+    // * Validates "$_traits" attribute value
+    // *
+    // * @param {*} value
+    // * @throws {Error}
+    // */
+    //ConfigDefinition.prototype.validateTraits = function(value)
+    //{
+    //    Subclass.Error.create(
+    //        'The config "' + this.getClass().getName() + '" can\'t contain any traits.'
+    //    );
+    //};
 
     /**
      * Validates "$_includes" attribute value
@@ -139,101 +139,101 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     {
         return this.getData().$_includes || [];
     };
-
-    /**
-     * Validates "$_decorators" attribute value
-     *
-     * @param {*} decorators
-     * @returns {boolean}
-     * @throws {Error}
-     */
-    ConfigDefinition.prototype.validateDecorators = function(decorators)
-    {
-        try {
-            if (decorators && !Array.isArray(decorators)) {
-                throw 'error';
-            }
-            if (decorators) {
-                for (var i = 0; i < decorators.length; i++) {
-                    if (typeof decorators[i] != 'string') {
-                        throw 'error';
-                    }
-                }
-            }
-        } catch (e) {
-            if (e == 'error') {
-                Subclass.Error.create('InvalidClassOption')
-                    .option('$_decorators')
-                    .className(this.getClass().getName())
-                    .received(decorators)
-                    .expected('an array of strings')
-                    .apply()
-                ;
-            } else {
-                throw e;
-            }
-        }
-        return true;
-    };
-
-    /**
-     * Sets "$_decorators" attribute value
-     *
-     * @param {string[]} decorators
-     *
-     *      List of the classes which properties overlaps properties from current one class
-     *
-     *      Example: [
-     *         "Namespace/Of/Config1",
-     *         "Namespace/Of/Config2",
-     *         ...
-     *      ]
-     */
-    ConfigDefinition.prototype.setDecorators = function(decorators)
-    {
-        this.validateDecorators(decorators);
-        this.getData().$_decorators = decorators || [];
-
-        if (decorators) {
-            for (var i = 0; i < decorators.length; i++) {
-                this.getClass().addDecorator(decorators[i]);
-            }
-        }
-    };
-
-    /**
-     * Return "$_decorators" attribute value
-     *
-     * @returns {string[]}
-     */
-    ConfigDefinition.prototype.getDecorators = function()
-    {
-        return this.getData().$_decorators || [];
-    };
+    //
+    ///**
+    // * Validates "$_decorators" attribute value
+    // *
+    // * @param {*} decorators
+    // * @returns {boolean}
+    // * @throws {Error}
+    // */
+    //ConfigDefinition.prototype.validateDecorators = function(decorators)
+    //{
+    //    try {
+    //        if (decorators && !Array.isArray(decorators)) {
+    //            throw 'error';
+    //        }
+    //        if (decorators) {
+    //            for (var i = 0; i < decorators.length; i++) {
+    //                if (typeof decorators[i] != 'string') {
+    //                    throw 'error';
+    //                }
+    //            }
+    //        }
+    //    } catch (e) {
+    //        if (e == 'error') {
+    //            Subclass.Error.create('InvalidClassOption')
+    //                .option('$_decorators')
+    //                .className(this.getClass().getName())
+    //                .received(decorators)
+    //                .expected('an array of strings')
+    //                .apply()
+    //            ;
+    //        } else {
+    //            throw e;
+    //        }
+    //    }
+    //    return true;
+    //};
+    //
+    ///**
+    // * Sets "$_decorators" attribute value
+    // *
+    // * @param {string[]} decorators
+    // *
+    // *      List of the classes which properties overlaps properties from current one class
+    // *
+    // *      Example: [
+    // *         "Namespace/Of/Config1",
+    // *         "Namespace/Of/Config2",
+    // *         ...
+    // *      ]
+    // */
+    //ConfigDefinition.prototype.setDecorators = function(decorators)
+    //{
+    //    this.validateDecorators(decorators);
+    //    this.getData().$_decorators = decorators || [];
+    //
+    //    if (decorators) {
+    //        for (var i = 0; i < decorators.length; i++) {
+    //            this.getClass().addDecorator(decorators[i]);
+    //        }
+    //    }
+    //};
+    //
+    ///**
+    // * Return "$_decorators" attribute value
+    // *
+    // * @returns {string[]}
+    // */
+    //ConfigDefinition.prototype.getDecorators = function()
+    //{
+    //    return this.getData().$_decorators || [];
+    //};
 
     /**
      * @inheritDoc
      */
-    ConfigDefinition.prototype.getBaseData = function ()
+    ConfigDefinition.prototype.getBaseData = function()
     {
-        var classDefinition = ConfigDefinition.$parent.prototype.getBaseData.call(this);
+        var classDefinition = ConfigDefinition.$parent.prototype.getBaseData.apply(this, arguments);
 
-        delete classDefinition.$_properties;
-        delete classDefinition.$_static;
-        delete classDefinition.$_abstract;
-        delete classDefinition.$_implements;
-        delete classDefinition.$_requires;
-        delete classDefinition.$_traits;
+        //delete classDefinition.$_properties;
+        //delete classDefinition.$_requires;
+        //delete classDefinition.$_static;
+        //delete classDefinition.$_abstract;
+        //delete classDefinition.$_implements;
+        //delete classDefinition.$_traits;
 
         /**
          * @type {string[]}
          */
         classDefinition.$_includes = [];
-
-        /**
-         * @type {string[]}
-         */
-        classDefinition.$_decorators = [];
+        //
+        ///**
+        // * @type {string[]}
+        // */
+        //classDefinition.$_decorators = [];
 
         /**
          * Sets values
@@ -264,8 +264,8 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
          */
         classDefinition.getValues = function()
         {
-            var values = {};
             var properties = this.$_class.getProperties();
+            var values = {};
 
             for (var propName in properties) {
                 if (properties.hasOwnProperty(propName)) {
@@ -308,31 +308,25 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
             }
             return defaults;
         };
-
-        /**
-         * Returns default values in full set (if defined "map" type property
-         * will be returned defaults values from schema).
-         *
-         * @returns {{}}
-         */
-        classDefinition.getSchemaDefaults = function()
-        {
-            var defaults = {};
-            var properties = this.$_class.getProperties();
-
-            for (var propName in properties) {
-                if (!properties.hasOwnProperty(propName)) {
-                    continue;
-                }
-                if (properties[propName].getSchemaDefaultValue) {
-                    defaults[propName] = properties[propName].getSchemaDefaultValue();
-
-                } else {
-                    defaults[propName] = properties[propName].getDefaultValue();
-                }
-            }
-            return defaults;
-        };
+        //
+        ///**
+        // * Returns default values in full set (if defined "map" type property
+        // * will be returned defaults values from schema).
+        // *
+        // * @returns {{}}
+        // */
+        //classDefinition.getSchemaDefaults = function()
+        //{
+        //    var defaults = {};
+        //    var properties = this.$_class.getProperties();
+        //
+        //    for (var propName in properties) {
+        //        if (properties.hasOwnProperty(propName)) {
+        //            defaults[propName] = properties[propName].getDefaultValue();
+        //        }
+        //    }
+        //    return defaults;
+        //};
 
         return classDefinition;
     };
@@ -349,11 +343,12 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         // Retrieving all properties we want to save
         var parentClassName = this.getExtends();
-        var decorators = this.getDecorators();
         var includes = this.getIncludes();
+        var properties = this.getProperties();
+        //var decorators = this.getDecorators();
 
         // Removing from definition data all properties that are not definitions of typed properties
-        delete dataDefault.$_decorators;
+        //delete dataDefault.$_decorators;
         delete dataDefault.$_includes;
         delete dataDefault.$_extends;
         delete dataDefault.$_properties;
@@ -363,9 +358,13 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
         this._data = {};
         var data = this._data;
 
+        if (!properties) {
+            properties = {};
+        }
+
         // Filling $_properties parameter by all property definitions from old class definition
 
-        data.$_properties = dataDefault;
+        data.$_properties = Subclass.Tools.extend(properties, dataDefault);
 
         // Setting parent class if exists
 
@@ -378,12 +377,12 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
         if (includes && Array.isArray(includes)) {
             data.$_includes = includes;
         }
-
-        // Setting decorators if exists
-
-        if (decorators && Array.isArray(decorators)) {
-            data.$_decorators = decorators;
-        }
+        //
+        //// Setting decorators if exists
+        //
+        //if (decorators && Array.isArray(decorators)) {
+        //    data.$_decorators = decorators;
+        //}
 
         // Extending class properties
 
@@ -431,16 +430,18 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         // Processing included and decoration classes
 
-        var classCollections = {
-            includes: this.getIncludes(),
-            decorators: this.getDecorators()
-        };
+        //var classCollections = {
+        //    includes: this.getIncludes()
+        //    //decorators: this.getDecorators()
+        //};
+        //
+        //for (var collectionType in classCollections) {
+        //    if (!classCollections.hasOwnProperty(collectionType)) {
+        //        continue;
+        //    }
+        //    var includes = classCollections[collectionType];
 
-        for (var collectionType in classCollections) {
-            if (!classCollections.hasOwnProperty(collectionType)) {
-                continue;
-            }
-            var includes = classCollections[collectionType];
+            var includes = this.getIncludes();
 
             for (var i = 0; i < includes.length; i++) {
                 var includeClassName = includes[i];
@@ -448,8 +449,8 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
                 var includeClassConstructor = includeClass.getConstructor();
                 var includeClassProperties = Subclass.Tools.copy(includeClass.getDefinition().getProperties());
 
-                switch (collectionType) {
-                    case 'includes':
+                //switch (collectionType) {
+                //    case 'includes':
                         this.extendProperties(
                             classProperties,
                             includeClassProperties
@@ -462,27 +463,27 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
                                 classProperties[propName] = Subclass.Tools.copy(includeClassProperties[propName]);
                             }
                         }
-                        break;
-
-                    case 'decorators':
-                        this.extendProperties(
-                            includeClassProperties,
-                            classProperties
-                        );
-                        for (propName in classProperties) {
-                            if (
-                                classProperties.hasOwnProperty(propName)
-                                && !includeClassProperties.hasOwnProperty(propName)
-                            ) {
-                                includeClassProperties[propName] = Subclass.Tools.copy(classProperties[propName]);
-                            }
-                        }
-                        this.getData().$_properties = includeClassProperties;
-                        classProperties = this.getProperties();
-                        break;
-                }
+                        //break;
+                    //
+                    //case 'decorators':
+                    //    this.extendProperties(
+                    //        includeClassProperties,
+                    //        classProperties
+                    //    );
+                    //    for (propName in classProperties) {
+                    //        if (
+                    //            classProperties.hasOwnProperty(propName)
+                    //            && !includeClassProperties.hasOwnProperty(propName)
+                    //        ) {
+                    //            includeClassProperties[propName] = Subclass.Tools.copy(classProperties[propName]);
+                    //        }
+                    //    }
+                    //    this.getData().$_properties = includeClassProperties;
+                    //    classProperties = this.getProperties();
+                    //    break;
+                //}
             }
-        }
+        //}
         //
         //// Normalizing short style property definitions
         //
@@ -553,7 +554,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
         var classInst = this.getClass();
         var classManager = classInst.getClassManager();
         var includes = this.getIncludes();
-        var decorators = this.getDecorators();
+        //var decorators = this.getDecorators();
 
         // Performing $_includes (Needs to be defined in ConfigDefinition)
 
@@ -562,14 +563,14 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
                 classManager.loadClass(includes[i]);
             }
         }
-
-        // Performing $_decorators (Needs to be defined in ConfigDefinition)
-
-        if (decorators && this.validateDecorators(decorators)) {
-            for (i = 0; i < decorators.length; i++) {
-                classManager.loadClass(decorators[i]);
-            }
-        }
+        //
+        //// Performing $_decorators (Needs to be defined in ConfigDefinition)
+        //
+        //if (decorators && this.validateDecorators(decorators)) {
+        //    for (i = 0; i < decorators.length; i++) {
+        //        classManager.loadClass(decorators[i]);
+        //    }
+        //}
     };
 
     return ConfigDefinition;

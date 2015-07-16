@@ -7,7 +7,7 @@ Subclass.Property.Error.InvalidPropertyOptionError = (function()
 {
     function InvalidPropertyOptionError(message)
     {
-        InvalidPropertyOptionError.$parent.call(this, message);
+        InvalidPropertyOptionError.$parent.apply(this, arguments);
     }
 
     InvalidPropertyOptionError.$parent = Subclass.Error.ErrorBase;
