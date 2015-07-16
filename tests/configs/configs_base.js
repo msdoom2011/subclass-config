@@ -4,7 +4,8 @@ describe("Checking base config class", function() {
 
     it ("default values", function() {
 
-        //console.log(config.getValues());
+        console.log(config.getDefaults());
+        console.log(config.getValues());
 
     });
 });

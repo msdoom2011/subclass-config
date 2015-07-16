@@ -136,7 +136,7 @@ Subclass.Property.Type.Mixed.MixedType = (function()
             Subclass.Error.create('InvalidPropertyValue')
                 .property(this)
                 .received(value)
-                .expected('one of the specified types [' + this.getAllowsNames().join(", ") + ']')
+                .expected('one of the specified types: "' + this.getAllowsNames().join('", "') + '"')
                 .apply()
             ;
         }

@@ -84,8 +84,6 @@ Subclass.Property.PropertyManager = (function()
 
     PropertyManager.prototype.initialize = function()
     {
-        //this.getDataTypeManager().initialize();
-
         var module = this.getModule();
         var eventManager = module.getEventManager();
         var $this = this;
@@ -140,16 +138,6 @@ Subclass.Property.PropertyManager = (function()
     {
         return this._module;
     };
-    //
-    ///**
-    // * Returns instance of data type manager
-    // *
-    // * @returns {Subclass.Property.DataTypeManager}
-    // */
-    //PropertyManager.prototype.getDataTypeManager = function()
-    //{
-    //    return this._dataTypeManager;
-    //};
 
     /**
      * Validates data type definitions
@@ -185,16 +173,6 @@ Subclass.Property.PropertyManager = (function()
             }
         }
     };
-    //
-    ///**
-    // * Defines data types
-    // *
-    // * @param {Object.<Object>} definitions
-    // */
-    //PropertyManager.prototype.defineDataTypes = function(definitions)
-    //{
-    //    this.getDataTypeManager().addTypeDefinitions(definitions);
-    //};
 
     /**
      * Adds new type definitions
@@ -220,13 +198,11 @@ Subclass.Property.PropertyManager = (function()
      */
     PropertyManager.prototype.normalizeTypeDefinition = function(definition)
     {
-        //var dataTypeManager = this.getDataTypeManager();
-
         if (definition === undefined || definition === null) {
             Subclass.Error.create("InvalidArgument")
                 .argument('the definition of property', false)
                 .received(definition)
-                .expected('not null or undefined')
+                .expected('not null or not undefined')
                 .apply()
             ;
         }
@@ -301,16 +277,6 @@ Subclass.Property.PropertyManager = (function()
         }
         return this.getTypeDefinitions()[typeName];
     };
-    //
-    ///**
-    // * Returns hash of all properties that will further created
-    // *
-    // * @returns {number}
-    // */
-    //PropertyManager.prototype.getPropertyNameHash = function()
-    //{
-    //    return this._hash;
-    //};
 
     /**
      * Returns data types
@@ -401,7 +367,6 @@ Subclass.Property.PropertyManager = (function()
                 .apply()
             ;
         }
-        //var dataTypeManager = this.getDataTypeManager();
         var propertyTypeName = propertyDefinition.type;
 
         if (this.issetType(propertyTypeName)) {

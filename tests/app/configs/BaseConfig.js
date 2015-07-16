@@ -2,39 +2,44 @@ app.registerConfig("Config/BaseConfig", {
 
     $_properties: {
 
-        propNumber: {type: 'number'},
+        propNumber: {type: 'number', default: 10, value: 20},
 
-        propString: {type: 'string'},
+        propString: {type: 'string', default: "string default", value: "string value" },
 
-        propBoolean: {type: 'boolean'},
+        propBoolean: {type: 'boolean', default: false, value: true},
 
-        propArray: {type: 'array'},
+        propArray: {type: 'array', default: [3, 2, 1], value: [1, 2, 3] },
 
-        propObject: {type: 'object'},
+        propObject: {type: 'object', default: { item1: "value1", item2: "value2" }, value: { str1: "str1", str2: "str2" } },
 
-        propClass: {type: "class", className: "Class/AppClass"},
+        propClass: {type: "class", className: "Class/AppClass" },
 
-        propEnum: {type: "enum", allows: ["male", "female"]},
+        propEnum: {type: "enum", allows: ["male", "female"], default: "female", value: "male" },
 
-        propFunction: {type: "function"},
+        propFunction: {type: "function", default: null, value: function() { return 100; }},
 
-        propUntyped: {type: "untyped"},
+        propUntyped: {type: "untyped", default: 'string value', value: 1000 },
 
-        propMixed: { type: "mixed", allows: [
-            {type: "number"},
-            {type: "string"}
-        ]},
+        propConstructor: { type: "constructor", construct: Date, default: new Date },
 
-        propConstructor: {type: "constructor", construct: Date},
+        propMixed: {
+            type: "mixed",
+            allows: [
+                {type: "number"},
+                {type: "string"}
+            ],
+            default: 1000,
+            value: "string value"
+        }
     },
 
     propMap: { type: "map", schema: {
 
-        mapNumber: { type: "number" },
+        mapNumber: { type: "number", default: 10 },
 
-        mapString: { type: "string" },
+        mapString: { type: "string", default: "map string" },
 
-        mapBoolean: { type: "boolean" },
+        mapBoolean: { type: "boolean", default: true },
 
         mapArray: { type: "array" },
 
@@ -46,9 +51,9 @@ app.registerConfig("Config/BaseConfig", {
 
         mapFunction: { type: "function" },
 
-        mapMixed: {type: "mixed", allows: [
+        mapMixed: {type: "mixed", default: "10%", allows: [
             { type: "number" },
-            { type: "string" }
+            { type: "string", pattern: /[0-9]+%$/i }
         ]},
 
         mapMap: { type: "map", schema: {

@@ -269,7 +269,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
             for (var propName in properties) {
                 if (properties.hasOwnProperty(propName)) {
-                    values[propName] = properties[propName].getData(this);
+                    values[propName] = this.getProperty(propName).getData();
                 }
             }
             return values;
@@ -303,30 +303,11 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
             for (var propName in properties) {
                 if (properties.hasOwnProperty(propName)) {
-                    defaults[propName] = properties[propName].getDefaultValue();
+                    defaults[propName] = this.getProperty(propName).getDefaultValue();
                 }
             }
             return defaults;
         };
-        //
-        ///**
-        // * Returns default values in full set (if defined "map" type property
-        // * will be returned defaults values from schema).
-        // *
-        // * @returns {{}}
-        // */
-        //classDefinition.getSchemaDefaults = function()
-        //{
-        //    var defaults = {};
-        //    var properties = this.$_class.getProperties();
-        //
-        //    for (var propName in properties) {
-        //        if (properties.hasOwnProperty(propName)) {
-        //            defaults[propName] = properties[propName].getDefaultValue();
-        //        }
-        //    }
-        //    return defaults;
-        //};
 
         return classDefinition;
     };
