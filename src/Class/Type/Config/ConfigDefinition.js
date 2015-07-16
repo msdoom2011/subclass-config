@@ -510,6 +510,8 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
                 );
             }
         }
+
+        return classProperties;
     };
 
     /**
