@@ -20,7 +20,7 @@ app.registerConfig("Config/BaseConfig", {
 
         propUntyped: {type: "untyped", default: 'string value', value: 1000 },
 
-        propConstructor: { type: "constructor", construct: Date, default: new Date },
+        propConstructor: { type: "constructor", construct: Date, default: null },
 
         propMixed: {
             type: "mixed",
@@ -49,7 +49,7 @@ app.registerConfig("Config/BaseConfig", {
 
         mapEnum: { type: "enum", allows: [ "male", "female" ] },
 
-        mapFunction: { type: "function" },
+        mapFunction: { type: "function", default: null },
 
         mapMixed: {type: "mixed", default: "10%", allows: [
             { type: "number" },
@@ -74,7 +74,7 @@ app.registerConfig("Config/BaseConfig", {
 
             mapMapFunction: { type: "function" },
 
-            mapMapMixed: {type: "mixed", allows: [
+            mapMapMixed: {type: "mixed", nullable: false, allows: [
                 { type: "number" },
                 { type: "string" }
             ]}
@@ -83,15 +83,15 @@ app.registerConfig("Config/BaseConfig", {
 
     // Array Collection
 
-    propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
+    propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" }, default: ["str1", "str2"], value: ["item1", "item2"] },
 
-    propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
+    propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" }, default: [3, 2, 1], value: [1, 2, 3] },
 
-    propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" } },
+    propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" }, default: [true] },
 
-    propArrayCollectionArray: { type: "arrayCollection", proto: { type: "array" } },
+    propArrayCollectionArray: { type: "arrayCollection", proto: { type: "array" }, default: [[1, 1], [2, 2]], value: [[3,3,3]] },
 
-    propObjectCollectionArray: { type: "arrayCollection", proto: { type: "object" } },
+    propObjectCollectionArray: { type: "arrayCollection", proto: { type: "object" }, default: [{ "item1": 1, "item2": 2}] },
 
     propClassCollectionArray: { type: "arrayCollection", proto: { type: "class", className: "Class/AppClass" } },
 

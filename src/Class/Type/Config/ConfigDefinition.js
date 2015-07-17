@@ -264,7 +264,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
          */
         classDefinition.getValues = function()
         {
-            var properties = this.$_class.getProperties();
+            var properties = this.$_class.getProperties(true);
             var values = {};
 
             for (var propName in properties) {
@@ -299,7 +299,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
         classDefinition.getDefaults = function()
         {
             var defaults = {};
-            var properties = this.$_class.getProperties();
+            var properties = this.$_class.getProperties(true);
 
             for (var propName in properties) {
                 if (properties.hasOwnProperty(propName)) {

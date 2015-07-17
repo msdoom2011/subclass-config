@@ -148,6 +148,20 @@ Subclass.Property.Type.Mixed.MixedType = (function()
     MixedType.prototype.validateDefault = MixedType.prototype.validateValue;
 
     /**
+    * @inheritDoc
+    */
+    MixedType.prototype.setDefault = function(defaultValue)
+    {
+        if (!this.isNullable() && defaultValue === null) {
+            var allows = this.getAllows();
+            var propType = this.getPropertyManager().createProperty('mixedPropertyType', allows[0]);
+
+            defaultValue = propType.getDefault();
+        }
+        return MixedType.$parent.prototype.setDefault.call(this, defaultValue);
+    };
+
+    /**
      * Validates "allows" attribute value
      *
      * @param {*} allows

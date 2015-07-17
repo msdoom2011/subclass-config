@@ -1,14 +1,15 @@
 describe("Checking base config class", function() {
 
-    var config = app.getClass('Config/BaseConfig').createInstance();
+    var config = app.getClass('Config/StandardConfig').createInstance();
 
     it ("default values", function() {
 
         var defaults = config.getDefaults();
         var values = config.getValues();
-        console.log(defaults.propMap.mapMap);
 
         expect(Subclass.Tools.isEqual(defaults, {
+            stPropNumber: 10,
+            stPropString: 'str',
             propNumber: 10,
             propString: 'string default',
             propBoolean: false,
@@ -70,8 +71,10 @@ describe("Checking base config class", function() {
         })).toBe(true);
 
         expect(Subclass.Tools.isEqual(values, {
-            propNumber: 20,
-            propString: 'string value',
+            stPropNumber: 10,
+            stPropString: 'str',
+            propNumber: 1000,
+            propString: 'standard string',
             propBoolean: true,
             propArray: [1, 2, 3],
             propObject: { str1: "str1", str2: "str2" },
@@ -131,6 +134,45 @@ describe("Checking base config class", function() {
             propArrayCollectionCollectionObject: {}
 
         })).toBe(true);
+
+        config.setDefaults({
+            propString: "new default string",
+            propNumber: 200,
+            stPropNumber: 500,
+            stPropString: 'new default string'
+        });
+
+        expect(config.getProperty('propString').getDefaultValue()).toBe('new default string');
+        expect(config.getProperty('propNumber').getDefaultValue()).toBe(200);
+        expect(config.getProperty('stPropNumber').getDefaultValue()).toBe(500);
+        expect(config.getProperty('stPropString').getDefaultValue()).toBe('new default string');
+
+        expect(config.propString).toBe('standard string');
+        expect(config.propNumber).toBe(1000);
+        expect(config.stPropNumber).toBe(10);
+        expect(config.stPropString).toBe('str');
+
+        config.getProperty('propString').resetValue();
+        config.getProperty('propNumber').resetValue();
+        config.getProperty('stPropNumber').resetValue();
+        config.getProperty('stPropString').resetValue();
+
+        expect(config.propString).toBe('new default string');
+        expect(config.propNumber).toBe(200);
+        expect(config.stPropNumber).toBe(500);
+        expect(config.stPropString).toBe('new default string');
+
+        config.setValues({
+            propString: "new value string",
+            propNumber: 1200,
+            stPropNumber: 1500,
+            stPropString: 'new value string'
+        });
+
+        expect(config.propString).toBe('new value string');
+        expect(config.propNumber).toBe(1200);
+        expect(config.stPropNumber).toBe(1500);
+        expect(config.stPropString).toBe('new value string');
 
     });
 });
