@@ -27,37 +27,16 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
              */
             data.$_properties = {};
 
-            ///**
-            // * Checks if property is typed
-            // *
-            // * @param {string} propertyName
-            // * @returns {boolean}
-            // */
-            //data.issetProperty = function(propertyName)
-            //{
-            //    return this.$_class.issetProperty(propertyName);
-            //};
-            //
-            ///**
-            // * Returns property api object
-            // *
-            // * @param {string} propertyName
-            // * @returns {Subclass.Property.PropertyAPI}
-            // */
-            //data.getProperty = function(propertyName)
-            //{
-            //    return this.$_class.getProperty(propertyName).getAPI(this);
-            //};
         });
 
         classInst.getEvent('onNormalizeData').addListener(function(evt, data)
         {
-            if (
-                data.hasOwnProperty('$_properties')
-                && Subclass.Tools.isPlainObject(data["$_properties"])
-            ) {
-                data["$_properties"] = this.normalizeProperties(data["$_properties"]);
-            }
+            //if (
+            //    data.hasOwnProperty('$_properties')
+            //    && Subclass.Tools.isPlainObject(data["$_properties"])
+            //) {
+            //    data["$_properties"] = this.normalizeProperties(data["$_properties"]);
+            //}
         });
 
         classInst.getEvent('onValidateData').addListener(function(evt, data)
@@ -76,20 +55,12 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                 }
             }
         });
-        //
-        //classInst.getEvent('onProcessData').addListener(function(evt, data)
-        //{
-        //    //Extending accessors
-        //
-        //    this.processPropertyAccessors();
-        //});
 
         classInst.getEvent('onProcessRelatedClasses').addListener(function(evt)
         {
             var classInst = this.getClass();
             var classManager = classInst.getClassManager();
             var propertyManager = classManager.getModule().getPropertyManager();
-            //var dataTypeManager = propertyManager.getDataTypeManager();
             var properties = this.getProperties();
 
             // Performing $_properties option
@@ -99,7 +70,10 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                     if (!properties.hasOwnProperty(propName)) {
                         continue;
                     }
-                    var propertyDefinition = propertyManager.normalizeTypeDefinition(properties[propName]);
+                    var propertyDefinition = propertyManager.normalizeTypeDefinition(
+                        properties[propName],
+                        propName
+                    );
 
                     if (typeof propertyDefinition != 'object') {
                         continue;
@@ -211,7 +185,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                 }
                 if (!properties[propName] || !Subclass.Tools.isPlainObject(properties[propName])) {
                     Subclass.Error.create('InvalidClassOption')
-                        .option('$_properties')
+                        .option('"$_properties" (invalid definition of property "' + propName + '")', false)
                         .received(properties)
                         .className(this.getClass().getName())
                         .expected('a plain object with property definitions')
@@ -248,7 +222,8 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
             for (var propertyName in properties) {
                 if (properties.hasOwnProperty(propertyName)) {
                     properties[propertyName] = propertyManager.normalizeTypeDefinition(
-                        properties[propertyName]
+                        properties[propertyName],
+                        propertyName
                     );
                 }
             }
@@ -298,58 +273,6 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
     {
         return this.getData().$_properties;
     };
-
-    ///**
-    //* Extends class constructor with specific methods.
-    //*
-    //* If getter or setter of any typed property was redefined in the class definition
-    //* the new methods will generated. For setter it's gonna be "<setterOrGetterName>Default"
-    //* where "<setterOrGetterName>" is name of redefined setter or getter name.
-    //*
-    //* These methods allows to interact with private properties through redefined getters and setters.
-    //*/
-    //ClassDefinition.prototype.processPropertyAccessors = function()
-    //{
-    //    return;
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //    if (!this.getClass().getProperties) {
-    //        return;
-    //    }
-    //    var classProperties = this.getClass().getProperties();
-    //    var classDefinition = this.getData();
-    //
-    //    for (var propertyName in classProperties) {
-    //        if (!classProperties.hasOwnProperty(propertyName)) {
-    //            continue;
-    //        }
-    //        var property = classProperties[propertyName];
-    //
-    //        if (!property.isAccessors()) {
-    //            continue;
-    //        }
-    //        var accessors = {
-    //            Getter: Subclass.Tools.generateGetterName(propertyName),
-    //            Setter: Subclass.Tools.generateSetterName(propertyName)
-    //        };
-    //
-    //        for (var accessorType in accessors) {
-    //            if (!accessors.hasOwnProperty(accessorType)) {
-    //                continue;
-    //            }
-    //            var accessorName = accessors[accessorType];
-    //
-    //            if (classDefinition[accessorName]) {
-    //                classDefinition[accessorName + "Default"] = property['generate' + accessorType]();
-    //            }
-    //        }
-    //    }
-    //};
 
 
     //=========================================================================

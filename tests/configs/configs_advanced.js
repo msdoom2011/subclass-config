@@ -1,6 +1,6 @@
 describe("Checking base config class", function() {
 
-    var config = app.getClass('Config/BaseConfig').createInstance();
+    var config = app.getClass('Config/AdvancedConfig').createInstance();
 
     it ("default values", function() {
 
@@ -8,6 +8,11 @@ describe("Checking base config class", function() {
         var values = config.getValues();
 
         expect(Subclass.Tools.isEqual(defaults, {
+            stPropNumber: 10,
+            stPropString: 'str',
+            incPropNumber: 300,
+            incPropString: "my string",
+            incPropArray: [],
             propNumber: 10,
             propString: 'string default',
             propBoolean: false,
@@ -41,6 +46,7 @@ describe("Checking base config class", function() {
                     mapMapMixed: 0
                 }
             },
+
             // Array collection
             propStringCollectionArray: ["str1", "str2"],
             propNumberCollectionArray: [3, 2, 1],
@@ -69,8 +75,13 @@ describe("Checking base config class", function() {
         })).toBe(true);
 
         expect(Subclass.Tools.isEqual(values, {
-            propNumber: 20,
-            propString: 'string value',
+            stPropNumber: 10,
+            stPropString: 'str',
+            incPropNumber: 500,
+            incPropString: "my string",
+            incPropArray: [],
+            propNumber: 2000,
+            propString: 'standard string',
             propBoolean: true,
             propArray: [1, 2, 3],
             propObject: { str1: "str1", str2: "str2" },
@@ -133,28 +144,55 @@ describe("Checking base config class", function() {
 
         config.setDefaults({
             propString: "new default string",
-            propNumber: 200
+            propNumber: 200,
+            stPropNumber: 500,
+            stPropString: 'new default string',
+            incPropNumber: 600,
+            incPropString: 'new default string'
         });
 
         expect(config.getProperty('propString').getDefaultValue()).toBe('new default string');
         expect(config.getProperty('propNumber').getDefaultValue()).toBe(200);
+        expect(config.getProperty('stPropNumber').getDefaultValue()).toBe(500);
+        expect(config.getProperty('stPropString').getDefaultValue()).toBe('new default string');
+        expect(config.getProperty('incPropNumber').getDefaultValue()).toBe(600);
+        expect(config.getProperty('incPropString').getDefaultValue()).toBe('new default string');
 
-        expect(config.propString).toBe('string value');
-        expect(config.propNumber).toBe(20);
+        expect(config.propString).toBe('standard string');
+        expect(config.propNumber).toBe(2000);
+        expect(config.stPropNumber).toBe(10);
+        expect(config.stPropString).toBe('str');
+        expect(config.incPropNumber).toBe(500);
+        expect(config.incPropString).toBe('my string');
 
         config.getProperty('propString').resetValue();
         config.getProperty('propNumber').resetValue();
+        config.getProperty('stPropNumber').resetValue();
+        config.getProperty('stPropString').resetValue();
+        config.getProperty('incPropNumber').resetValue();
+        config.getProperty('incPropString').resetValue();
 
         expect(config.propString).toBe('new default string');
         expect(config.propNumber).toBe(200);
+        expect(config.stPropNumber).toBe(500);
+        expect(config.stPropString).toBe('new default string');
+        expect(config.incPropNumber).toBe(600);
+        expect(config.incPropString).toBe('new default string');
 
         config.setValues({
             propString: "new value string",
-            propNumber: 1200
+            propNumber: 1200,
+            stPropNumber: 1500,
+            stPropString: 'new value string',
+            incPropNumber: 1500,
+            incPropString: 'new value string'
         });
 
         expect(config.propString).toBe('new value string');
         expect(config.propNumber).toBe(1200);
-
+        expect(config.stPropNumber).toBe(1500);
+        expect(config.stPropString).toBe('new value string');
+        expect(config.incPropNumber).toBe(1500);
+        expect(config.incPropString).toBe('new value string');
     });
 });

@@ -66,22 +66,12 @@ Subclass.Class.Type.Config.Config = function()
     {
         return Subclass.Class.Type.Config.ConfigDefinition;
     };
-    //
-    ///**
-    // * @inheritDoc
-    // */
-    //Config.prototype.createConstructorOnGet = function()
-    //{
-    //    return false;
-    //};
 
     /**
      * @inheritDoc
      */
     Config.prototype.setParent = function(parentClassName)
     {
-        Config.$parent.prototype.setParent.call(this, parentClassName);
-
         if (
             this._parent
             && this._parent.constructor != Config
@@ -91,6 +81,8 @@ Subclass.Class.Type.Config.Config = function()
                 'inherited only from an another config.'
             );
         }
+
+        Config.$parent.prototype.setParent.apply(this, arguments);
     };
 
     /**

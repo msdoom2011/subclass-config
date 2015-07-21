@@ -4,6 +4,8 @@ app.registerConfig("Config/StandardIncludeConfig", {
 
     incPropNumber: { type: "number", default: 300 },
 
-    incPropArray: { type: "array" }
+    incPropArray: { type: "array" },
+
+    propNumber: { type: "number", value: 2000 }
 
 });

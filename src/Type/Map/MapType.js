@@ -279,7 +279,10 @@ Subclass.Property.Type.Map.MapType = function()
             if (!schema.hasOwnProperty(propName)) {
                 continue;
             }
-            schema[propName] = propertyManager.normalizeTypeDefinition(schema[propName]);
+            schema[propName] = propertyManager.normalizeTypeDefinition(
+                schema[propName],
+                propName
+            );
 
             if (!this.isWritable()) {
                 schema[propName].writable = false;

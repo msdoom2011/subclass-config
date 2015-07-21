@@ -58,15 +58,6 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
 
                 if (initValue !== undefined) {
                     property.setValue(initValue, false);
-
-                    //if (propertyDefinition.isAccessors()) {
-                    //    var setterName = Subclass.Tools.generateSetterName(propertyName);
-                    //    classInstance[setterName](initValue);
-                    //
-                    //} else {
-                    //    classInstance[propertyName] = initValue;
-                    //}
-                    //property.unModify();
                 }
             }
         });

@@ -194,15 +194,16 @@ Subclass.Property.PropertyManager = (function()
      * Normalizes definition of data type
      *
      * @param definition
+     * @param {string} [propertyName]
      * @returns {*}
      */
-    PropertyManager.prototype.normalizeTypeDefinition = function(definition)
+    PropertyManager.prototype.normalizeTypeDefinition = function(definition, propertyName)
     {
         if (definition === undefined || definition === null) {
             Subclass.Error.create("InvalidArgument")
-                .argument('the definition of property', false)
+                .argument('the definition of property' + (propertyName ? ' "' + propertyName + '"' : ''), false)
                 .received(definition)
-                .expected('not null or not undefined')
+                .expected('not null and not undefined')
                 .apply()
             ;
         }
