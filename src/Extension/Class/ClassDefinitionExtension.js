@@ -31,12 +31,12 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
 
         classInst.getEvent('onNormalizeData').addListener(function(evt, data)
         {
-            //if (
-            //    data.hasOwnProperty('$_properties')
-            //    && Subclass.Tools.isPlainObject(data["$_properties"])
-            //) {
-            //    data["$_properties"] = this.normalizeProperties(data["$_properties"]);
-            //}
+            if (
+                data.hasOwnProperty('$_properties')
+                && Subclass.Tools.isPlainObject(data["$_properties"])
+            ) {
+                data["$_properties"] = this.normalizeProperties(data["$_properties"]);
+            }
         });
 
         classInst.getEvent('onValidateData').addListener(function(evt, data)
@@ -115,25 +115,25 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
      *
      * @param {Object.<string>} requires
      *
-     *      List of the classes that current one requires. It can be specified in two ways:
+     * List of the classes that current one requires. It can be specified in two ways:
      *
-     *      1. As an array of class names:
+     * 1. As an array of class names:
      *
-     *      Example:
-     *      [
-     *         "Namespace/Of/Class1",
-     *         "Namespace/Of/Class2",
-     *         ...
-     *      ]
+     * Example:
+     * [
+     *    "Namespace/Of/Class1",
+     *    "Namespace/Of/Class2",
+     *    ...
+     * ]
      *
-     *      2. As an object with pairs key/value where key is an class alias and value is a class name.
+     * 2. As an object with pairs key/value where key is an class alias and value is a class name.
      *
-     *      Example:
-     *      {
-     *         classAlias1: "Namespace/Of/Class1",
-     *         classAlias2: "Namespace/Of/Class2",
-     *         ...
-     *      }
+     * Example:
+     * {
+     *    classAlias1: "Namespace/Of/Class1",
+     *    classAlias2: "Namespace/Of/Class2",
+     *    ...
+     * }
      */
     ClassDefinition.prototype.setRequires = function(requires)
     {

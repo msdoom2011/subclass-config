@@ -86,6 +86,72 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     };
 
     /**
+     * Validates "$_final" option value
+     *
+     * @throws {Error}
+     * @param {*} isFinal
+     * @returns {boolean}
+     */
+    ConfigDefinition.prototype.validateFinal = function(isFinal)
+    {
+        if (typeof isFinal != 'boolean') {
+            Subclass.Error.create('InvalidClassOption')
+                .option('$_final')
+                .className(this.getClass().getName())
+                .received(isFinal)
+                .expected('a boolean')
+                .apply()
+            ;
+        }
+        return true;
+    };
+
+    /**
+     * Sets "$_final" option value
+     *
+     * @param {boolean} isFinal
+     */
+    ConfigDefinition.prototype.setFinal = function(isFinal)
+    {
+        this.validateFinal(isFinal);
+        this.getData().$_final = isFinal;
+    };
+
+    /**
+     * Reports whether current class is final
+     *
+     * @returns {boolean}
+     */
+    ConfigDefinition.prototype.getFinal = function()
+    {
+        var classTypeInst = this.getClass();
+        var data = this.getData();
+
+        if (!classTypeInst.hasParent()) {
+            return this.getData().$_final;
+        }
+        if (data.$_final) {
+            return true;
+        }
+        return classTypeInst
+            .getParent()
+            .getDefinition()
+            .getFinal()
+        ;
+    };
+
+    /**
+     * Alias of Subclass.Class.Type.Config.ConfigDefinition#getFinal
+     *
+     * @alias {Subclass.Class.Type.Config.ConfigDefinition#getFinal}
+     * @returns {boolean}
+     */
+    ConfigDefinition.prototype.isFinal = function()
+    {
+        return this.getFinal();
+    };
+
+    /**
      * @inheritDoc
      */
     ConfigDefinition.prototype.getBaseData = function()
@@ -93,6 +159,18 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
         var classDefinition = ConfigDefinition.$parent.prototype.getBaseData.apply(this, arguments);
 
         /**
+         * Reports whether current config class is final
+         * and its children can't contain any new or change already
+         * existent property definitions
+         *
+         * @type {boolean}
+         */
+        classDefinition.$_final = false;
+
+        /**
+         * Allows specify a list of config classes which properties
+         * will be included into current class definition
+         *
          * @type {string[]}
          */
         classDefinition.$_includes = [];
@@ -229,7 +307,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         // Extending class properties
 
-        data.$_properties = this.normalizeProperties();
+        data.$_properties = this.processProperties(data.$_properties);
 
         // Customising property definitions
 
@@ -241,13 +319,12 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     };
 
     /**
-     * Normalising class properties
+     * Processes class properties
      */
-    ConfigDefinition.prototype.normalizeProperties = function()
+    ConfigDefinition.prototype.processProperties = function(classProperties)
     {
         var classManager = this.getClass().getClassManager();
         var propertyManager = classManager.getModule().getPropertyManager();
-        var classProperties = this.getProperties();
         var propName;
 
         // Normalizing short style property definitions
@@ -283,10 +360,56 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
             var parentClassName = this.getExtends();
             var parentClass = this.getClass().getClassManager().getClass(parentClassName);
             var parentClassConstructor = parentClass.getConstructor();
-            var parentClassProperties = parentClass.getDefinition().getProperties();
+            var parentClassDefinition = parentClass.getDefinition();
+
+            // Checking whether the parent class is final and presence new property definitions in current class
+
+            if (parentClassDefinition.isFinal()) {
+                var parentClassPropertyNames = Object.keys(parentClass.getProperties(true));
+                var classPropertyNames = Object.keys(classProperties);
+                var changedDefinitions = [];
+
+                // Checking for changing definitions of existing properties
+
+                for (propName in classProperties) {
+                    if (classProperties.hasOwnProperty(propName)) {
+                        var propDef = classProperties[propName];
+
+                        if (typeof propDef == 'object' && propDef.hasOwnProperty('type')) {
+                            changedDefinitions.push(propName);
+                        }
+                    }
+                }
+                if (changedDefinitions.length > 0) {
+                    Subclass.Error.create(
+                        'Trying to change definitions of typed properties ("' + changedDefinitions.join('", "') + '") ' +
+                        'for the config class "' + this.getClass().getName() + '" which extends ' +
+                        'from the final config class "' + parentClassName + '".'
+                    );
+                }
+
+                // Checking for new property definitions
+
+                for (i = 0; i < parentClassPropertyNames.length; i++) {
+                    var index = classPropertyNames.indexOf(parentClassPropertyNames[i]);
+
+                    if (index >= 0) {
+                        classPropertyNames.splice(index, 1);
+                    }
+                }
+                if (classPropertyNames.length > 0) {
+                    Subclass.Error.create(
+                        'Trying to define new typed properties ("' + classPropertyNames.join('", "') + '") ' +
+                        'for the config class "' + this.getClass().getName() + '" which extends ' +
+                        'from the final config class "' + parentClassName + '".'
+                    );
+                }
+            }
+
+            // Processing parent class properties
 
             classProperties = this.extendProperties(
-                parentClassProperties,
+                parentClass.getDefinition().getProperties(),
                 classProperties
             );
         }
@@ -356,8 +479,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     {
         ConfigDefinition.$parent.prototype.processRelatedClasses.call(this);
 
-        var classInst = this.getClass();
-        var classManager = classInst.getClassManager();
+        var classManager = this.getClass().getClassManager();
         var includes = this.getIncludes();
 
         // Performing $_includes (Needs to be defined in ConfigDefinition)

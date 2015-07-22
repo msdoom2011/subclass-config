@@ -89,6 +89,7 @@ Subclass.Property.PropertyType = (function()
     {
         Subclass.Error.create('NotImplementedMethod')
             .method("getPropertyTypeName")
+            .className(this.name)
             .apply()
         ;
     };
@@ -110,11 +111,6 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.parseRelatedClasses = function(propertyDefinition)
     {
-        //Subclass.Error.create('NotImplementedMethod')
-        //    .method("parseRelatedClasses")
-        //    .apply()
-        //;
-
         // Do something
     };
 
