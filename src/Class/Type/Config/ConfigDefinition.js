@@ -10,9 +10,37 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     function ConfigDefinition(classInst, classDefinition)
     {
         ConfigDefinition.$parent.apply(this, arguments);
+
+        /**
+         * Collection of properties stored in form as they were defined in class definition
+         *
+         * @type {{}}
+         * @private
+         */
+        this._originProperties = {};
     }
 
     ConfigDefinition.$parent = Subclass.Class.ClassDefinition;
+
+    /**
+     * Sets origin config properties
+     *
+     * @param {Object} originProperties
+     */
+    ConfigDefinition.prototype.setOriginProperties = function(originProperties)
+    {
+        this._originProperties = originProperties;
+    };
+
+    /**
+     * Returns origin config properties
+     *
+     * @returns {Object}
+     */
+    ConfigDefinition.prototype.getOriginProperties = function()
+    {
+        return this._originProperties;
+    };
 
     /**
      * Validates "$_includes" attribute value
@@ -292,6 +320,12 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         data.$_properties = Subclass.Tools.extend(properties, dataDefault);
 
+        // Storing origin property definitions
+
+        this.setOriginProperties(Subclass.Tools.copy(data.$_properties));
+
+        // Restoring system properties of class definition
+
         for (propName in systemProperties) {
             if (systemProperties.hasOwnProperty(propName) && propName != "$_properties") {
                 var validatorMethodName = Subclass.Tools.generateValidatorName(propName.replace(/^\$_/i, ''));
@@ -316,6 +350,26 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
                 data.$_properties[propName].accessors = false;
             }
         }
+    };
+
+    /**
+     * @inheritDoc
+     */
+    ConfigDefinition.prototype.validateProperties = function(properties)
+    {
+        if (this.getExtends()) {
+            var parentClassName = this.getExtends();
+            var parentClass = this.getClass().getClassManager().getClass(parentClassName);
+            var parentClassDefinition = parentClass.getDefinition();
+
+            // Checking whether the parent class is final and presence new property definitions in current class
+
+            if (parentClassDefinition.isFinal()) {
+
+            }
+        }
+
+        return ConfigDefinition.$parent.prototype.validateProperties.apply(this, arguments);
     };
 
     /**
@@ -489,6 +543,31 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
                 classManager.loadClass(includes[i]);
             }
         }
+    };
+
+    /**
+     * Returns the list of new properties of current class which were not defined in its parent.
+     * The properties from included classes also fall into current list.
+     *
+     * @returns {Object}
+     */
+    ConfigDefinition.prototype.getNewProperties = function()
+    {
+
+    };
+
+    /**
+     * Returns the list of properties which were specified using
+     * normal property declaration but not specifying just a value.
+     *
+     * The such properties from included classes also fall into
+     * current list, but not from parent class.
+     *
+     * @returns {Object}
+     */
+    ConfigDefinition.prototype.getDefinedProperties = function()
+    {
+
     };
 
     return ConfigDefinition;
