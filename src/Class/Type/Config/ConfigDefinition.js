@@ -355,6 +355,48 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     /**
      * @inheritDoc
      */
+    ConfigDefinition.prototype.validateData = function()
+    {
+        if (!ConfigDefinition.$parent.prototype.validateData.apply(this, arguments)) {
+            return false;
+        }
+
+        if (this.getExtends()) {
+            var parentClassName = this.getExtends();
+            var parentClass = this.getClass().getClassManager().getClass(parentClassName);
+            var parentClassDefinition = parentClass.getDefinition();
+
+            // Checking whether the parent class is final and searching
+            // for changed definitions of existing properties in current class
+
+            if (parentClassDefinition.isFinal()) {
+                var definedProperties = this.getDefinedProperties();
+                var newProperties = this.getNewProperties();
+
+                for (var i = 0; i < newProperties.length; i++) {
+                    var index = definedProperties.indexOf(newProperties[i]);
+
+                    if (index >= 0) {
+                        definedProperties.splice(index, 1);
+                    }
+                }
+
+                if (definedProperties.length > 0) {
+                    Subclass.Error.create(
+                        'Trying to change definitions of typed properties ("' + definedProperties.join('", "') + '") ' +
+                        'for the config class "' + this.getClass().getName() + '" which extends ' +
+                        'the final config class "' + parentClassName + '".'
+                    );
+                }
+            }
+        }
+
+        return true;
+    };
+
+    /**
+     * @inheritDoc
+     */
     ConfigDefinition.prototype.validateProperties = function(properties)
     {
         if (this.getExtends()) {
@@ -362,10 +404,19 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
             var parentClass = this.getClass().getClassManager().getClass(parentClassName);
             var parentClassDefinition = parentClass.getDefinition();
 
-            // Checking whether the parent class is final and presence new property definitions in current class
+            // Checking whether the parent class is final and presence
+            // of new property definitions in current class
 
             if (parentClassDefinition.isFinal()) {
+                var newClassProperties = this.getNewProperties(properties);
 
+                if (newClassProperties.length > 0) {
+                    Subclass.Error.create(
+                        'Trying to define new typed properties ("' + newClassProperties.join('", "') + '") ' +
+                        'for the config class "' + this.getClass().getName() + '" which extends ' +
+                        'the final config class "' + parentClassName + '".'
+                    );
+                }
             }
         }
 
@@ -414,51 +465,6 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
             var parentClassName = this.getExtends();
             var parentClass = this.getClass().getClassManager().getClass(parentClassName);
             var parentClassConstructor = parentClass.getConstructor();
-            var parentClassDefinition = parentClass.getDefinition();
-
-            // Checking whether the parent class is final and presence new property definitions in current class
-
-            if (parentClassDefinition.isFinal()) {
-                var parentClassPropertyNames = Object.keys(parentClass.getProperties(true));
-                var classPropertyNames = Object.keys(classProperties);
-                var changedDefinitions = [];
-
-                // Checking for changing definitions of existing properties
-
-                for (propName in classProperties) {
-                    if (classProperties.hasOwnProperty(propName)) {
-                        var propDef = classProperties[propName];
-
-                        if (typeof propDef == 'object' && propDef.hasOwnProperty('type')) {
-                            changedDefinitions.push(propName);
-                        }
-                    }
-                }
-                if (changedDefinitions.length > 0) {
-                    Subclass.Error.create(
-                        'Trying to change definitions of typed properties ("' + changedDefinitions.join('", "') + '") ' +
-                        'for the config class "' + this.getClass().getName() + '" which extends ' +
-                        'from the final config class "' + parentClassName + '".'
-                    );
-                }
-
-                // Checking for new property definitions
-
-                for (i = 0; i < parentClassPropertyNames.length; i++) {
-                    var index = classPropertyNames.indexOf(parentClassPropertyNames[i]);
-
-                    if (index >= 0) {
-                        classPropertyNames.splice(index, 1);
-                    }
-                }
-                if (classPropertyNames.length > 0) {
-                    Subclass.Error.create(
-                        'Trying to define new typed properties ("' + classPropertyNames.join('", "') + '") ' +
-                        'for the config class "' + this.getClass().getName() + '" which extends ' +
-                        'from the final config class "' + parentClassName + '".'
-                    );
-                }
-            }
 
             // Processing parent class properties
 
@@ -549,11 +555,47 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
      * Returns the list of new properties of current class which were not defined in its parent.
      * The properties from included classes also fall into current list.
      *
+     * @param {Object} [properties]
      * @returns {Object}
      */
-    ConfigDefinition.prototype.getNewProperties = function()
+    ConfigDefinition.prototype.getNewProperties = function(properties)
     {
+        var classPropertyNames = [];
 
+        if (properties) {
+            classPropertyNames = Object.keys(properties);
+
+        } else {
+            classPropertyNames = Object.keys(this.getOriginProperties());
+            var classManager = this.getClass().getClassManager();
+            var includes = this.getIncludes();
+
+            for (var i = 0; i < includes.length; i++) {
+                var includeClass = classManager.getClass(includes[i]);
+                var includeClassConstructor = includeClass.getConstructor();
+                var includeClassProperties = includeClass.getProperties(true);
+
+                classPropertyNames = classPropertyNames.concat(
+                    Object.keys(includeClassProperties)
+                );
+            }
+        }
+
+        if (this.getExtends()) {
+            var parentClassName = this.getExtends();
+            var parentClass = this.getClass().getClassManager().getClass(parentClassName);
+            var parentClassPropertyNames = Object.keys(parentClass.getProperties(true));
+
+            for (i = 0; i < parentClassPropertyNames.length; i++) {
+                var index = classPropertyNames.indexOf(parentClassPropertyNames[i]);
+
+                if (index >= 0) {
+                    classPropertyNames.splice(index, 1);
+                }
+            }
+        }
+
+        return Subclass.Tools.unique(classPropertyNames);
     };
 
     /**
@@ -567,7 +609,36 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
      */
     ConfigDefinition.prototype.getDefinedProperties = function()
     {
+        var classManager = this.getClass().getClassManager();
+        var classProperties = this.getOriginProperties();
+        var includes = this.getIncludes();
+        var definedProperties = [];
 
+        for (var i = 0; i < includes.length; i++) {
+            var includeClass = classManager.getClass(includes[i]);
+            var includeClassDefinition = includeClass.getDefinition();
+
+            definedProperties = definedProperties.concat(
+                includeClassDefinition.getDefinedProperties()
+            );
+            if (includeClass.hasParent()) {
+                definedProperties = definedProperties.concat(
+                    includeClass.getParent().getDefinition().getDefinedProperties()
+                );
+            }
+        }
+
+        for (var propName in classProperties) {
+            if (
+                classProperties.hasOwnProperty(propName)
+                && typeof classProperties[propName] == 'object'
+                && classProperties[propName].hasOwnProperty('type')
+            ) {
+                definedProperties.push(propName);
+            }
+        }
+
+        return Subclass.Tools.unique(definedProperties);
     };
 
     return ConfigDefinition;
