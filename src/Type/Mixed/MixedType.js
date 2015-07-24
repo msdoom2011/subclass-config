@@ -113,7 +113,7 @@ Subclass.Property.Type.Mixed.MixedType = (function()
         MixedType.$parent.prototype.validateValue.call(this, value);
 
         if (value === null) {
-            return;
+            return true;
         }
 
         var allowedTypes = this.getAllowedTypes();
@@ -140,6 +140,8 @@ Subclass.Property.Type.Mixed.MixedType = (function()
                 .apply()
             ;
         }
+
+        return true;
     };
 
     /**

@@ -35,50 +35,50 @@ app.registerConfig("Config/BaseConfig", {
 
     propMap: { type: "map", schema: {
 
-        mapNumber: { type: "number", default: 10 },
+        mapNumber: [ "number", 10 ],
 
-        mapString: { type: "string", default: "map string" },
+        mapString: [ "string", "map string" ],
 
-        mapBoolean: { type: "boolean", default: true },
+        mapBoolean: [ "boolean", true ],
 
-        mapArray: { type: "array" },
+        mapArray: [ "array" ],
 
-        mapObject: { type: "object" },
+        mapObject: [ "object" ],
 
-        mapClass: { type: "class", className: "Class/AppClass" },
+        mapClass: [ "class", "Class/AppClass" ],
 
-        mapEnum: { type: "enum", allows: [ "male", "female" ] },
+        mapEnum: [ "enum", [ "male", "female" ] ],
 
-        mapFunction: { type: "function", default: null },
+        mapFunction: [ "function", null ],
 
-        mapMixed: {type: "mixed", default: "10%", allows: [
-            { type: "number" },
+        mapMixed: [ "mixed", [
+            [ "number" ],
             { type: "string", pattern: /[0-9]+%$/i }
-        ]},
+        ], "10%" ],
 
-        mapMap: { type: "map", schema: {
+        mapMap: [ "map", {
 
-            mapMapNumber: { type: "number" },
+            mapMapNumber: ["number"],
 
-            mapMapString: { type: "string" },
+            mapMapString: ["string"],
 
-            mapMapBoolean: { type: "boolean" },
+            mapMapBoolean: ["boolean"],
 
-            mapMapArray: { type: "array" },
+            mapMapArray: ["array"],
 
-            mapMapObject: { type: "object" },
+            mapMapObject: ["object"],
 
-            mapMapClass: { type: "class", className: "Class/AppClass" },
+            mapMapClass: ["class", "Class/AppClass"],
 
-            mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
+            mapMapEnum: ["enum", [ "male", "female" ]],
 
-            mapMapFunction: { type: "function" },
+            mapMapFunction: ["function"],
 
             mapMapMixed: {type: "mixed", nullable: false, allows: [
-                { type: "number" },
-                { type: "string" }
+                [ "number" ],
+                [ "string" ]
             ]}
-        }}
+        }]
     }},
 
     // Array Collection
@@ -87,7 +87,7 @@ app.registerConfig("Config/BaseConfig", {
 
     propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" }, default: [3, 2, 1], value: [1, 2, 3] },
 
-    propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" }, default: [true] },
+    propBooleanCollectionArray: ["arrayCollection", ["boolean"], [true]],
 
     propArrayCollectionArray: { type: "arrayCollection", proto: { type: "array" }, default: [[1, 1], [2, 2]], value: [[3,3,3]] },
 
@@ -99,18 +99,18 @@ app.registerConfig("Config/BaseConfig", {
 
     propFunctionCollectionArray: { type: "arrayCollection", proto: { type: "function" } },
 
-    propMixedCollectionArray: { type: "arrayCollection", proto: { type: "mixed", allows: [
-        { type: "number" },
-        { type: "string" }
-    ]}},
+    propMixedCollectionArray: { type: "arrayCollection", proto: ["mixed", [
+        ["number"],
+        ["string"]
+    ]]},
 
-    propMapCollectionArray: { type: "arrayCollection", proto: { type: "map", schema: {
-        propMapNumber: { type: "number" },
-        propMapString: { type: "string" },
-        propMapMap: { type: "map", schema: {
-            mapMapString: { type: "string" }
-        }}
-    }}},
+    propMapCollectionArray: { type: "arrayCollection", proto: ["map", {
+        propMapNumber: ["number"],
+        propMapString: ["string"],
+        propMapMap: ["map", {
+            mapMapString: ["string"]
+        }]
+    }]},
 
     propArrayCollectionCollectionArray: { type: "arrayCollection", proto: {
         type: "arrayCollection",

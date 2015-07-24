@@ -35,6 +35,42 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
         return false;
     };
 
+    /**
+     * @inheritDoc
+     */
+    ConstructorType.normalizeDefinition = function(definition)
+    {
+        if (Array.isArray(definition) && definition.length >= 1 && definition.length <= 5) {
+            var fullDefinition = {};
+            var isNullable = false;
+
+            if (definition[0]) {
+                fullDefinition.type = definition[0];
+            }
+            if (definition.length >= 2) {
+                fullDefinition.construct = definition[1];
+            }
+            if (definition.length >= 3) {
+                fullDefinition.default = definition[2];
+
+                if (definition[2] === null) {
+                    isNullable = true;
+                }
+            }
+            if (definition.length >= 4) {
+                fullDefinition.writable = definition[3];
+            }
+            if (definition.length == 5) {
+                fullDefinition.nullable = definition[4];
+            }
+            if (isNullable) {
+                fullDefinition.nullable = true;
+            }
+            return fullDefinition;
+        }
+        return definition;
+    };
+
     ConstructorType.prototype = {
 
         /**
@@ -143,11 +179,6 @@ Subclass.Property.Type.Constructor.ConstructorType = function()
              * @type {Function}
              */
             baseData.construct = null;
-
-            /**
-             * @inheritDoc
-             */
-            baseData.nullable = true;
 
             /**
              * @inheritDoc

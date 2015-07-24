@@ -21,84 +21,84 @@ app.registerClass('Class/BaseDefinition',
 
     $_properties: {
 
-        propNumber: { type: 'number' },
+        propNumber: [ 'number' ],
 
-        propString: { type: 'string' },
+        propString: [ 'string' ],
 
-        propBoolean: { type: 'boolean' },
+        propBoolean: [ 'boolean' ],
 
-        propArray: { type: 'array' },
+        propArray: [ 'array' ],
 
-        propObject: { type: 'object' },
+        propObject: [ 'object' ],
 
-        propClass: { type: "class", className: "Class/AppClass"},
+        propClass: [ "class", "Class/AppClass" ],
 
-        propEnum: { type: "enum", allows: [ "male", "female" ] },
+        propEnum: [ "enum", [ "male", "female" ] ],
 
-        propFunction: { type: "function" },
+        propFunction: [ "function" ],
 
-        propUntyped: { type: "untyped" },
+        propUntyped: [ "untyped" ],
 
-        propMixed: { type: "mixed", allows: [
-            { type: "number" },
-            { type: "string" }
-        ]},
+        propMixed: [ "mixed", [
+            [ "number" ],
+            [ "string" ]
+        ]],
 
-        propConstructor: { type: "constructor", construct: Date },
+        propConstructor: [ "constructor", Date ],
 
-        propMap: { type: "map", schema: {
+        propMap: [ "map", {
 
-            mapNumber: { type: "number" },
+            mapNumber: [ "number" ],
 
-            mapString: { type: "string" },
+            mapString: [ "string" ],
 
-            mapBoolean: { type: "boolean" },
+            mapBoolean: [ "boolean" ],
 
-            mapArray: { type: "array" },
+            mapArray: [ "array" ],
 
-            mapObject: { type: "object" },
+            mapObject: [ "object" ],
 
-            mapClass: { type: "class", className: "Class/AppClass" },
+            mapClass: [ "class", "Class/AppClass" ],
 
-            mapEnum: { type: "enum", allows: [ "male", "female" ] },
+            mapEnum: [ "enum", [ "male", "female" ] ],
 
-            mapFunction: { type: "function" },
+            mapFunction: [ "function" ],
 
-            mapMixed: {type: "mixed", allows: [
-                { type: "number" },
-                { type: "string" }
-            ]},
+            mapMixed: ["mixed", [
+                [ "number" ],
+                [ "string" ]
+            ]],
 
-            mapMap: { type: "map", schema: {
+            mapMap: [ "map", {
 
-                mapMapNumber: { type: "number" },
+                mapMapNumber: [ "number" ],
 
-                mapMapString: { type: "string" },
+                mapMapString: [ "string" ],
 
-                mapMapBoolean: { type: "boolean" },
+                mapMapBoolean: [ "boolean" ],
 
-                mapMapArray: { type: "array" },
+                mapMapArray: [ "array" ],
 
-                mapMapObject: { type: "object" },
+                mapMapObject: [ "object" ],
 
-                mapMapClass: { type: "class", className: "Class/AppClass" },
+                mapMapClass: [ "class", "Class/AppClass" ],
 
-                mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
+                mapMapEnum: [ "enum", [ "male", "female" ] ],
 
-                mapMapFunction: { type: "function" },
+                mapMapFunction: [ "function" ],
 
-                mapMapMixed: {type: "mixed", allows: [
-                    { type: "number" },
-                    { type: "string" }
-                ]}
-            }}
-        }},
+                mapMapMixed: [ "mixed", [
+                    [ "number" ],
+                    [ "string" ]
+                ]]
+            }]
+        }],
 
         // Array Collection
 
-        propStringCollectionArray: { type: "arrayCollection", proto: { type: "string" } },
+        propStringCollectionArray: [ "arrayCollection", [ "string" ] ],
 
-        propNumberCollectionArray: { type: "arrayCollection", proto: { type: "number" } },
+        propNumberCollectionArray: [ "arrayCollection", [ "number" ] ],
 
         propBooleanCollectionArray: { type: "arrayCollection", proto: { type: "boolean" } },
 
@@ -133,7 +133,7 @@ app.registerClass('Class/BaseDefinition',
 
         // Object Collection
 
-        propStringCollectionObject: { type: "objectCollection", proto: { type: "string" } },
+        propStringCollectionObject: [ "objectCollection", [ "string" ] ],
 
         propNumberCollectionObject: { type: "objectCollection", proto: { type: "number" } },
 

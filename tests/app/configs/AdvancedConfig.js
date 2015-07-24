@@ -6,6 +6,6 @@ app.registerConfig("Config/AdvancedConfig", {
 
     $_includes: ['Config/StandardIncludeConfig'],
 
-    incPropNumber: { type: 'number', value: 500 }
+    incPropNumber: { type: 'number', value: 500, extends: true }
 
 });

@@ -120,7 +120,6 @@ app.registerClass('Class/StandardDefinition',
             default: [ 10, 20, 30 ],
             writable: true,
             accessors: true,
-            nullable: true,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropArray = true;
                 this.propArrayOld = oldValue;
@@ -133,11 +132,10 @@ app.registerClass('Class/StandardDefinition',
             default: { foo: 10, bar: 20 },
             writable: true,
             accessors: true,
-            nullable: true,
             watcher: function(newValue, oldValue, property) {
-                this.changedPropArray = true;
-                this.propArrayOld = oldValue;
-                this.propArrayNew = newValue;
+                this.changedPropObject = true;
+                this.propObjectOld = oldValue;
+                this.propObjectNew = newValue;
             }
         },
 
@@ -147,7 +145,6 @@ app.registerClass('Class/StandardDefinition',
             default: null,
             writable: true,
             accessors: true,
-            nullable: true,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropClass = true;
                 this.propClassOld = oldValue;
@@ -157,7 +154,7 @@ app.registerClass('Class/StandardDefinition',
 
         propEnum: {
             type: "enum",
-            allows: [ "male", "female", null ],
+            allows: [ "male", "female" ],
             default: "female",
             writable: true,
             accessors: true,
@@ -173,7 +170,6 @@ app.registerClass('Class/StandardDefinition',
             "default": function () { return true },
             writable: true,
             accessors: true,
-            nullable: true,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropFunction = true;
                 this.propFunctionOld = oldValue;
@@ -204,7 +200,6 @@ app.registerClass('Class/StandardDefinition',
             default: "string value",
             writable: true,
             accessors: true,
-            nullable: true,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropMixed = true;
                 this.propMixedOld = oldValue;
@@ -218,7 +213,6 @@ app.registerClass('Class/StandardDefinition',
             default: new Date(0),
             writable: true,
             accessors: true,
-            nullable: true,
             watcher: function(newValue, oldValue, property) {
                 this.changedPropConstructor = true;
                 this.propConstructorOld = oldValue;
@@ -290,7 +284,6 @@ app.registerClass('Class/StandardDefinition',
             proto: { type: "string" },
             writable: true,
             accessors: true,
-            nullable: true,
             default: ["foo", "bar"],
             watcher: function(newValue, oldValue, property) {
                 this.changedPropStringCollectionArray = true;
@@ -310,7 +303,6 @@ app.registerClass('Class/StandardDefinition',
             }},
             writable: true,
             accessors: true,
-            nullable: true,
             default: [
                 {
                     propMapNumber: 10,
@@ -333,7 +325,6 @@ app.registerClass('Class/StandardDefinition',
             proto: { type: "arrayCollection", proto: { type: 'string' } },
             writable: true,
             accessors: true,
-            nullable: true,
             default: [
                 [ 'str11', 'str12', 'str13'],
                 [ 'str21', 'str22', 'str23']
@@ -354,7 +345,6 @@ app.registerClass('Class/StandardDefinition',
             proto: { type: "string" },
             writable: true,
             accessors: true,
-            nullable: true,
             default: {
                 "item1": "foo",
                 "item2": "bar"
@@ -377,7 +367,6 @@ app.registerClass('Class/StandardDefinition',
             }},
             writable: true,
             accessors: true,
-            nullable: true,
             default: {
                 "item1": {
                     propMapNumber: 10,
@@ -410,7 +399,6 @@ app.registerClass('Class/StandardDefinition',
             proto: { type: "arrayCollection", proto: { type: 'string' } },
             writable: true,
             accessors: true,
-            nullable: true,
             default: {
                 "item1": ['str11', 'str12', 'str13'],
                 "item2": ['str21', 'str22', 'str23']

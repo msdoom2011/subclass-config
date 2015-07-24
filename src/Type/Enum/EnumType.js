@@ -67,27 +67,32 @@ Subclass.Property.Type.Enum.EnumType = function()
     {
         return this.getAllows()[0];
     };
-
-    /**
-     * @inheritDoc
-     * @throws {Error}
-     */
-    EnumType.prototype.setNullable = function(nullable)
-    {
-        this.validateNullable(nullable);
-
-        if (typeof nullable == 'boolean' && nullable) {
-            Subclass.Error.create(
-                'The "enum" type property ' + this + ' can\'t be nullable.'
-            );
-        }
-    };
+    //
+    ///**
+    // * @inheritDoc
+    // * @throws {Error}
+    // */
+    //EnumType.prototype.setNullable = function(nullable)
+    //{
+    //    this.validateNullable(nullable);
+    //
+    //    if (typeof nullable == 'boolean' && nullable) {
+    //        Subclass.Error.create(
+    //            'The "enum" type property ' + this + ' can\'t be nullable.'
+    //        );
+    //    }
+    //};
 
     /**
      * @inheritDoc
      */
     EnumType.prototype.validateValue = function(value)
     {
+        EnumType.$parent.prototype.validateValue.apply(this, arguments);
+
+        if (value === null) {
+            return true;
+        }
         var allows = this.getAllows();
 
         if (allows.indexOf(value) < 0) {
@@ -98,6 +103,7 @@ Subclass.Property.Type.Enum.EnumType = function()
                 .apply()
             ;
         }
+        return true;
     };
 
     /**
@@ -180,11 +186,6 @@ Subclass.Property.Type.Enum.EnumType = function()
          * @type {Array}
          */
         data.allows = null;
-
-        /**
-         * @inheritDoc
-         */
-        data.nullable = false;
 
         return data;
     };

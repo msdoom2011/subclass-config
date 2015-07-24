@@ -35,7 +35,22 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
                 data.hasOwnProperty('$_properties')
                 && Subclass.Tools.isPlainObject(data["$_properties"])
             ) {
-                data["$_properties"] = this.normalizeProperties(data["$_properties"]);
+                data.$_properties = this.normalizeProperties(data.$_properties);
+
+                // Validating result properties
+
+                for (var propName in data.$_properties) {
+                    if (data.$_properties.hasOwnProperty(propName)) {
+                        var property = data.$_properties[propName];
+
+                        if (!property || !Subclass.Tools.isPlainObject(property)) {
+                            Subclass.Error.create(
+                                'Specified invalid definition of property "' + propName + '" ' +
+                                'in class "' + this.getClass().getName() + '".'
+                            );
+                        }
+                    }
+                }
             }
         });
 
@@ -205,6 +220,42 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
     };
 
     /**
+     * Returns functions which should normalize class properties collection
+     *
+     * Each normalizer takes one argument, which is properties collection object.
+     * It can modify this collection whatever its needed and after that should
+     * return this collection back.
+     *
+     * @returns {Array.<Function>}
+     */
+    ClassDefinition.prototype.getPropertyNormalizers = function()
+    {
+        var $this = this;
+
+        return [
+
+            // Processing parent class
+
+            function(properties) {
+                if ($this.getExtends && $this.getExtends()) {
+                    var parentClassName = $this.getExtends();
+                    var parentClass = $this.getClass().getClassManager().getClass(parentClassName);
+                    var parentClassConstructor = parentClass.getConstructor();
+
+                    // Processing parent class properties
+
+                    properties = $this.extendProperties(
+                        parentClass.getDefinition().getProperties(),
+                        properties
+                    );
+                }
+
+                return properties;
+            }
+        ];
+    };
+
+    /**
      * Normalizes property definitions.
      * Brings all property definitions to the single form.
      *
@@ -218,6 +269,8 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
         var classManager = this.getClass().getClassManager();
         var propertyManager = classManager.getModule().getPropertyManager();
 
+        // Bringing property definition to the single form
+
         if (properties && Subclass.Tools.isPlainObject(properties)) {
             for (var propertyName in properties) {
                 if (properties.hasOwnProperty(propertyName)) {
@@ -229,7 +282,62 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
             }
         }
 
+        // Solving issues of extending property definitions
+        // from parent to child class
+
+        var normalizers = this.getPropertyNormalizers();
+
+        for (var i = 0; i < normalizers.length; i++) {
+            properties = normalizers[i](properties);
+        }
+
         return properties;
+    };
+
+    /**
+     * Extending class property definitions
+     *
+     * @param {Object} childProperties
+     * @param {Object} parentProperties
+     */
+    ClassDefinition.prototype.extendProperties = function(parentProperties, childProperties)
+    {
+        parentProperties = Subclass.Tools.copy(parentProperties);
+
+        for (var propName in childProperties) {
+            if (!childProperties.hasOwnProperty(propName)) {
+                continue;
+            }
+            if (
+                Subclass.Tools.isPlainObject(childProperties[propName])
+                && childProperties[propName].hasOwnProperty('type')
+                && parentProperties
+                && parentProperties.hasOwnProperty(propName)
+            ) {
+                if (childProperties[propName].extends === true) {
+                    parentProperties[propName] = Subclass.Tools.extend(
+                        parentProperties[propName],
+                        childProperties[propName]
+                    );
+                } else {
+                    parentProperties[propName] = childProperties[propName];
+                }
+
+            } else if (
+                parentProperties
+                && parentProperties[propName]
+            ) {
+                parentProperties[propName] = Subclass.Tools.extend(
+                    parentProperties[propName],
+                    { value: childProperties[propName] }
+                );
+
+            } else {
+                parentProperties[propName] = childProperties[propName];
+            }
+        }
+
+        return parentProperties;
     };
 
     /**

@@ -28,7 +28,7 @@ Subclass.Property.Extension.Class.Type.Class.ClassExtension = function()
                     continue;
                 }
                 var property = traitClassProperties[propName];
-                this.addProperty(propName, property.getDefinition().getData());
+                this.addProperty(propName, property.getData());
             }
         });
     };

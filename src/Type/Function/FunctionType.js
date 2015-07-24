@@ -32,7 +32,7 @@ Subclass.Property.Type.Function.FunctionType = (function()
      */
     FunctionType.prototype.validateValue = function(value)
     {
-        FunctionType.$parent.prototype.validateValue.call(this, value);
+        FunctionType.$parent.prototype.validateValue.apply(this, arguments);
 
         if (value && typeof value != 'function') {
             Subclass.Error.create('InvalidPropertyValue')

@@ -2,10 +2,10 @@ app.registerConfig("Config/StandardIncludeConfig", {
 
     $_extends: "Config/BaseIncludeConfig",
 
-    incPropNumber: { type: "number", default: 300 },
+    incPropNumber: { type: "number", default: 300, extends: true },
 
-    incPropArray: { type: "array" },
+    incPropArray: [ "array" ],
 
-    propNumber: { type: "number", value: 2000 }
+    propNumber: { type: "number", value: 2000, extends: true }
 
 });

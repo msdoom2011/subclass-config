@@ -59,11 +59,6 @@ Subclass.Property.Type.Object.ObjectType = function()
         /**
          * @inheritDoc
          */
-        baseData.nullable = false;
-
-        /**
-         * @inheritDoc
-         */
         baseData.default = {};
 
         return baseData;

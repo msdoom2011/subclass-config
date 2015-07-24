@@ -127,6 +127,53 @@ Subclass.Property.Extension.Class.Type.Class.ClassDefinitionExtension = function
         });
     };
 
+
+    //=========================================================================
+    //========================== ADDING NEW METHODS ===========================
+    //=========================================================================
+
+    var ClassDefinition = Subclass.Class.Type.Class.ClassDefinition;
+
+
+    /**
+     * @inheritDoc
+     */
+    ClassDefinition.prototype.getPropertyNormalizers = function()
+    {
+        var normalizes = ClassDefinition.$parent.prototype.getPropertyNormalizers.apply(this, arguments);
+        var $this = this;
+
+        // Processing included classes
+
+        normalizes.unshift(function(properties) {
+            if (!$this.getTraits) {
+                return properties;
+            }
+            var traits = $this.getTraits();
+
+            if (!traits) {
+                return properties;
+            }
+
+            for (var i = 0; i < traits.length; i++) {
+                var traitClassName = traits[i];
+                var traitClass = $this.getClass().getClassManager().getClass(traitClassName);
+                var traitClassConstructor = traitClass.getConstructor();
+                var traitClassProperties = traitClass.getDefinition().getProperties();
+
+                properties = $this.extendProperties(
+                    traitClassProperties,
+                    properties
+                );
+            }
+
+            return properties;
+        });
+
+        return normalizes;
+    };
+
+
     Subclass.Module.onInitializeAfter(function(evt, module)
     {
         var ClassDefinition = Subclass.ClassManager.getClassType('Class').getDefinitionClass();

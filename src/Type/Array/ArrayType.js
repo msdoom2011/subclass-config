@@ -60,11 +60,6 @@ Subclass.Property.Type.Array.ArrayType = (function()
         /**
          * @inheritDoc
          */
-        baseData.nullable = false;
-
-        /**
-         * @inheritDoc
-         */
         baseData.default = [];
 
         return baseData;

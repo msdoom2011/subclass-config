@@ -167,11 +167,6 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.initialize = function()
     {
-        //var propertyDefinition = this.getDefinition();
-
-        //if (this.getContextProperty()) {
-        //    propertyDefinition.setAccessors(false);
-        //}
         this.validateData();
         this.processData();
     };
@@ -544,12 +539,12 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.validateAccessors = function(isAccessors)
     {
-        if (isAccessors !== null && typeof isAccessors != 'boolean') {
+        if (typeof isAccessors != 'boolean') {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('accessors')
                 .received(isAccessors)
                 .property(this)
-                .expected('a boolean or null')
+                .expected('a boolean')
                 .apply()
             ;
         }
@@ -558,7 +553,7 @@ Subclass.Property.PropertyType = (function()
     /**
      * Sets marker if needs to generate accessor methods for current property
      *
-     * @param isAccessors
+     * @param {boolean} isAccessors
      */
     PropertyType.prototype.setAccessors = function(isAccessors)
     {
@@ -569,13 +564,11 @@ Subclass.Property.PropertyType = (function()
     /**
      * Checks if there is a need in generation of property accessor methods
      *
-     * @returns {(boolean|null)}
+     * @returns {boolean}
      */
     PropertyType.prototype.getAccessors = function()
     {
-        var isAccessors = this.getData().accessors;
-
-        return isAccessors !== null ? isAccessors : true;
+        return this.getData().accessors;
     };
 
     PropertyType.prototype.isAccessors = PropertyType.prototype.getAccessors;
@@ -587,12 +580,12 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.validateWritable = function(isWritable)
     {
-        if (isWritable !== null && typeof isWritable != 'boolean') {
+        if (typeof isWritable != 'boolean') {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('writable')
                 .received(isWritable)
                 .property(this)
-                .expected('a boolean or null')
+                .expected('a boolean')
                 .apply()
             ;
         }
@@ -601,7 +594,7 @@ Subclass.Property.PropertyType = (function()
     /**
      * Set marker if current property is writable
      *
-     * @param {(boolean|null)} isWritable
+     * @param {boolean} isWritable
      */
     PropertyType.prototype.setWritable = function(isWritable)
     {
@@ -616,15 +609,16 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.getWritable = function()
     {
-        var isWritable = this.getData().writable;
-
-        return isWritable !== null ? isWritable : true;
+        return this.getData().writable;
     };
 
     /**
      * @alias Subclass.Property.PropertyDefinition
      */
-    PropertyType.prototype.isWritable = PropertyType.prototype.getWritable;
+    PropertyType.prototype.isWritable = function()
+    {
+        return this.getWritable();
+    };
 
     /**
      * Validates "nullable" attribute value
@@ -633,12 +627,12 @@ Subclass.Property.PropertyType = (function()
      */
     PropertyType.prototype.validateNullable = function(isNullable)
     {
-        if (isNullable !== null && typeof isNullable != 'boolean') {
+        if (typeof isNullable != 'boolean') {
             Subclass.Error.create('InvalidPropertyOption')
                 .option('nullable')
                 .received(isNullable)
                 .property(this)
-                .expected('a boolean or null')
+                .expected('a boolean')
                 .apply()
             ;
         }
@@ -658,13 +652,60 @@ Subclass.Property.PropertyType = (function()
     /**
      * Checks if current property can store null value
      *
-     * @returns {(boolean|null)}
+     * @returns {boolean}
      */
     PropertyType.prototype.isNullable = function()
     {
-        var isNullable = this.getData().nullable;
+        return this.getData().nullable;
+    };
 
-        return isNullable !== null ? isNullable : true;
+    /**
+     * Validates "extends" attribute value
+     *
+     * @param {*} isExtends
+     */
+    PropertyType.prototype.validateExtends = function(isExtends)
+    {
+        if (typeof isExtends != 'boolean') {
+            Subclass.Error.create('InvalidPropertyOption')
+                .option('extends')
+                .received(isExtends)
+                .property(this)
+                .expected('a boolean')
+                .apply()
+            ;
+        }
+    };
+
+    /**
+     * Set marker if current property extends property
+     * with the same name from the parent class
+     *
+     * @param {boolean} isExtends
+     */
+    PropertyType.prototype.setExtends = function(isExtends)
+    {
+        this.validateExtends(isExtends);
+        this.getData().extends = isExtends;
+    };
+
+    /**
+     * Checks if current property extends property
+     * with the same name from the parent class
+     *
+     * @returns {boolean}
+     */
+    PropertyType.prototype.getExtends = function()
+    {
+        return this.getData().extends;
+    };
+
+    /**
+     * @alias {Subclass.Property.PropertyDefinition#getExtends}
+     */
+    PropertyType.prototype.isExtends = function()
+    {
+        return this.getExtends();
     };
 
     /**
@@ -746,7 +787,7 @@ Subclass.Property.PropertyType = (function()
              *
              * @type {(boolean|null)}
              */
-            accessors: null,
+            accessors: true,
 
             /**
              * Indicates that current property can hold null value or not.
@@ -757,7 +798,21 @@ Subclass.Property.PropertyType = (function()
              *
              * @type {(boolean|null)}
              */
-            nullable: null
+            nullable: true,
+
+            /**
+             * Influences on behaviour of property definition when the class
+             * to which it belongs, extends another class which contains
+             * property with the same name.
+             *
+             * If it's true the property definition in child class should
+             * extend the property with the same name in parent class.
+             * Otherwise the the definition in child should replace definition
+             * of the same property in parent class by the new definition.
+             *
+             * @type {boolean}
+             */
+            extends: false
         };
     };
 
@@ -837,7 +892,6 @@ Subclass.Property.PropertyType = (function()
                 );
                 Subclass.Error.create(e.message);
             }
-
         } else {
             this.setDefault(definition.default);
         }
@@ -865,4 +919,5 @@ Subclass.Property.PropertyType = (function()
     };
 
     return PropertyType;
+
 })();

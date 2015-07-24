@@ -327,11 +327,6 @@ Subclass.Property.Type.Map.MapType = function()
         /**
          * @inheritDoc
          */
-        baseData.nullable = false;
-
-        /**
-         * @inheritDoc
-         */
         baseData.default = {};
 
         return baseData;

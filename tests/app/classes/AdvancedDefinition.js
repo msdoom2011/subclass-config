@@ -2,124 +2,64 @@ app.registerClass('Class/AdvancedDefinition',
 {
     $_extends: "Class/StandardDefinition",
 
+    $_traits: ['Class/StandardTrait'],
+
     $_properties: {
 
         propNumber: {
             type: 'number',
-            default: 10,
-            writable: true,
-            accessors: true,
-            nullable: true,
-            minValue: 0,
-            maxValue: 100,
+            //minValue: 0,
+            //maxValue: 100,
             value: 50,
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropNumber = true;
-                this.propNumberOld = oldValue;
-                this.propNumberNew = newValue;
-            }
+            extends: true
         },
 
         propString: {
             type: 'string',
             default: "0%",
-            writable: true,
-            accessors: true,
-            nullable: true,
             pattern: /^[0-9]*%$/i,
             minLength: 2,
             maxLength: 3,
             value: "10%",
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropString = true;
-                this.propStringOld = oldValue;
-                this.propStringNew = newValue;
-            }
+            extends: true
         },
 
         propBoolean: {
             type: 'boolean',
             default: false,
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: true,
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropBoolean = true;
-                this.propBooleanOld = oldValue;
-                this.propBooleanNew = newValue;
-            }
+            extends: true
         },
 
         propArray: {
             type: 'array',
-            default: [ 10, 20, 30 ],
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: [ 40, 50, 60 ],
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropArray = true;
-                this.propArrayOld = oldValue;
-                this.propArrayNew = newValue;
-            }
+            extends: true
         },
 
         propObject: {
             type: 'object',
-            default: { foo: 10, bar: 20 },
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: { prop1: 30 },
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropObject = true;
-                this.propObjectOld = oldValue;
-                this.propObjectNew = newValue;
-            }
+            extends: true
         },
 
         propClass: {
             type: "class",
-            className: "Class/AppClass",
-            default: null,
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: null,
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropClass = true;
-                this.propClassOld = oldValue;
-                this.propClassNew = newValue;
-            }
+            extends: true
         },
 
         propEnum: {
             type: "enum",
-            allows: [ "male", "female", null ],
             default: "male",
-            writable: true,
-            accessors: true,
             value: "female",
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropEnum = true;
-                this.propEnumOld = oldValue;
-                this.propEnumNew = newValue;
-            }
+            extends: true
         },
 
         propFunction: {
             type: "function",
-            "default": function () { return true; },
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: function() { return false; },
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropFunction = true;
-                this.propFunctionOld = oldValue;
-                this.propFunctionNew = newValue;
-            }
+            extends: true
         },
 
         propMixed: {
@@ -129,40 +69,18 @@ app.registerClass('Class/AdvancedDefinition',
                 { type: "string", pattern: /^[0-9]+px$/i }
             ],
             default: 10,
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: "100px",
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropMixed = true;
-                this.propMixedOld = oldValue;
-                this.propMixedNew = newValue;
-            }
+            extends: true
         },
 
         propConstructor: {
             type: "constructor",
-            construct: Date,
-            default: new Date(0),
-            writable: true,
-            accessors: true,
-            nullable: true,
             value: new Date(100),
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropConstructor = true;
-                this.propConstructorOld = oldValue;
-                this.propConstructorNew = newValue;
-            }
+            extends: true
         },
 
         propMap: {
             type: "map",
-            nullable: true,
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropMap = true;
-                this.propMapOld = oldValue;
-                this.propMapNew = newValue;
-            },
             default: {
                 mapNumber: 10
             },
@@ -172,53 +90,7 @@ app.registerClass('Class/AdvancedDefinition',
                     mapMapArray: [10]
                 }
             },
-            schema: {
-
-                mapNumber: { type: "number" },
-
-                mapString: { type: "string" },
-
-                mapBoolean: { type: "boolean" },
-
-                mapArray: { type: "array" },
-
-                mapObject: { type: "object" },
-
-                mapClass: { type: "class", className: "Class/AppClass" },
-
-                mapEnum: { type: "enum", allows: [ "male", "female" ] },
-
-                mapFunction: { type: "function" },
-
-                mapMixed: {type: "mixed", allows: [
-                    { type: "number" },
-                    { type: "string" }
-                ]},
-
-                mapMap: { type: "map", schema: {
-
-                    mapMapNumber: { type: "number" },
-
-                    mapMapString: { type: "string" },
-
-                    mapMapBoolean: { type: "boolean" },
-
-                    mapMapArray: { type: "array" },
-
-                    mapMapObject: { type: "object" },
-
-                    mapMapClass: { type: "class", className: "Class/AppClass" },
-
-                    mapMapEnum: { type: "enum", allows: [ "male", "female" ] },
-
-                    mapMapFunction: { type: "function" },
-
-                    mapMapMixed: {type: "mixed", allows: [
-                        { type: "number" },
-                        { type: "string" }
-                    ]}
-                }}
-            }
+            extends: true
         },
 
 
@@ -226,32 +98,13 @@ app.registerClass('Class/AdvancedDefinition',
 
         propStringCollectionArray: {
             type: "arrayCollection",
-            proto: { type: "string" },
-            writable: true,
-            accessors: true,
-            nullable: true,
-            default: ["foo", "bar"],
             value: ["str1", "str2", "str3"],
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropStringCollectionArray = true;
-                this.propStringCollectionArrayOld = oldValue;
-                this.propStringCollectionArrayNew = newValue;
-            }
+            extends: true
         },
 
 
         propMapCollectionArray: {
             type: "arrayCollection",
-            proto: { type: "map", schema: {
-                propMapNumber: { type: "number" },
-                propMapString: { type: "string" },
-                propMapMap: { type: "map", schema: {
-                    mapMapString: { type: "string" }
-                }}
-            }},
-            writable: true,
-            accessors: true,
-            nullable: true,
             default: [
                 {
                     propMapNumber: 10,
@@ -284,34 +137,17 @@ app.registerClass('Class/AdvancedDefinition',
                     }
                 }
             ],
-            watcher: function(newValue, oldValue, property)
-            {
-                this.changedPropMapCollectionArray = true;
-                this.propMapCollectionArrayOld = oldValue;
-                this.propMapCollectionArrayNew = newValue;
-            }
+            extends: true
         },
 
         propArrayCollectionCollectionArray: {
             type: "arrayCollection",
             proto: { type: "arrayCollection", proto: { type: 'string', default: "default_str" } },
-            writable: true,
-            accessors: true,
-            nullable: true,
-            default: [
-                [ 'str11', 'str12', 'str13'],
-                [ 'str21', 'str22', 'str23']
-            ],
             value: [
                 [ 'item11', 'item12', 'item13'],
                 [ 'item21', 'item22', 'item23']
             ],
-            watcher: function(newValue, oldValue, property)
-            {
-                this.changedPropArrayCollectionCollectionArray = true;
-                this.propArrayCollectionCollectionArrayOld = oldValue;
-                this.propArrayCollectionCollectionArrayNew = newValue;
-            }
+            extends: true
         },
 
 
@@ -319,39 +155,17 @@ app.registerClass('Class/AdvancedDefinition',
 
         propStringCollectionObject: {
             type: "objectCollection",
-            proto: { type: "string" },
-            writable: true,
-            accessors: true,
-            nullable: true,
-            default: {
-                "item1": "foo",
-                "item2": "bar"
-            },
             value: {
                 "item1": "str1",
                 "item2": "str2",
                 "item3": "str3"
             },
-            watcher: function(newValue, oldValue, property) {
-                this.changedPropStringCollectionObject = true;
-                this.propStringCollectionObjectOld = oldValue;
-                this.propStringCollectionObjectNew = newValue;
-            }
+            extends: true
         },
 
 
         propMapCollectionObject: {
             type: "objectCollection",
-            proto: { type: "map", schema: {
-                propMapNumber: { type: "number" },
-                propMapString: { type: "string" },
-                propMapMap: { type: "map", schema: {
-                    mapMapString: { type: "string" }
-                }}
-            }},
-            writable: true,
-            accessors: true,
-            nullable: true,
             default: {
                 "item1": {
                     propMapNumber: 1000,
@@ -391,12 +205,7 @@ app.registerClass('Class/AdvancedDefinition',
                     }
                 }
             },
-            watcher: function(newValue, oldValue, property)
-            {
-                this.changedPropMapCollectionObject = true;
-                this.propMapCollectionObjectOld = oldValue;
-                this.propMapCollectionObjectNew = newValue;
-            }
+            extends: true
         },
 
         propArrayCollectionCollectionObject: {
@@ -408,23 +217,11 @@ app.registerClass('Class/AdvancedDefinition',
                     default: "default_str"
                 }
             },
-            writable: true,
-            accessors: true,
-            nullable: true,
-            default: {
-                "item1": ['str11', 'str12', 'str13'],
-                "item2": ['str21', 'str22', 'str23']
-            },
             value: {
                 "item1": ['item11', 'item12', 'item13'],
                 "item2": ['item21', 'item22', 'item23']
             },
-            watcher: function(newValue, oldValue, property)
-            {
-                this.changedPropArrayCollectionCollectionObject = true;
-                this.propArrayCollectionCollectionObjectOld = oldValue;
-                this.propArrayCollectionCollectionObjectNew = newValue;
-            }
+            extends: true
         }
     }
 });
