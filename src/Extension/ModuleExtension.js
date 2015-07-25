@@ -104,7 +104,7 @@ Subclass.Property.Extension.ModuleExtension = function() {
     //======================== REGISTERING EXTENSION ==========================
     //=========================================================================
 
-    Subclass.Module.onInitializeBefore(function(evt, modulodule)
+    Subclass.Module.onInitializeBefore(function(evt, module)
     {
         if (!Module.hasExtension(ModuleExtension)) {
             Module.registerExtension(ModuleExtension);

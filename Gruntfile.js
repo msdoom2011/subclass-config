@@ -43,12 +43,6 @@ module.exports = function(grunt) {
         },
 
         copy: {
-            release_lib: {
-                src: "**/*",
-                dest: "<%= config.release_dir %>/src/",
-                cwd: "<%= config.lib.dir.src %>/",
-                expand: true
-            },
             release_readme: {
                 src: "README.md",
                 dest: "<%= config.release_dir %>/",
@@ -88,15 +82,13 @@ module.exports = function(grunt) {
                 files: [{
                     src: [
                         "vendors/subclass.js",
-                        "vendors/subclass-config.js"
-                        //"tests/plugs/app-first-plugin.js",
-                        //"tests/plugs/app-forth-plugin.js",
-                        //"tests/plugs/app-third-plugin.js",
-                        //"tests/plugs/app-second-plugin.js",
-                        //"tests/app/app.js",
-                        //"tests/app/**/*.js",
-                        //"tests/main.js",
-                        //"tests/*.js"
+                        "release/subclass-config.min.js",
+                        "tests/app/app.js",
+                        "tests/app/**/*.js",
+                        "tests/main.js",
+                        "tests/*.js",
+                        "tests/types/**/*.js",
+                        "tests/configs/**/*.js"
                     ]
                 }]
             }
@@ -128,12 +120,10 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerMultiTask("concat", "Altering file paths", function() {
-        var filesCwd = grunt.template.process("<%= config.lib.dir.src %>/");
-        var files = grunt.file.expand({ cwd: filesCwd}, this.data.src);
+        var files = grunt.file.expand(this.data.src);
         var content = this.data.options.banner;
 
         for (var i = 0; i < files.length; i++) {
-            files[i] = filesCwd + files[i];
             content += grunt.file.read(files[i]);
 
             if (i != files.length - 1) {

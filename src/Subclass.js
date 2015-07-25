@@ -1,5 +1,5 @@
 /**
- * Registers the new SubclassJS plug-in
+ * Registers the new SubclassJS plugin
  */
 Subclass.registerPlugin(function() {
 
@@ -15,7 +15,7 @@ Subclass.registerPlugin(function() {
      */
     PropertyPlugin.getName = function()
     {
-        return "SubclassProperty";
+        return "SubclassConfig";
     };
 
     return PropertyPlugin;

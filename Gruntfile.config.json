@@ -8,18 +8,21 @@
       "release": "<%= config.release_dir %>"
     },
     "files": [
+      "<%= config.lib.dir.src %>/Class/Type/Config/Config.js",
+      "<%= config.lib.dir.src %>/Class/Type/Config/**/*",
       "<%= config.lib.dir.src %>/PropertyManager.js",
       "<%= config.lib.dir.src %>/PropertyType.js",
       "<%= config.lib.dir.src %>/Property.js",
+      "<%= config.lib.dir.src %>/Error/Option/*.js",
       "<%= config.lib.dir.src %>/Error/**/*.js",
       "<%= config.lib.dir.src %>/Extension/**/*.js",
       "<%= config.lib.dir.src %>/Type/Map/MapType.js",
       "<%= config.lib.dir.src %>/Type/Map/*.js",
       "<%= config.lib.dir.src %>/Type/Collection/CollectionType.js",
       "<%= config.lib.dir.src %>/Type/Collection/*.js",
-      "<%= config.lib.dir.src %>/Type/Collection/**/*",
+      "<%= config.lib.dir.src %>/Type/Collection/**/*.js",
       "<%= config.lib.dir.src %>/Type/**/*.js",
-      "<%= config.lib.dir.src %>/**/*.js"
+      "<%= config.lib.dir.src %>/*.js"
     ],
     "files_release": {
       "normal": "<%= config.lib.dir.release %>/<%= config.name %>.js",

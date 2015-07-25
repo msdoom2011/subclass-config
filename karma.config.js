@@ -26,17 +26,6 @@ module.exports = function(config) {
       "src/Error/Option/*.js",
       "src/Error/**/*.js",
       "src/Extension/**/*.js",
-      //"src/Type/Number/*.js",
-      //"src/Type/String/*.js",
-      //"src/Type/Boolean/*.js",
-      //"src/Type/Array/*.js",
-      //"src/Type/Object/*.js",
-      //"src/Type/Class/*.js",
-      //"src/Type/Enum/*.js",
-      //"src/Type/Function/*.js",
-      //"src/Type/Mixed/*.js",
-      //"src/Type/Untyped/*.js",
-      //"src/Type/Constructor/*.js",
       "src/Type/Map/MapType.js",
       "src/Type/Map/*.js",
       "src/Type/Collection/CollectionType.js",
@@ -53,8 +42,8 @@ module.exports = function(config) {
       "tests/app/app.js",
       "tests/app/**/*.js",
       "tests/main.js",
-      //"tests/def_base.js",
-      //"tests/def_standard.js",
+      "tests/def_base.js",
+      "tests/def_standard.js",
       "tests/def_advanced.js",
       "tests/types/number.js",
       "tests/types/string.js",
@@ -77,8 +66,6 @@ module.exports = function(config) {
       "tests/configs/configs_base.js",
       "tests/configs/configs_standard.js",
       "tests/configs/configs_advanced.js"
-
-      //"tests/types/**/*.js"
     ],
 
 
