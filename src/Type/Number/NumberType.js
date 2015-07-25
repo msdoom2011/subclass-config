@@ -205,7 +205,7 @@ Subclass.Property.Type.Number.NumberType = (function()
      */
     NumberType.prototype.validateData = function()
     {
-        NumberType.$parent.prototype.processData.call(this);
+        NumberType.$parent.prototype.validateData.apply(this, arguments);
 
         this.validateMinMaxValues();
     };

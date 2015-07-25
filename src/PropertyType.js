@@ -732,7 +732,7 @@ Subclass.Property.PropertyType = (function()
              *
              * @type {string}
              */
-            type: null,
+            type: this.constructor.getName(),
 
             /**
              * Reports whether the default value will be ignored by default

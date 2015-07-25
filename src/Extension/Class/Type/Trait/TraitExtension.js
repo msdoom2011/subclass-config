@@ -28,7 +28,7 @@ Subclass.Property.Extension.Class.Type.Trait.TraitExtension = function()
                 if (this.hasParent()) {
                     var parentClass = this.getParent();
                     var parentProperties = parentClass.getProperties();
-                    properties = Subclass.Tools.extend({}, parentProperties);
+                    properties = Subclass.Tools.extend(properties, parentProperties);
                 }
                 return Subclass.Tools.extend(
                     properties,

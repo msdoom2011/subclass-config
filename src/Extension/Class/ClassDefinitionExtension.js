@@ -355,7 +355,6 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
      */
     ClassDefinition.prototype.setProperties = function(properties)
     {
-        this.normalizeProperties(properties);
         this.validateProperties(properties);
         this.getData().$_properties = properties || {};
 

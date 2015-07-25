@@ -337,7 +337,7 @@ Subclass.Property.Type.Map.MapType = function()
      */
     MapType.prototype.validateData = function()
     {
-        MapType.$parent.prototype.validateData.call(this);
+        MapType.$parent.prototype.validateData.apply(this, arguments);
 
         var schema = this.getSchema();
 

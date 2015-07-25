@@ -4,8 +4,8 @@ app.registerTrait('Class/StandardTrait', {
 
     $_properties: {
 
-        //trPropNumber: { type: 'number', value: 30, extends: true },
+        trPropNumber: { type: 'number', value: 30, extends: true },
 
-        //trPropString: [ 'string', 'new string value']
+        trPropString: [ 'string', 'new string value']
     }
 });

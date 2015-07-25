@@ -403,6 +403,7 @@ Subclass.Property.PropertyManager = (function()
                 (contextClass && ' in class "' + contextClass.getName() + '"' || "") +  "."
             );
         }
+
         inst.initialize();
 
         return inst;
