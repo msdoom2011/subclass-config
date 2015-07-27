@@ -8,8 +8,6 @@ app.registerClass('Class/AdvancedDefinition',
 
         propNumber: {
             type: 'number',
-            //minValue: 0,
-            //maxValue: 100,
             value: 50,
             extends: true
         },

@@ -192,12 +192,14 @@ describe("Testing map property type with its", function() {
     it ("ability to lock its writable capability", function() {
         expect(prop.isLocked()).toBe(false);
         prop.lock();
-        classInst.setPropMap({ mapString: "111" });
-        classInst.getPropMap().mapString = "111";
-        expect(classInst.getPropMap().mapString).toBe("init string value");
+        classInst.setPropMap({ mapMap: { mapMapString: "111" }});
+        classInst.getPropMap().mapMap.mapMapString = "111";
+        //expect(classInst.getPropMap().mapMap.mapMapString).toBe("init string value");
+        expect(classInst.getPropMap().mapMap.mapMapString).toBe("");
         prop.unlock();
-        classInst.setPropMap({ mapString: "111" });
-        expect(classInst.getPropMap().mapString).toBe("111");
+        //classInst.setPropMap({ mapString: "111", mapMap: { mapMapString: "111" } });
+        classInst.getPropMap().mapMap.mapMapString = "111";
+        expect(classInst.getPropMap().mapMap.mapMapString).toBe("111");
     });
 
     it ("modifying state after manipulations", function() {
@@ -206,7 +208,21 @@ describe("Testing map property type with its", function() {
 
     it ("watchers", function() {
         expect(classInst.changedPropMap).toBe(true);
-        expect(classInst.propMapOld.mapString).toBe("init string value");
-        expect(classInst.propMapNew.mapString).toBe("111");
+        //expect(classInst.propMapOld.mapMap.mapMapString).toBe("init string value");
+        expect(classInst.propMapOld.mapMap.mapMapString).toBe("");
+        expect(classInst.propMapNew.mapMap.mapMapString).toBe("111");
+        console.log('===============================');
+        console.log('===============================');
+        console.log('===============================');
+        console.log('===============================');
+        console.log('===============================');
+        console.log(classInst.propMapOld);
+        console.log(classInst.propMapNew);
+        console.log(classInst.propMapDiff);
+        console.log('===============================');
+        console.log('===============================');
+        console.log('===============================');
+        console.log('===============================');
+        console.log('===============================');
     });
 });

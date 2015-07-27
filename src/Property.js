@@ -50,14 +50,6 @@ Subclass.Property.Property = function()
          * @private
          */
         this._watchers = [];
-        //
-        ///**
-        // * Context of watcher callback functions
-        // *
-        // * @type {(Object|null)}
-        // * @private
-        // */
-        //this._watchersContext = null;
 
         /**
          * Checks if current value was ever modified (was set any value)
@@ -300,29 +292,6 @@ Subclass.Property.Property = function()
             return false;
         }
     };
-    //
-    ///**
-    // * Sets the property watchers callback functions context object
-    // *
-    // * @param {Object} watchersContext
-    // */
-    //Property.prototype.setWatchersContext = function(watchersContext)
-    //{
-    //    this._watchersContext = watchersContext;
-    //};
-    //
-    ///**
-    // * Returns the watchers context object.
-    // *
-    // * If wasn't specified special watcher context then the standard
-    // * property context will be returned
-    // *
-    // * @returns {Object}
-    // */
-    //Property.prototype.getWatchersContext = function()
-    //{
-    //    return this._watchersContext || this._context;
-    //};
 
     /**
      * Returns all registered watchers
@@ -409,10 +378,9 @@ Subclass.Property.Property = function()
     /**
      * Invokes all registered watcher functions
      *
-     * @param {*} newValue
-     * @param {*} oldValue
+     * @param {Subclass.Property.WatcherEvent} event
      */
-    Property.prototype.invokeWatchers = function(newValue, oldValue)
+    Property.prototype.invokeWatchers = function(event)
     {
         var watchers = this.getWatchers();
         var context = this.getContext();
@@ -426,7 +394,77 @@ Subclass.Property.Property = function()
             ;
         }
         for (var i = 0; i < watchers.length; i++) {
-            watchers[i].call(context, newValue, oldValue, this);
+            watchers[i].call(context, event);
+        }
+    };
+
+    Property.prototype._createWatcherEvent = function(newValue, oldValue)
+    {
+        return Subclass.Tools.createClassInstance(
+            Subclass.Property.WatcherEvent,
+            this,
+            newValue,
+            oldValue
+        );
+    };
+
+    /**
+     * Returns new and old values of parent context properties
+     *
+     * @param {Subclass.Property.Property} property
+     * @param {*} newValue
+     * @returns {Array.<{"property": {Subclass.Property.Property}, "newValue": {*}, "oldValue": {*}}>}
+     * @protected
+     */
+
+    Property.prototype._getParentWatcherValues = function(property, newValue)
+    {
+        var context = property.getContext();
+        var parents = [];
+
+        if (arguments[2]) {
+            parents = arguments[2];
+        }
+        if (context && context.getContextType && context.getContextType() == 'property') {
+            var parent = property.getContext().getProperty();
+            var parentOldValue = parent.getData();
+            var parentNewValue = Subclass.Tools.copy(parentOldValue);
+
+            parentNewValue[property.getName()] = newValue;
+
+            parents.push({
+                property: parent,
+                newValue: parentNewValue,
+                oldValue: parentOldValue
+            });
+
+            this._getParentWatcherValues(
+                parent,
+                parentNewValue
+            );
+        }
+
+        return parents;
+    };
+
+    /**
+     * Invokes all parent property watchers specified in "parents" argument
+     *
+     * @param {Subclass.Property.WatcherEvent} event
+     * @param {Array.<{"property": {Subclass.Property.Property}, "newValue": {*}, "oldValue": {*}}>} parents
+     * @private
+     */
+    Property.prototype._invokeParentWatchers = function(event, parents)
+    {
+        for (var i = 0; i < parents.length; i++) {
+            if (event.isPropagationStopped()) {
+                break;
+            }
+            var parentValues = parents[i];
+            event.setProperty(parentValues.property);
+            event.setNewValue(parentValues.newValue);
+            event.setOldValue(parentValues.oldValue);
+            parentValues.property.invokeWatchers(event);
         }
     };
 
@@ -488,19 +526,6 @@ Subclass.Property.Property = function()
      */
     Property.prototype.setValue = function(value, markAsModified)
     {
-        //var context = this.getContext();
-        //var propName = this.getName();
-        //
-        //if (!this.getDefinition().isWritable()) {
-        //    console.warn('Trying to change not writable property ' + this + ".");
-        //    return;
-        //}
-        //if (this.getDefinition().isAccessors()) {
-        //    var setterName = Subclass.Tools.generateSetterName(propName);
-        //    return context[setterName](value);
-        //}
-        //context[propName] = value;
-
         if (markAsModified !== false) {
             markAsModified = true;
         }
@@ -510,17 +535,24 @@ Subclass.Property.Property = function()
                 'property ' + this + ' that is locked for write.'
             );
         }
+
         if (markAsModified) {
             var oldValue = this.getData();
             var newValue = value;
-            this.modify();
+            var parents = this._getParentWatcherValues(this, newValue);
+            var event = this._createWatcherEvent(newValue, oldValue);
+
+            if (!Subclass.Tools.isEqual(oldValue, newValue)) {
+                this.modify();
+            }
         }
 
         this.getDefinition().validateValue(value);
         this._value = value;
 
         if (markAsModified) {
-            this.invokeWatchers(newValue, oldValue);
+            this.invokeWatchers(event);
+            this._invokeParentWatchers(event, parents);
         }
     };
 
@@ -529,16 +561,6 @@ Subclass.Property.Property = function()
      */
     Property.prototype.getValue = function()
     {
-        //var context = this.getContext();
-        //var propName = this.getName();
-        //
-        //if (this.getDefinition().isAccessors()) {
-        //    var getterName = Subclass.Tools.generateGetterName(propName);
-        //    return context[getterName]();
-        //}
-        //
-        //return context[propName];
-
         return this._value;
     };
 

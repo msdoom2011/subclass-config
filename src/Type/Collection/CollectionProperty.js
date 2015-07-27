@@ -62,6 +62,8 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
             if (markAsModified) {
                 var oldValue = this.getData();
                 var newValue = value;
+                var parents = this._getParentWatcherValues(this, newValue);
+                var event = this._createWatcherEvent(newValue, oldValue);
 
                 if (!Subclass.Tools.isEqual(oldValue, newValue)) {
                     this.modify();
@@ -88,7 +90,8 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
             // Invoking watchers
 
             if (markAsModified) {
-                this.invokeWatchers(newValue, oldValue);
+                this.invokeWatchers(event);
+                this._invokeParentWatchers(event, parents);
             }
         },
         /**

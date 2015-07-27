@@ -49,6 +49,7 @@ app.registerClass('Class/StandardDefinition',
     changedPropMap: false,
     propMapOld: false,
     propMapNew: false,
+    propMapDiff: false,
 
     changedPropStringCollectionArray: false,
     propStringCollectionArrayOld: false,
@@ -82,10 +83,10 @@ app.registerClass('Class/StandardDefinition',
             writable: true,
             accessors: true,
             nullable: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropNumber = true;
-                this.propNumberOld = oldValue;
-                this.propNumberNew = newValue;
+                this.propNumberOld = event.getOldValue();
+                this.propNumberNew = event.getNewValue();
             }
         },
 
@@ -95,10 +96,10 @@ app.registerClass('Class/StandardDefinition',
             writable: true,
             accessors: true,
             nullable: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropString = true;
-                this.propStringOld = oldValue;
-                this.propStringNew = newValue;
+                this.propStringOld = event.getOldValue();
+                this.propStringNew = event.getNewValue();
             }
         },
 
@@ -108,10 +109,10 @@ app.registerClass('Class/StandardDefinition',
             writable: true,
             accessors: true,
             nullable: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropBoolean = true;
-                this.propBooleanOld = oldValue;
-                this.propBooleanNew = newValue;
+                this.propBooleanOld = event.getOldValue();
+                this.propBooleanNew = event.getNewValue();
             }
         },
 
@@ -120,10 +121,10 @@ app.registerClass('Class/StandardDefinition',
             default: [ 10, 20, 30 ],
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropArray = true;
-                this.propArrayOld = oldValue;
-                this.propArrayNew = newValue;
+                this.propArrayOld = event.getOldValue();
+                this.propArrayNew = event.getNewValue();
             }
         },
 
@@ -132,10 +133,10 @@ app.registerClass('Class/StandardDefinition',
             default: { foo: 10, bar: 20 },
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropObject = true;
-                this.propObjectOld = oldValue;
-                this.propObjectNew = newValue;
+                this.propObjectOld = event.getOldValue();
+                this.propObjectNew = event.getNewValue();
             }
         },
 
@@ -145,10 +146,10 @@ app.registerClass('Class/StandardDefinition',
             default: null,
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropClass = true;
-                this.propClassOld = oldValue;
-                this.propClassNew = newValue;
+                this.propClassOld = event.getOldValue();
+                this.propClassNew = event.getNewValue();
             }
         },
 
@@ -158,10 +159,10 @@ app.registerClass('Class/StandardDefinition',
             default: "female",
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropEnum = true;
-                this.propEnumOld = oldValue;
-                this.propEnumNew = newValue;
+                this.propEnumOld = event.getOldValue();
+                this.propEnumNew = event.getNewValue();
             }
         },
 
@@ -170,10 +171,10 @@ app.registerClass('Class/StandardDefinition',
             "default": function () { return true },
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropFunction = true;
-                this.propFunctionOld = oldValue;
-                this.propFunctionNew = newValue;
+                this.propFunctionOld = event.getOldValue();
+                this.propFunctionNew = event.getNewValue();
             }
         },
 
@@ -184,10 +185,10 @@ app.registerClass('Class/StandardDefinition',
             accessors: true,
             nullable: false,
             value: "string value",
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropUntyped = true;
-                this.propUntypedOld = oldValue;
-                this.propUntypedNew = newValue;
+                this.propUntypedOld = event.getOldValue();
+                this.propUntypedNew = event.getNewValue();
             }
         },
 
@@ -200,10 +201,10 @@ app.registerClass('Class/StandardDefinition',
             default: "string value",
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropMixed = true;
-                this.propMixedOld = oldValue;
-                this.propMixedNew = newValue;
+                this.propMixedOld = event.getOldValue();
+                this.propMixedNew = event.getNewValue();
             }
         },
 
@@ -213,19 +214,20 @@ app.registerClass('Class/StandardDefinition',
             default: new Date(0),
             writable: true,
             accessors: true,
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropConstructor = true;
-                this.propConstructorOld = oldValue;
-                this.propConstructorNew = newValue;
+                this.propConstructorOld = event.getOldValue();
+                this.propConstructorNew = event.getNewValue();
             }
         },
 
         propMap: {
             type: "map",
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropMap = true;
-                this.propMapOld = oldValue;
-                this.propMapNew = newValue;
+                this.propMapOld = event.getOldValue();
+                this.propMapNew = event.getNewValue();
+                this.propMapDiff = event.getDiffValue();
             },
             schema: {
 
@@ -285,10 +287,10 @@ app.registerClass('Class/StandardDefinition',
             writable: true,
             accessors: true,
             default: ["foo", "bar"],
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropStringCollectionArray = true;
-                this.propStringCollectionArrayOld = oldValue;
-                this.propStringCollectionArrayNew = newValue;
+                this.propStringCollectionArrayOld = event.getOldValue();
+                this.propStringCollectionArrayNew = event.getNewValue();
             }
         },
 
@@ -312,11 +314,11 @@ app.registerClass('Class/StandardDefinition',
                     }
                 }
             ],
-            watcher: function(newValue, oldValue, property)
+            watcher: function(event)
             {
                 this.changedPropMapCollectionArray = true;
-                this.propMapCollectionArrayOld = oldValue;
-                this.propMapCollectionArrayNew = newValue;
+                this.propMapCollectionArrayOld = event.getOldValue();
+                this.propMapCollectionArrayNew = event.getNewValue();
             }
         },
 
@@ -329,11 +331,11 @@ app.registerClass('Class/StandardDefinition',
                 [ 'str11', 'str12', 'str13'],
                 [ 'str21', 'str22', 'str23']
             ],
-            watcher: function(newValue, oldValue, property)
+            watcher: function(event)
             {
                 this.changedPropArrayCollectionCollectionArray = true;
-                this.propArrayCollectionCollectionArrayOld = oldValue;
-                this.propArrayCollectionCollectionArrayNew = newValue;
+                this.propArrayCollectionCollectionArrayOld = event.getOldValue();
+                this.propArrayCollectionCollectionArrayNew = event.getNewValue();
             }
         },
 
@@ -349,10 +351,10 @@ app.registerClass('Class/StandardDefinition',
                 "item1": "foo",
                 "item2": "bar"
             },
-            watcher: function(newValue, oldValue, property) {
+            watcher: function(event) {
                 this.changedPropStringCollectionObject = true;
-                this.propStringCollectionObjectOld = oldValue;
-                this.propStringCollectionObjectNew = newValue;
+                this.propStringCollectionObjectOld = event.getOldValue();
+                this.propStringCollectionObjectNew = event.getNewValue();
             }
         },
 
@@ -386,11 +388,11 @@ app.registerClass('Class/StandardDefinition',
                     }
                 }
             },
-            watcher: function(newValue, oldValue, property)
+            watcher: function(event)
             {
                 this.changedPropMapCollectionObject = true;
-                this.propMapCollectionObjectOld = oldValue;
-                this.propMapCollectionObjectNew = newValue;
+                this.propMapCollectionObjectOld = event.getOldValue();
+                this.propMapCollectionObjectNew = event.getNewValue();
             }
         },
 
@@ -403,11 +405,11 @@ app.registerClass('Class/StandardDefinition',
                 "item1": ['str11', 'str12', 'str13'],
                 "item2": ['str21', 'str22', 'str23']
             },
-            watcher: function(newValue, oldValue, property)
+            watcher: function(event)
             {
                 this.changedPropArrayCollectionCollectionObject = true;
-                this.propArrayCollectionCollectionObjectOld = oldValue;
-                this.propArrayCollectionCollectionObjectNew = newValue;
+                this.propArrayCollectionCollectionObjectOld = event.getOldValue();
+                this.propArrayCollectionCollectionObjectNew = event.getNewValue();
             }
         }
     }
