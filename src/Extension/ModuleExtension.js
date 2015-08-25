@@ -4,6 +4,9 @@
  *
  * Module configs:
  *
+ * configs      {Object}    opt    Object, where you can specify
+ *                                 configuration of your application.
+ *
  * dataTypes    {Object}    opt    Object, which keys are the type
  *                                 names and values are
  *                                 its definitions.
@@ -60,6 +63,17 @@ Subclass.Property.Extension.ModuleExtension = function() {
         eventManager.getEvent('onInitialize').addListener(function(evt, module)
         {
             /**
+             * Config manager instance
+             *
+             * @type {Subclass.ConfigManager}
+             * @private
+             */
+            this._configManager = Subclass.Tools.createClassInstance(
+                Subclass.ConfigManager,
+                this
+            );
+
+            /**
              * Property manager instance
              *
              * @type {Subclass.Property.PropertyManager}
@@ -84,9 +98,22 @@ Subclass.Property.Extension.ModuleExtension = function() {
 
     var Module = Subclass.Module;
 
+    /**
+     * Returns instance of config manager which contains configuration
+     * of your application
+     *
+     * @method getConfigManager
+     * @memberOf Subclass.Module.prototype
+     *
+     * @returns {Subclass.ConfigManager}
+     */
+    Module.prototype.getConfigManager = function()
+    {
+        return this._configManager;
+    };
 
     /**
-     * Returns an instance of property manager which allows to register
+     * Returns instance of property manager which allows to register
      * custom data types and creates typed property instance by its definition.
      *
      * @method getPropertyManager

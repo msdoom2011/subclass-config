@@ -230,23 +230,23 @@ Subclass.Property.PropertyManager = (function()
     /**
      * Returns definitions of custom types
      *
-     * @param {boolean} [privateDefinitions = false]
+     * @param {boolean} [privateOnly = false]
      *      If passed true it returns type definitions only from current module
      *      without type definitions from its plug-ins
      *
      * @returns {Object}
      */
-    PropertyManager.prototype.getTypeDefinitions = function(privateDefinitions)
+    PropertyManager.prototype.getTypeDefinitions = function(privateOnly)
     {
         var mainModule = this.getModule();
         var moduleStorage = mainModule.getModuleStorage();
         var typeDefinitions = {};
         var $this = this;
 
-        if (privateDefinitions !== true) {
-            privateDefinitions = false;
+        if (privateOnly !== true) {
+            privateOnly = false;
         }
-        if (privateDefinitions) {
+        if (privateOnly) {
             return this._typeDefinitions;
         }
 

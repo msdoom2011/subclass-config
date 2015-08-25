@@ -19,6 +19,17 @@ Subclass.Property.Extension.ModuleAPIExtension = function() {
     var ModuleAPI = Subclass.ModuleAPI;
 
     /**
+     * The same as the {@link Subclass.Module#getConfigManager}
+     *
+     * @method getConfigManager
+     * @memberOf Subclass.ModuleAPI.prototype
+     */
+    ModuleAPI.prototype.getConfigManager = function()
+    {
+        return this.getModule().getConfigManager.apply(this.getModule(), arguments);
+    };
+
+    /**
      * The same as the {@link Subclass.Module#getPropertyManager}
      *
      * @method getPropertyManager
