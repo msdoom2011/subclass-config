@@ -225,10 +225,10 @@ app.registerClass('Class/StandardDefinition',
             type: "map",
             watcher: function(event) {
 
-                console.log(event.getOldValue());
-                console.log(event.getNewValue());
-                console.log(event.getDiffValue());
-                console.log('---------');
+                //console.log(event.getOldValue());
+                //console.log(event.getNewValue());
+                //console.log(event.getDiffValue());
+                //console.log('---------');
 
                 this.changedPropMap = true;
                 this.propMapOld = event.getOldValue();
@@ -302,13 +302,16 @@ app.registerClass('Class/StandardDefinition',
 
         propMapCollectionArray: {
             type: "arrayCollection",
-            proto: { type: "map", schema: {
-                propMapNumber: { type: "number" },
-                propMapString: { type: "string" },
-                propMapMap: { type: "map", schema: {
-                    mapMapString: { type: "string" }
-                }}
-            }},
+            proto: {
+                type: "map",
+                schema: {
+                    propMapNumber: { type: "number" },
+                    propMapString: { type: "string" },
+                    propMapMap: { type: "map", schema: {
+                        mapMapString: { type: "string" }
+                    }}
+                }
+            },
             writable: true,
             accessors: true,
             default: [
@@ -320,8 +323,7 @@ app.registerClass('Class/StandardDefinition',
                     }
                 }
             ],
-            watcher: function(event)
-            {
+            watcher: function(event) {
                 this.changedPropMapCollectionArray = true;
                 this.propMapCollectionArrayOld = event.getOldValue();
                 this.propMapCollectionArrayNew = event.getNewValue();

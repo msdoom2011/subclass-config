@@ -110,10 +110,13 @@ Subclass.Property.Type.Map.MapProperty = function()
     /**
      * @inheritDoc
      */
-    MapProperty.prototype.setValue = function(value, markAsModified)
+    MapProperty.prototype.setValue = function(value, markAsModified, invokeParentWatchers)
     {
         if (markAsModified !== false) {
             markAsModified = true;
+        }
+        if (invokeParentWatchers !== false) {
+            invokeParentWatchers = true;
         }
         if (this.isLocked()) {
             return console.warn(
@@ -122,13 +125,16 @@ Subclass.Property.Type.Map.MapProperty = function()
             );
         }
         var childrenContext = this.getValue();
+        var parents = [];
 
         if (markAsModified) {
             var oldValue = this.getData();
             var newValue = value;
-            var parents = this._getParentWatcherValues(this, newValue);
             var event = this._createWatcherEvent(newValue, oldValue);
 
+            if (invokeParentWatchers) {
+                parents = this._getParentWatcherValues(this, newValue);
+            }
             if (!Subclass.Tools.isEqual(oldValue, newValue)) {
                 this.modify();
             }
@@ -143,7 +149,8 @@ Subclass.Property.Type.Map.MapProperty = function()
                 if (value.hasOwnProperty(childName)) {
                     childrenContext.getProperty(childName).setValue(
                         value[childName],
-                        markAsModified
+                        markAsModified,
+                        false
                     );
                 }
             }
@@ -155,7 +162,10 @@ Subclass.Property.Type.Map.MapProperty = function()
 
         if (markAsModified) {
             this.invokeWatchers(event);
-            this._invokeParentWatchers(event, parents);
+
+            if (invokeParentWatchers) {
+                this._invokeParentWatchers(event, parents);
+            }
         }
     };
 

@@ -523,12 +523,16 @@ Subclass.Property.Property = function()
      *
      * @param {*} value
      * @param {boolean} [markAsModified=true]
+     * @param {boolean} [invokeParentWatchers=true]
      * @returns {*}
      */
-    Property.prototype.setValue = function(value, markAsModified)
+    Property.prototype.setValue = function(value, markAsModified, invokeParentWatchers)
     {
         if (markAsModified !== false) {
             markAsModified = true;
+        }
+        if (invokeParentWatchers !== false) {
+            invokeParentWatchers = true;
         }
         if (this.isLocked()) {
             return console.warn(
@@ -537,12 +541,16 @@ Subclass.Property.Property = function()
             );
         }
 
+        var parents = [];
+
         if (markAsModified) {
             var oldValue = this.getData();
             var newValue = value;
-            var parents = this._getParentWatcherValues(this, newValue);
             var event = this._createWatcherEvent(newValue, oldValue);
 
+            if (invokeParentWatchers) {
+                parents = this._getParentWatcherValues(this, newValue);
+            }
             if (!Subclass.Tools.isEqual(oldValue, newValue)) {
                 this.modify();
             }
@@ -553,7 +561,10 @@ Subclass.Property.Property = function()
 
         if (markAsModified) {
             this.invokeWatchers(event);
-            this._invokeParentWatchers(event, parents);
+
+            if (invokeParentWatchers) {
+                this._invokeParentWatchers(event, parents);
+            }
         }
     };
 

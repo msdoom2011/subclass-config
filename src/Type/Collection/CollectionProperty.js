@@ -46,10 +46,13 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
         /**
          * @inheritDoc
          */
-        setValue: function(value, markAsModified)
+        setValue: function(value, markAsModified, invokeParentWatchers)
         {
             if (markAsModified !== false) {
                 markAsModified = true;
+            }
+            if (invokeParentWatchers !== false) {
+                invokeParentWatchers = true;
             }
             if (this.isLocked()) {
                 return console.warn(
@@ -58,13 +61,16 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 );
             }
             var collection = this.getValue();
+            var parents = [];
 
             if (markAsModified) {
                 var oldValue = this.getData();
                 var newValue = value;
-                var parents = this._getParentWatcherValues(this, newValue);
                 var event = this._createWatcherEvent(newValue, oldValue);
 
+                if (invokeParentWatchers) {
+                    parents = this._getParentWatcherValues(this, newValue);
+                }
                 if (!Subclass.Tools.isEqual(oldValue, newValue)) {
                     this.modify();
                 }
@@ -91,7 +97,10 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
 
             if (markAsModified) {
                 this.invokeWatchers(event);
-                this._invokeParentWatchers(event, parents);
+
+                if (invokeParentWatchers) {
+                    this._invokeParentWatchers(event, parents);
+                }
             }
         },
         /**
