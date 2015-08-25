@@ -440,7 +440,8 @@ Subclass.Property.Property = function()
 
             this._getParentWatcherValues(
                 parent,
-                parentNewValue
+                parentNewValue,
+                parents
             );
         }
 

@@ -224,6 +224,12 @@ app.registerClass('Class/StandardDefinition',
         propMap: {
             type: "map",
             watcher: function(event) {
+
+                console.log(event.getOldValue());
+                console.log(event.getNewValue());
+                console.log(event.getDiffValue());
+                console.log('---------');
+
                 this.changedPropMap = true;
                 this.propMapOld = event.getOldValue();
                 this.propMapNew = event.getNewValue();
