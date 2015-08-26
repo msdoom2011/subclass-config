@@ -2,45 +2,72 @@
  * @class
  * @constructor
  *
- * Module configs:
+ * Module settings:
  *
- * configs      {Object}    opt    Object, where you can specify
- *                                 configuration of your application.
+ * configurators   {Object}    opt    Array of strings which are names
+ *                                    of configurator classes
  *
- * dataTypes    {Object}    opt    Object, which keys are the type
- *                                 names and values are
- *                                 its definitions.
+ *                                    Example:
+ *                                    ...
  *
- *                                 It allows to create the new data
- *                                 types based on the default
- *                                 (registered) data types using
- *                                 configuration whatever you need.
+ *                                    var moduleSettings = [
+ *                                      "App/FooConfigurator",
+ *                                      "App/BarConfigurator"
+ *                                    ];
  *
- *                                 Also you may to change
- *                                 configuration of the default
- *                                 data types.
  *
- *                                 Example:
+ * configs         {Object}    opt    Object, where you can specify
+ *                                    configuration of your application.
  *
- *                                 var moduleConfigs = {
- *                                   ...
- *                                   dataTypes: {
+ *                                    Example:
+ *                                    ...
  *
- *                                     // creating the new type
- *                                     percents: {
- *                                       type: "string",
- *                                       pattern: /^[0-9]+%$/
- *                                     },
+ *                                    var moduleSettings = {
+ *                                      configs: {
+ *                                        foo: true,
+ *                                        bar: 200,
+ *                                        map: {
+ *                                            mapFoo: false,
+ *                                            mapBar: 300
+ *                                        }
+ *                                      }
+ *                                      ...
+ *                                    };
  *
- *                                     // altering existent type
- *                                     number: {
- *                                       type: "number",
- *                                       nullable: false,
- *                                       default: 100
- *                                     }
- *                                   },
- *                                   ...
- *                                 };
+ * dataTypes       {Object}    opt    Object, which keys are the type
+ *                                    names and values are
+ *                                    its definitions.
+ *
+ *                                    It allows to create the new data
+ *                                    types based on the default
+ *                                    (registered) data types using
+ *                                    configuration whatever you need.
+ *
+ *                                    Also you may to change
+ *                                    configuration of the default
+ *                                    data types.
+ *
+ *                                    Example:
+ *
+ *                                    var moduleSettings = {
+ *                                      ...
+ *                                      dataTypes: {
+ *
+ *                                        // creating the new type
+ *                                        percents: {
+ *                                          type: "string",
+ *                                          pattern: /^[0-9]+%$/
+ *                                        },
+ *
+ *                                        // altering existent type
+ *                                        number: {
+ *                                          type: "number",
+ *                                          nullable: false,
+ *                                          default: 100
+ *                                        }
+ *                                      },
+ *                                      ...
+ *                                    };
  */
 Subclass.Property.Extension.ModuleExtension = function() {
 
@@ -87,6 +114,7 @@ Subclass.Property.Extension.ModuleExtension = function() {
 
         eventManager.getEvent('onInitializeAfter').addListener(function(evt, module)
         {
+            this.getConfigManager().initialize();
             this.getPropertyManager().initialize();
         });
     };

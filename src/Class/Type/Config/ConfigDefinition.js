@@ -341,10 +341,6 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         ConfigDefinition.$parent.prototype.normalizeData.call(this);
 
-        ////Extending class properties
-        //
-        //data.$_properties = this.processProperties(data.$_properties);
-
         // Customising property definitions
 
         for (propName in data.$_properties) {
@@ -459,107 +455,6 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         return normalizes;
     };
-    //
-    ///**
-    // * Processes class properties
-    // */
-    //ConfigDefinition.prototype.processProperties = function(classProperties)
-    //{
-    //    // Processing included classes
-    //
-    //    var includes = this.getIncludes();
-    //
-    //    for (var i = 0; i < includes.length; i++) {
-    //        var includeClassName = includes[i];
-    //        var includeClass = this.getClass().getClassManager().getClass(includeClassName);
-    //        var includeClassConstructor = includeClass.getConstructor();
-    //        var includeClassProperties = includeClass.getDefinition().getProperties();
-    //
-    //        classProperties = this.extendProperties(
-    //            includeClassProperties,
-    //            classProperties
-    //        );
-    //    }
-    //
-    //    // Processing parent class
-    //
-    //    if (this.getExtends()) {
-    //        var parentClassName = this.getExtends();
-    //        var parentClass = this.getClass().getClassManager().getClass(parentClassName);
-    //        var parentClassConstructor = parentClass.getConstructor();
-    //
-    //        // Processing parent class properties
-    //
-    //        classProperties = this.extendProperties(
-    //            parentClass.getDefinition().getProperties(),
-    //            classProperties
-    //        );
-    //    }
-    //
-    //    // Validating result properties
-    //
-    //    for (var propName in classProperties) {
-    //        if (!classProperties.hasOwnProperty(propName)) {
-    //            continue;
-    //        }
-    //        var property = classProperties[propName];
-    //
-    //        if (!property || !Subclass.Tools.isPlainObject(property)) {
-    //            Subclass.Error.create(
-    //                'Specified invalid definition of property "' + propName + '" ' +
-    //                'in class "' + this.getClass().getName() + '".'
-    //            );
-    //        }
-    //    }
-    //
-    //    return classProperties;
-    //};
-    //
-    ///**
-    // * Extending class property definitions
-    // *
-    // * @param {Object} childProperties
-    // * @param {Object} parentProperties
-    // */
-    //ConfigDefinition.prototype.extendProperties = function(parentProperties, childProperties)
-    //{
-    //    parentProperties = Subclass.Tools.copy(parentProperties);
-    //
-    //    for (var propName in childProperties) {
-    //        if (!childProperties.hasOwnProperty(propName)) {
-    //            continue;
-    //        }
-    //        if (
-    //            Subclass.Tools.isPlainObject(childProperties[propName])
-    //            && childProperties[propName].hasOwnProperty('type')
-    //            && parentProperties
-    //            && parentProperties.hasOwnProperty(propName)
-    //        ) {
-    //            if (childProperties[propName].extends === true) {
-    //                parentProperties[propName] = Subclass.Tools.extendDeep(
-    //                    parentProperties[propName],
-    //                    childProperties[propName]
-    //                );
-    //            } else {
-    //                parentProperties[propName] = childProperties[propName];
-    //            }
-    //
-    //        } else if (
-    //            parentProperties
-    //            && parentProperties[propName]
-    //        ) {
-    //            parentProperties[propName] = Subclass.Tools.extendDeep(
-    //                parentProperties[propName],
-    //                { value: childProperties[propName] }
-    //            );
-    //
-    //        } else {
-    //            parentProperties[propName] = childProperties[propName];
-    //        }
-    //    }
-    //
-    //    return parentProperties;
-    //};
 
     ConfigDefinition.prototype.processRelatedClasses = function()
     {

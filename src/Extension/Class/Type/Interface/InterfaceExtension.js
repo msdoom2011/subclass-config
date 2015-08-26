@@ -11,7 +11,7 @@ Subclass.Property.Extension.Class.Type.Interface.InterfaceExtension = function()
 
     InterfaceExtension.$parent = Subclass.Extension;
 
-    Subclass.Module.onInitializeAfter(function(evt, module)
+    Subclass.Module.onInitializeBefore(function(evt, module)
     {
         if (Subclass.ClassManager.issetClassType('Interface')) {
             var Interface = Subclass.ClassManager.getClassType('Interface');

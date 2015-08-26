@@ -174,7 +174,7 @@ Subclass.Property.Extension.Class.Type.Class.ClassDefinitionExtension = function
     };
 
 
-    Subclass.Module.onInitializeAfter(function(evt, module)
+    Subclass.Module.onInitializeBefore(function(evt, module)
     {
         var ClassDefinition = Subclass.ClassManager.getClassType('Class').getDefinitionClass();
             ClassDefinition = Subclass.Tools.buildClassConstructor(ClassDefinition);

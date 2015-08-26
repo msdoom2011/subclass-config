@@ -41,7 +41,7 @@ Subclass.ConfigManager = function()
          * @type {Object}
          * @private
          */
-        this._configs = {};
+        this._configs = null;
 
         /**
          * App configuration tree
@@ -50,6 +50,24 @@ Subclass.ConfigManager = function()
          * @private
          */
         this._tree = null;
+
+        /**
+         * Reports whether config manager is initialized
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._initialized = false;
+
+
+        // Registering and attaching events
+
+        var eventManager = module.getEventManager();
+        var $this = this;
+
+        eventManager
+            .registerEvent('onConfig')
+        ;
     }
 
     ConfigManager.prototype = {
@@ -65,6 +83,50 @@ Subclass.ConfigManager = function()
         },
 
         /**
+         * Initializes config manager
+         */
+        initialize: function()
+        {
+            var module = this.getModule();
+            var eventManager = module.getEventManager();
+            var $this = this;
+
+            eventManager.getEvent('onLoadingEnd').addListener(function() {
+                if (module.isRoot()) {
+                    var serviceManager = module.getServiceManager();
+                    serviceManager.register('config_manager', $this);
+                }
+            });
+
+            eventManager.getEvent('onReadyBefore').addListener(function() {
+                if (module.isRoot()) {
+                    var serviceManager = module.getServiceManager();
+                    var configurators = serviceManager.getServicesByTag('config_manager');
+
+                    for (var i = 0; i < configurators.length; i++) {
+                        $this.register(configurators[i].createInstance());
+                    }
+                    $this.createConfigs();
+                    $this._initialized = true;
+                    eventManager.getEvent('onConfig').trigger($this.getConfigs());
+
+                } else {
+                    $this._initialized = true;
+                }
+            });
+        },
+
+        /**
+         * Checks whether config manager is initialized
+         *
+         * @returns {boolean}
+         */
+        isInitialized: function()
+        {
+            return this._initialized;
+        },
+
+        /**
          * Creates configs class
          *
          * @returns {Subclass.Class.ClassBuilder}
@@ -77,7 +139,7 @@ Subclass.ConfigManager = function()
                 .setBody(this.createTree())
                 .save()
                 .createInstance()
-                .setValues(this._values)
+                .setValues(this.getConfigs())
             ;
 
             this._configs = configs;
@@ -114,9 +176,10 @@ Subclass.ConfigManager = function()
             }
             if (!this._configs) {
                 this._values = configs;
-                return;
+
+            } else {
+                this._configs.setValues(configs);
             }
-            this._configs.setValues(configs);
         },
 
         /**
@@ -124,9 +187,41 @@ Subclass.ConfigManager = function()
          *
          * @returns {Object}
          */
-        getConfigs: function()
+        getConfigs: function(privateOnly)
         {
-            return this._configs;
+            var mainModule = this.getModule();
+            var moduleStorage = mainModule.getModuleStorage();
+
+            if (this.isInitialized() && !mainModule.isRoot()) {
+                var rootModule = mainModule.getRoot();
+                return rootModule.getConfigManager().getConfigs();
+
+            } else if (this.isInitialized()) {
+                return this._configs;
+            }
+
+            var configs = {};
+            var $this = this;
+
+            if (privateOnly !== true) {
+                privateOnly = false;
+            }
+            if (privateOnly) {
+                return this._values;
+            }
+
+            moduleStorage.eachModule(function(module) {
+                if (module == mainModule) {
+                    Subclass.Tools.extend(configs, $this._values);
+                    return;
+                }
+                var moduleConfigManager = module.getConfigManager();
+                var moduleConfigurators = moduleConfigManager.getConfigs();
+
+                Subclass.Tools.extend(configs, moduleConfigurators);
+            });
+
+            return configs;
         },
 
         /**
@@ -167,7 +262,7 @@ Subclass.ConfigManager = function()
          *
          * @param {Subclass.ConfiguratorInterface} configurator
          */
-        add: function(configurator)
+        register: function(configurator)
         {
             if (
                 !configurator

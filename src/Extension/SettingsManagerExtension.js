@@ -2,21 +2,46 @@
  * @class
  * @constructor
  */
-Subclass.Property.Extension.ConfigManagerExtension = function() {
+Subclass.Property.Extension.SettingsManagerExtension = function() {
 
-    function ConfigManagerExtension(classInst)
+    function SettingsManagerExtension(classInst)
     {
-        ConfigManagerExtension.$parent.apply(this, arguments);
+        SettingsManagerExtension.$parent.apply(this, arguments);
     }
 
-    ConfigManagerExtension.$parent = Subclass.Extension;
+    SettingsManagerExtension.$parent = Subclass.Extension;
 
 
     //=========================================================================
     //========================== ADDING NEW METHODS ===========================
     //=========================================================================
 
-    var ConfigManager = Subclass.ConfigManager;
+    var SettingsManager = Subclass.SettingsManager;
+
+    /**
+     * Sets module configuration option values
+     *
+     * @param {Object} configs
+     */
+    SettingsManager.prototype.setConfigs = function(configs)
+    {
+        if (!configs) {
+            return;
+        }
+        var configManager = this.getModule().getConfigManager();
+        configManager.setConfigs(configs);
+    };
+
+    /**
+     * Returns module configuration
+     *
+     * @returns {Object}
+     */
+    SettingsManager.prototype.getConfigs = function()
+    {
+        var configManager = this.getModule().getConfigManager();
+        return configManager.getConfigs();
+    };
 
     /**
      * Defines custom data types relying on existent property types
@@ -27,7 +52,7 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
      * customize it to be not nullable etc.
      *
      * @method setDataTypes
-     * @memberOf Subclass.ConfigManager.prototype
+     * @memberOf Subclass.SettingsManager.prototype
      *
      * @throws {Error}
      *      Throws error if trying to change value after the module became ready
@@ -40,10 +65,10 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
      * @example
      * ...
      *
-     * var moduleConfigs = moduleInst.getConfigManager();
+     * var moduleSettings = moduleInst.getSettingsManager();
      *
      * // Setting data types
-     * moduleConfigs.setDataTypes({
+     * moduleSettings.setDataTypes({
      *     percents: {               // name of data type
      *         type: "string",       // type of property
      *         pattern: /^[0-9]+%$/, // RegExp instance object
@@ -72,13 +97,12 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
      * testClass.setPercentsProp("10");  // throws error
      * ...
      */
-    ConfigManager.prototype.setDataTypes = function(propertyDefinitions)
+    SettingsManager.prototype.setDataTypes = function(propertyDefinitions)
     {
         this.checkModuleIsReady();
         this.getModule()
             .getPropertyManager()
             .addTypeDefinitions(propertyDefinitions)
-            //.defineDataTypes(propertyDefinitions)
         ;
     };
 
@@ -86,15 +110,14 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
      * Returns defined custom data types in the form in which they were set
      *
      * @method getDataTypes
-     * @memberOf Subclass.ConfigManager.prototype
+     * @memberOf Subclass.SettingsManager.prototype
      *
      * @returns {Object.<Object>}
      */
-    ConfigManager.prototype.getDataTypes = function()
+    SettingsManager.prototype.getDataTypes = function()
     {
         return this.getModule()
             .getPropertyManager()
-            //.getDataTypeManager()
             .getTypeDefinitions()
         ;
     };
@@ -106,12 +129,12 @@ Subclass.Property.Extension.ConfigManagerExtension = function() {
 
     Subclass.Module.onInitializeBefore(function(evt, module)
     {
-        ConfigManager = Subclass.Tools.buildClassConstructor(ConfigManager);
+        SettingsManager = Subclass.Tools.buildClassConstructor(SettingsManager);
 
-        if (!ConfigManager.hasExtension(ConfigManagerExtension)) {
-            ConfigManager.registerExtension(ConfigManagerExtension);
+        if (!SettingsManager.hasExtension(SettingsManagerExtension)) {
+            SettingsManager.registerExtension(SettingsManagerExtension);
         }
     });
 
-    return ConfigManagerExtension;
+    return SettingsManagerExtension;
 }();

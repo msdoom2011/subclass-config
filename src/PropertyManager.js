@@ -104,6 +104,11 @@ Subclass.Property.PropertyManager = (function()
                     Subclass.Tools.copy(typeDefinition)
                 );
             }
+
+            if (module.isRoot()) {
+                var serviceManager = module.getServiceManager();
+                serviceManager.register('property_manager', module.getPropertyManager());
+            }
         });
 
         if (module.isRoot()) {

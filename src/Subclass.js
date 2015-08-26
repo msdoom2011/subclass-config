@@ -18,5 +18,13 @@ Subclass.registerPlugin(function() {
         return "SubclassConfig";
     };
 
+    /**
+     * @inheritDoc
+     */
+    PropertyPlugin.getDependencies = function()
+    {
+        return ['SubclassService'];
+    };
+
     return PropertyPlugin;
 }());

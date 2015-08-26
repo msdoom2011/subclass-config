@@ -27,7 +27,7 @@ Subclass.Property.Extension.Class.Type.AbstractClass.AbstractClassDefinitionExte
 
     // Registering extension
 
-    Subclass.Module.onInitializeAfter(function(evt, module)
+    Subclass.Module.onInitializeBefore(function(evt, module)
     {
         if (Subclass.ClassManager.issetClassType('AbstractClass')) {
             var AbstractClassDefinition = Subclass.ClassManager.getClassType('AbstractClass').getDefinitionClass();

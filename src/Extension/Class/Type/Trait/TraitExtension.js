@@ -11,7 +11,7 @@ Subclass.Property.Extension.Class.Type.Trait.TraitExtension = function()
 
     TraitExtension.$parent = Subclass.Extension;
 
-    Subclass.Module.onInitializeAfter(function(evt, module)
+    Subclass.Module.onInitializeBefore(function(evt, module)
     {
         if (Subclass.ClassManager.issetClassType('Trait')) {
             var Trait = Subclass.ClassManager.getClassType('Trait');

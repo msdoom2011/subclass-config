@@ -9,11 +9,12 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
         ClassTypeExtension.$parent.apply(this, arguments);
     }
 
-    ClassTypeExtension.$parent = Subclass.Class.ClassExtension;
+    //ClassTypeExtension.$parent = Subclass.Class.ClassExtension;
+    ClassTypeExtension.$parent = Subclass.Extension;
 
-    ClassTypeExtension.$config = {
-        classes: ["Class", "Config"]
-    };
+    //ClassTypeExtension.$config = {
+    //    classes: ["Class", "Config"]
+    //};
 
     /**
      * @inheritDoc
@@ -25,9 +26,9 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
         classInst.getEvent('onInitialize').addListener(function()
         {
             /**
-            * @type {Object}
-            * @protected
-            */
+             * @type {Object}
+             * @protected
+             */
             this._properties = {};
         });
 
@@ -257,7 +258,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
     //======================== REGISTERING EXTENSION ==========================
     //=========================================================================
 
-    Subclass.Module.onInitializeBefore(function(evt, module)
+    Subclass.Module.onCreate(function(evt, module)
     {
         ClassType = Subclass.Tools.buildClassConstructor(ClassType);
 
