@@ -22,6 +22,7 @@ module.exports = function(config) {
       "vendors/subclass-parameter.js",
       "src/Class/Type/Config/Config.js",
       "src/Class/Type/Config/**/*",
+      "src/Parser/**/*",
       "src/Helper/**/*",
       "src/PropertyManager.js",
       "src/PropertyType.js",

@@ -44,6 +44,40 @@ Subclass.Property.Extension.SettingsManagerExtension = function() {
     };
 
     /**
+     * Sets callback function which will invoke right after module configuration
+     * has been processed.
+     *
+     * It is a good opportunity to modify its settings using plugins of application.
+     *
+     * @method setOnConfig
+     * @memberOf Subclass.SettingsManager.prototype
+     *
+     * @throws {Error}
+     *      Throws error if:<br />
+     *      - trying to change value after the module became ready<br />
+     *      - specified not function argument value
+     *
+     * @param callback
+     */
+    SettingsManager.prototype.setOnConfig = function(callback)
+    {
+        this.checkModuleIsReady();
+
+        if (typeof callback != "function") {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the callback', false)
+                .received(callback)
+                .expected('a function')
+                .apply()
+            ;
+        }
+        var eventManager = this.getModule().getEventManager();
+        var onSetupEvent = eventManager.getEvent('onConfig');
+
+        onSetupEvent.addListener(callback);
+    };
+
+    /**
      * Defines custom data types relying on existent property types
      * registered in Subclass.Property.PropertyManager.
      *

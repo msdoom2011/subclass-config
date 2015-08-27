@@ -10,6 +10,7 @@
     "files": [
       "<%= config.lib.dir.src %>/Class/Type/Config/Config.js",
       "<%= config.lib.dir.src %>/Class/Type/Config/**/*",
+      "<%= config.lib.dir.src %>/Parser/**/*",
       "<%= config.lib.dir.src %>/Helper/**/*",
       "<%= config.lib.dir.src %>/PropertyManager.js",
       "<%= config.lib.dir.src %>/PropertyType.js",

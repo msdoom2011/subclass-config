@@ -5,7 +5,7 @@ describe("Checking base config class", function() {
     it ("default values", function() {
 
         var defaults = config.getDefaults();
-        var values = config.getValues();
+        var values = config.getData();
 
         expect(Subclass.Tools.isEqual(defaults, {
             stPropNumber: 10,

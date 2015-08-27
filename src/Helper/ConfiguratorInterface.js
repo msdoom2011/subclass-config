@@ -54,8 +54,8 @@ Subclass.ClassManager.registerClass('Interface', 'Subclass/ConfiguratorInterface
     /**
      * Processes configuration values of current configurator
      *
-     * @param {Object} configuratorConfigs
+     * @param {Object} configs
      * @param {Object} appConfigs
      */
-    processConfigs: function(configuratorConfigs, appConfigs) {}
+    processConfigs: function(configs, appConfigs) {}
 });

@@ -96,6 +96,9 @@ Subclass.Property.Type.Map.MapProperty = function()
      */
     MapProperty.prototype.getDefaultValue = function()
     {
+        if (this.getDefinition().getDefault() === null) {
+            return null;
+        }
         var children = this.getChildren();
         var defaultValue = {};
 

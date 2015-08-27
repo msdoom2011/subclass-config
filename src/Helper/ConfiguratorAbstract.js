@@ -28,6 +28,7 @@ Subclass.ClassManager.registerClass('AbstractClass', 'Subclass/ConfiguratorAbstr
                 .apply()
             ;
         }
+        this._configManager = configManager;
     },
 
     /**
@@ -51,7 +52,12 @@ Subclass.ClassManager.registerClass('AbstractClass', 'Subclass/ConfiguratorAbstr
      */
     getTree: function()
     {
-        return {};
+        return {
+            "type": "map",
+            "schema": {},
+            "nullable": true,
+            "default": null
+        };
     },
 
     /**
@@ -65,7 +71,7 @@ Subclass.ClassManager.registerClass('AbstractClass', 'Subclass/ConfiguratorAbstr
     /**
      * @inheritDoc
      */
-    processConfigs: function(configuratorConfigs, appConfigs)
+    processConfigs: function(configs, appConfigs)
     {
         // Do something
     }

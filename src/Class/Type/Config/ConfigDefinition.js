@@ -208,7 +208,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
          *
          * @param {Object} values
          */
-        classDefinition.setValues = function(values)
+        classDefinition.setData = function(values)
         {
             if (!values || !Subclass.Tools.isPlainObject(values)) {
                 Subclass.Error.create('InvalidArgument')
@@ -230,7 +230,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
          *
          * @returns {{}}
          */
-        classDefinition.getValues = function()
+        classDefinition.getData = function()
         {
             var properties = this.$_class.getProperties(true);
             var values = {};

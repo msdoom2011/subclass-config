@@ -91,20 +91,26 @@ Subclass.ConfigManager = function()
             var eventManager = module.getEventManager();
             var $this = this;
 
-            eventManager.getEvent('onLoadingEnd').addListener(function() {
+            eventManager.getEvent('onLoadingEnd').addListener(function()
+            {
                 if (module.isRoot()) {
                     var serviceManager = module.getServiceManager();
                     serviceManager.register('config_manager', $this);
                 }
             });
 
-            eventManager.getEvent('onReadyBefore').addListener(function() {
+            // It should invoke only after services becomes normalized
+
+            eventManager.getEvent('onReadyBefore').addListener(-1000000, function()
+            {
                 if (module.isRoot()) {
                     var serviceManager = module.getServiceManager();
-                    var configurators = serviceManager.getServicesByTag('config_manager');
+                    var configurators = serviceManager.getServicesByTag('config');
 
                     for (var i = 0; i < configurators.length; i++) {
-                        $this.register(configurators[i].createInstance());
+                        var configuratorInst = configurators[i].createInstance();
+                        configuratorInst.setConfigManager($this);
+                        $this.register(configuratorInst);
                     }
                     $this.createConfigs();
                     $this._initialized = true;
@@ -113,6 +119,51 @@ Subclass.ConfigManager = function()
                 } else {
                     $this._initialized = true;
                 }
+            });
+
+            eventManager.getEvent('onAddPlugin').addListener(function(evt, pluginModule)
+            {
+                var rootModule = pluginModule.getRoot();
+                var rootConfigManager = rootModule.getConfigManager();
+                var pluginConfigManager = pluginModule.getConfigManager();
+                var pluginServiceManager = pluginModule.getServiceManager();
+                var pluginEventManager = pluginModule.getEventManager();
+                var pluginConfigurators = pluginServiceManager.getServicesByTag('config');
+
+                for (var i = 0; i < pluginConfigurators.length; i++) {
+                    var configuratorInst = pluginConfigurators[i].createInstance();
+
+                    if ($this.isset(configuratorInst.getName())) {
+                        continue;
+                    }
+                    configuratorInst.setConfigManager($this);
+                    $this.register(configuratorInst);
+                }
+
+                var rootConfigs = rootConfigManager.getConfigs();
+                var pluginConfigs = pluginConfigManager.getConfigs();
+
+                if (
+                    rootConfigs
+                    && typeof rootConfigs == 'object'
+                    && rootConfigs instanceof Subclass.Class.Type.Config.Config
+                ) {
+                    rootConfigs = rootConfigs.getData();
+                }
+
+                Subclass.Tools.extend(rootConfigs, pluginConfigs);
+
+                rootConfigs._tree = null;
+                rootConfigs._values = {};
+                rootConfigs._configs = null;
+                rootConfigs._initialized = false;
+
+                rootConfigs.setConfigs(rootConfigs);
+                rootConfigs.createConfigs();
+                rootConfigs._initialized = true;
+
+                pluginConfigManager._initialized = true;
+                pluginEventManager.getEvent('onConfig').trigger(pluginConfigManager.getConfigs());
             });
         },
 
@@ -135,18 +186,19 @@ Subclass.ConfigManager = function()
         {
             var module = this.getModule();
             var configurators = this.getConfigurators();
-            var configs = module.getClassManager().buildClass('Config', module.getName() + "_ModuleConfig")
+            var configs = module.getClassManager().buildClass('Config')
                 .setBody(this.createTree())
-                .save()
+                .create()
                 .createInstance()
-                .setValues(this.getConfigs())
             ;
 
+            var configsData = this.normalizeConfigs(this.getConfigs());
+            configs.setData(configsData);
             this._configs = configs;
 
             for (var i = 0; i < configurators.length; i++) {
                 var configuratorName = configurators[i].getName();
-                var configuratorConfigs = configs.hasOwnProperty(configuratorName)
+                var configuratorConfigs = configs.issetProperty(configuratorName)
                     ? configs[configuratorName]
                     : {};
 
@@ -154,6 +206,31 @@ Subclass.ConfigManager = function()
                     configuratorConfigs,
                     configs
                 );
+            }
+
+            return configs;
+        },
+
+        /**
+         * Normalizes raw configs object
+         *
+         * @param {object} configs
+         */
+        normalizeConfigs: function(configs)
+        {
+            if (Array.isArray(configs)) {
+                for (var i = 0; i < configs.length; i++) {
+                    configs[i] = this.normalizeConfigs(configs[i]);
+                }
+            } else if (configs && typeof configs == 'object') {
+                for (var propName in configs) {
+                    if (configs.hasOwnProperty(propName)) {
+                        configs[propName] = this.normalizeConfigs(configs[propName]);
+                    }
+                }
+            } else if (configs && typeof configs == 'string') {
+                var parserManager = this.getModule().getParserManager();
+                configs = parserManager.parse(configs);
             }
 
             return configs;
@@ -174,11 +251,13 @@ Subclass.ConfigManager = function()
                     .apply()
                 ;
             }
+
             if (!this._configs) {
                 this._values = configs;
 
             } else {
-                this._configs.setValues(configs);
+                this._configs.setData(configs);
+                this._configs.setData(this.normalizeConfigs(this._configs.getData()));
             }
         },
 
@@ -233,7 +312,7 @@ Subclass.ConfigManager = function()
         {
             var mainModule = this.getModule();
             var moduleStorage = mainModule.getModuleStorage();
-            var configurators = {};
+            var configurators = [];
             var $this = this;
 
             if (privateOnly !== true) {
@@ -245,16 +324,15 @@ Subclass.ConfigManager = function()
 
             moduleStorage.eachModule(function(module) {
                 if (module == mainModule) {
-                    Subclass.Tools.extend(configurators, $this._configurators);
+                    configurators = configurators.concat($this._configurators);
                     return;
                 }
                 var moduleConfigManager = module.getConfigManager();
                 var moduleConfigurators = moduleConfigManager.getConfigurators();
-
-                Subclass.Tools.extend(configurators, moduleConfigurators);
+                configurators = configurators.concat(moduleConfigurators);
             });
 
-            return configurators;
+            return Subclass.Tools.unique(configurators);
         },
 
         /**
@@ -378,7 +456,7 @@ Subclass.ConfigManager = function()
 
             for (var i = 0; i < configurators.length; i++) {
                 if (!configurators[i].isPrivate()) {
-                    tree[configurators.getName()] = configurators.getTree();
+                    tree[configurators[i].getName()] = configurators[i].getTree();
                 }
             }
 
