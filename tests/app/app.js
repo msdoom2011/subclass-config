@@ -1,4 +1,4 @@
-var app = Subclass.createModule('app', {
+var app = Subclass.createModule('app', ['appFirstPlugin'], {
     dataTypes: {
         string: { type: 'string', nullable: true }
         //percents: { type: "string", pattern: /^[a-z]+%$/ },

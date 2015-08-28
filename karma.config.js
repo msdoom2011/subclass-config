@@ -39,18 +39,18 @@ module.exports = function(config) {
       "src/*.js",
 
       // Tests
-      //"tests/plugs/app-first-plugin.js",
-      //"tests/plugs/app-forth-plugin.js",
-      //"tests/plugs/app-third-plugin.js",
-      //"tests/plugs/app-second-plugin.js",
+      "tests/plugs/app-first-plugin.js",
+      "tests/plugs/app-forth-plugin.js",
+      "tests/plugs/app-third-plugin.js",
+      "tests/plugs/app-second-plugin.js",
       "tests/app/app.js",
       "tests/app/**/*.js",
-      //"tests/app/configurators/**/*.js",
-      //"tests/app/services/**/*.js",
+      "tests/app/configurators/**/*.js",
+      "tests/app/services/**/*.js",
       "tests/main.js",
-      "tests/**/*"
-      //"tests/configuration.js",
-      //"tests/services.js"
+      //"tests/**/*"
+      "tests/configuration.js",
+      "tests/services.js"
       //"tests/def_base.js",
       //"tests/def_standard.js",
       //"tests/def_advanced.js",

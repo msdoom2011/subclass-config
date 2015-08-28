@@ -62,10 +62,7 @@ Subclass.ConfigManager = function()
 
         // Registering and attaching events
 
-        var eventManager = module.getEventManager();
-        var $this = this;
-
-        eventManager
+        module.getEventManager()
             .registerEvent('onConfig')
         ;
     }
@@ -280,6 +277,7 @@ Subclass.ConfigManager = function()
             }
 
             var configs = {};
+            //var configs = this._values;
             var $this = this;
 
             if (privateOnly !== true) {
@@ -291,14 +289,20 @@ Subclass.ConfigManager = function()
 
             moduleStorage.eachModule(function(module) {
                 if (module == mainModule) {
-                    Subclass.Tools.extend(configs, $this._values);
+                    Subclass.Tools.extendDeep(configs, $this._values);
                     return;
                 }
-                var moduleConfigManager = module.getConfigManager();
-                var moduleConfigurators = moduleConfigManager.getConfigs();
+                //if (module != mainModule) {
+                    var moduleConfigManager = module.getConfigManager();
+                    var moduleConfigs = moduleConfigManager.getConfigs();
 
-                Subclass.Tools.extend(configs, moduleConfigurators);
+                    Subclass.Tools.extendDeep(configs, moduleConfigs);
+                //}
             });
+
+            //if (mainModule.getName() == 'app') {
+            //    console.log(configs);
+            //}
 
             return configs;
         },

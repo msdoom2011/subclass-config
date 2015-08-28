@@ -37,14 +37,12 @@ Subclass.Parser.ConfigParser = function()
                     while (regExp.test(string)) {
                         configName = string.match(regExp)[1];
                         configValue = eval("(" + "configs." + configName + ")");
-
-                        string = string.replace(
-                            regExp, this.getParserManager().parse(configValue)
-                        );
+                        string = string.replace(regExp, this.getParserManager().parse(configValue));
                     }
                 } else {
                     configName = string.match(regExp)[1];
-                    string = eval("(" + "configs." + configName + ")");
+                    configValue = eval("(" + "configs." + configName + ")");
+                    string = this.getParserManager().parse(configValue);
                 }
             }
             return string;
