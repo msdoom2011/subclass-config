@@ -28,16 +28,23 @@ Subclass.Parser.ConfigParser = function()
         {
             if (typeof string == 'string' && string.match(/\$.+\$/i)) {
                 var configManager = this.getModule().getConfigManager();
-                var regex = /\$([^\$]+)\$/i;
+                var regExpStr = "\\$([^\\$]+)\\$";
+                var regExp = new RegExp(regExpStr, "i");
+                var configs = configManager.getConfigs();
+                var configName, configValue;
 
-                while (regex.test(string)) {
-                    var configs = configManager.getConfigs();
-                    var configName = string.match(regex)[1];
-                    var configValue = eval("(" + "configs." + configName + ")");
+                if (!(new RegExp("^" + regExpStr + "$", "i")).test(string)) {
+                    while (regExp.test(string)) {
+                        configName = string.match(regExp)[1];
+                        configValue = eval("(" + "configs." + configName + ")");
 
-                    string = string.replace(
-                        regex, this.getParserManager().parse(configValue)
-                    );
+                        string = string.replace(
+                            regExp, this.getParserManager().parse(configValue)
+                        );
+                    }
+                } else {
+                    configName = string.match(regExp)[1];
+                    string = eval("(" + "configs." + configName + ")");
                 }
             }
             return string;

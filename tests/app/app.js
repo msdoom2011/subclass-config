@@ -6,7 +6,8 @@ var app = Subclass.createModule('app', {
         //number: { type: "number", maxValue: -10000 }
     },
     parameters: {
-        testParameter: "- test parameter value -"
+        testParameter: "- test parameter value -",
+        testNumber: 100
     },
     services: {
         common_configurator: {
@@ -16,12 +17,16 @@ var app = Subclass.createModule('app', {
         special_configurator: {
             className: "App/SpecialConfigurator",
             tags: ['config']
-        }
+        },
+        //test_service: {
+        //    className: "App/TestService",
+        //    arguments: ["$common.width$", "$common.height$"]
+        //}
     },
     configs: {
         common: {
-            width: 100,
-            height: 100,
+            width: "%testNumber%",
+            height: "$common.width$",
             name: "some name %testParameter% $common.providers.provider_1.elements[0].name$",
             border: true,
             providers: {
