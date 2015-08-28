@@ -18,10 +18,10 @@ var app = Subclass.createModule('app', {
             className: "App/SpecialConfigurator",
             tags: ['config']
         },
-        //test_service: {
-        //    className: "App/TestService",
-        //    arguments: ["$common.width$", "$common.height$"]
-        //}
+        test_service: {
+            className: "App/TestConfigService",
+            arguments: ["$common.width$", "$common.height$"]
+        }
     },
     configs: {
         common: {

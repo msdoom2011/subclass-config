@@ -162,7 +162,7 @@ describe("Checking base config class", function() {
         expect(config.stPropNumber).toBe(500);
         expect(config.stPropString).toBe('new default string');
 
-        config.setValues({
+        config.setData({
             propString: "new value string",
             propNumber: 1200,
             stPropNumber: 1500,
@@ -173,6 +173,5 @@ describe("Checking base config class", function() {
         expect(config.propNumber).toBe(1200);
         expect(config.stPropNumber).toBe(1500);
         expect(config.stPropString).toBe('new value string');
-
     });
 });

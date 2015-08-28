@@ -179,7 +179,7 @@ describe("Checking base config class", function() {
         expect(config.incPropNumber).toBe(600);
         expect(config.incPropString).toBe('new default string');
 
-        config.setValues({
+        config.setData({
             propString: "new value string",
             propNumber: 1200,
             stPropNumber: 1500,
