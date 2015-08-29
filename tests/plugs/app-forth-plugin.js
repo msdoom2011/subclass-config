@@ -21,12 +21,7 @@ var appForthPlugin = Subclass.createModule('appForthPlugin', {
 
         getName: function()
         {
-            return 'forth_plugin';
-        },
-
-        isPrivate: function()
-        {
-            return true;
+            return 'forth';
         },
 
         getTree: function()
