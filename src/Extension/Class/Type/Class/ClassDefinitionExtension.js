@@ -157,7 +157,7 @@ Subclass.Property.Extension.Class.Type.Class.ClassDefinitionExtension = function
 
             for (var i = 0; i < traits.length; i++) {
                 var traitClassName = traits[i];
-                var traitClass = $this.getClass().getClassManager().getClass(traitClassName);
+                var traitClass = $this.getClass().getClassManager().get(traitClassName);
                 var traitClassConstructor = traitClass.getConstructor();
                 var traitClassProperties = traitClass.getDefinition().getProperties();
 
@@ -176,7 +176,7 @@ Subclass.Property.Extension.Class.Type.Class.ClassDefinitionExtension = function
 
     Subclass.Module.onInitializeBefore(function(evt, module)
     {
-        var ClassDefinition = Subclass.ClassManager.getClassType('Class').getDefinitionClass();
+        var ClassDefinition = Subclass.ClassManager.getType('Class').getDefinitionClass();
             ClassDefinition = Subclass.Tools.buildClassConstructor(ClassDefinition);
 
         if (!ClassDefinition.hasExtension(ClassDefinitionExtension)) {

@@ -361,7 +361,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         if (this.getExtends()) {
             var parentClassName = this.getExtends();
-            var parentClass = this.getClass().getClassManager().getClass(parentClassName);
+            var parentClass = this.getClass().getClassManager().get(parentClassName);
             var parentClassDefinition = parentClass.getDefinition();
 
             // Checking whether the parent class is final and searching
@@ -399,7 +399,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
     {
         if (this.getExtends()) {
             var parentClassName = this.getExtends();
-            var parentClass = this.getClass().getClassManager().getClass(parentClassName);
+            var parentClass = this.getClass().getClassManager().get(parentClassName);
             var parentClassDefinition = parentClass.getDefinition();
 
             // Checking whether the parent class is final and presence
@@ -440,7 +440,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
             for (var i = 0; i < includes.length; i++) {
                 var includeClassName = includes[i];
-                var includeClass = $this.getClass().getClassManager().getClass(includeClassName);
+                var includeClass = $this.getClass().getClassManager().get(includeClassName);
                 var includeClassConstructor = includeClass.getConstructor();
                 var includeClassProperties = includeClass.getDefinition().getProperties();
 
@@ -467,7 +467,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         if (includes && this.validateIncludes(includes)) {
             for (var i = 0; i < includes.length; i++) {
-                classManager.loadClass(includes[i]);
+                classManager.load(includes[i]);
             }
         }
     };
@@ -492,7 +492,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
             var includes = this.getIncludes();
 
             for (var i = 0; i < includes.length; i++) {
-                var includeClass = classManager.getClass(includes[i]);
+                var includeClass = classManager.get(includes[i]);
                 var includeClassConstructor = includeClass.getConstructor();
                 var includeClassProperties = includeClass.getProperties(true);
 
@@ -504,7 +504,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
 
         if (this.getExtends()) {
             var parentClassName = this.getExtends();
-            var parentClass = this.getClass().getClassManager().getClass(parentClassName);
+            var parentClass = this.getClass().getClassManager().get(parentClassName);
             var parentClassPropertyNames = Object.keys(parentClass.getProperties(true));
 
             for (i = 0; i < parentClassPropertyNames.length; i++) {
@@ -536,7 +536,7 @@ Subclass.Class.Type.Config.ConfigDefinition = (function()
         var definedProperties = [];
 
         for (var i = 0; i < includes.length; i++) {
-            var includeClass = classManager.getClass(includes[i]);
+            var includeClass = classManager.get(includes[i]);
             var includeClassDefinition = includeClass.getDefinition();
 
             definedProperties = definedProperties.concat(

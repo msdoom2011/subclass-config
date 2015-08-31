@@ -3,7 +3,7 @@
  * @abstract
  * @name Subclass.ConfiguratorAbstract
  */
-Subclass.ClassManager.registerClass('AbstractClass', 'Subclass/ConfiguratorAbstract',
+Subclass.ClassManager.register('AbstractClass', 'Subclass/ConfiguratorAbstract',
 {
     $_implements: ["Subclass/ConfiguratorInterface"],
 

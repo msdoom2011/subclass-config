@@ -2,7 +2,7 @@
  * @interface
  * @name Subclass.ConfiguratorInterface
  */
-Subclass.ClassManager.registerClass('Interface', 'Subclass/ConfiguratorInterface',
+Subclass.ClassManager.register('Interface', 'Subclass/ConfiguratorInterface',
 {
     /**
      * Sets instance of subclass config manager

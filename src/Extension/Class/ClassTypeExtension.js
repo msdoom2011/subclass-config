@@ -77,7 +77,7 @@ Subclass.Property.Extension.Class.ClassTypeExtension = function() {
                         }
                         var setterName = Subclass.Tools.generateSetterName(alias);
                         var requiredClassName = classInstance.$_requires[alias];
-                        var requiredClass = classManager.getClass(requiredClassName);
+                        var requiredClass = classManager.get(requiredClassName);
 
                         classInstance[setterName](requiredClass);
                     }

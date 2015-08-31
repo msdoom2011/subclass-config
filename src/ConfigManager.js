@@ -102,7 +102,7 @@ Subclass.ConfigManager = function()
             {
                 if (module.isRoot()) {
                     var serviceManager = module.getServiceManager();
-                    var configurators = serviceManager.getServicesByTag('config');
+                    var configurators = serviceManager.findByTag('config');
 
                     for (var i = 0; i < configurators.length; i++) {
                         var configuratorInst = configurators[i].createInstance();
@@ -125,7 +125,7 @@ Subclass.ConfigManager = function()
                 var pluginConfigManager = pluginModule.getConfigManager();
                 var pluginServiceManager = pluginModule.getServiceManager();
                 var pluginEventManager = pluginModule.getEventManager();
-                var pluginConfigurators = pluginServiceManager.getServicesByTag('config');
+                var pluginConfigurators = pluginServiceManager.findByTag('config');
 
                 for (var i = 0; i < pluginConfigurators.length; i++) {
                     var configuratorInst = pluginConfigurators[i].createInstance();
@@ -183,7 +183,7 @@ Subclass.ConfigManager = function()
         {
             var module = this.getModule();
             var configurators = this.getConfigurators();
-            var configs = module.getClassManager().buildClass('Config')
+            var configs = module.getClassManager().build('Config')
                 .setBody(this.createTree())
                 .create()
                 .createInstance()

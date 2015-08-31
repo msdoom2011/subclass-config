@@ -13,8 +13,8 @@ Subclass.Property.Extension.Class.Type.Interface.InterfaceExtension = function()
 
     Subclass.Module.onInitializeBefore(function(evt, module)
     {
-        if (Subclass.ClassManager.issetClassType('Interface')) {
-            var Interface = Subclass.ClassManager.getClassType('Interface');
+        if (Subclass.ClassManager.issetType('Interface')) {
+            var Interface = Subclass.ClassManager.getType('Interface');
 
             Interface.prototype.setProperties = undefined;
 

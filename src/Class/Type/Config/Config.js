@@ -114,13 +114,13 @@ Subclass.Class.Type.Config.Config = function()
                 .apply()
             ;
         }
-        if (!this.getClassManager().issetClass(className)) {
+        if (!this.getClassManager().isset(className)) {
             Subclass.Error.create(
                 'Trying to include non existent class "' + className + '" ' +
                 'to config class "' + this.getName() + '".'
             );
         }
-        var classObj = this.getClassManager().getClass(className);
+        var classObj = this.getClassManager().get(className);
 
         this._includes.push(classObj);
     };
@@ -162,7 +162,7 @@ Subclass.Class.Type.Config.Config = function()
     /*        Registering the new class type         */
     /*************************************************/
 
-    Subclass.ClassManager.registerClassType(Config);
+    Subclass.ClassManager.registerType(Config);
 
     return Config;
 

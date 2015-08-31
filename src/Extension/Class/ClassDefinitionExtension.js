@@ -110,7 +110,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
 
                     if (requiredClasses && requiredClasses.length) {
                         for (var i = 0; i < requiredClasses.length; i++) {
-                            classManager.loadClass(requiredClasses[i]);
+                            classManager.load(requiredClasses[i]);
                         }
                     }
                 }
@@ -239,7 +239,7 @@ Subclass.Property.Extension.Class.ClassDefinitionExtension = function() {
             function(properties) {
                 if ($this.getExtends && $this.getExtends()) {
                     var parentClassName = $this.getExtends();
-                    var parentClass = $this.getClass().getClassManager().getClass(parentClassName);
+                    var parentClass = $this.getClass().getClassManager().get(parentClassName);
                     var parentClassConstructor = parentClass.getConstructor();
 
                     // Processing parent class properties

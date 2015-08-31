@@ -13,8 +13,8 @@ Subclass.Property.Extension.Class.Type.Trait.TraitExtension = function()
 
     Subclass.Module.onInitializeBefore(function(evt, module)
     {
-        if (Subclass.ClassManager.issetClassType('Trait')) {
-            var Trait = Subclass.ClassManager.getClassType('Trait');
+        if (Subclass.ClassManager.issetType('Trait')) {
+            var Trait = Subclass.ClassManager.getType('Trait');
 
             Trait.prototype.attachProperties = function() {};
 

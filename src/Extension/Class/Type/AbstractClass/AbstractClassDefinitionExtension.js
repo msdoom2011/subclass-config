@@ -29,8 +29,8 @@ Subclass.Property.Extension.Class.Type.AbstractClass.AbstractClassDefinitionExte
 
     Subclass.Module.onInitializeBefore(function(evt, module)
     {
-        if (Subclass.ClassManager.issetClassType('AbstractClass')) {
-            var AbstractClassDefinition = Subclass.ClassManager.getClassType('AbstractClass').getDefinitionClass();
+        if (Subclass.ClassManager.issetType('AbstractClass')) {
+            var AbstractClassDefinition = Subclass.ClassManager.getType('AbstractClass').getDefinitionClass();
                 AbstractClassDefinition = Subclass.Tools.buildClassConstructor(AbstractClassDefinition);
 
             if (!AbstractClassDefinition.hasExtension(AbstractClassDefinitionExtension)) {

@@ -125,7 +125,7 @@ Subclass.Property.Type.Class.ClassType = (function()
         }
         var classManager = this.getPropertyManager().getModule().getClassManager();
 
-        if (!classManager.issetClass(className)) {
+        if (!classManager.isset(className)) {
             Subclass.Error.create(
                 'Specified non existent class in "' + className + '" attribute ' +
                 'in definition of property ' + property + '.'
