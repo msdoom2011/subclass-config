@@ -48,9 +48,9 @@ module.exports = function(config) {
       "tests/app/configurators/**/*.js",
       "tests/app/services/**/*.js",
       "tests/main.js",
-      //"tests/**/*"
-      "tests/configuration.js",
-      "tests/services.js"
+      "tests/**/*"
+      //"tests/configuration.js",
+      //"tests/services.js"
       //"tests/def_base.js",
       //"tests/def_standard.js",
       //"tests/def_advanced.js",
