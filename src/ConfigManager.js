@@ -58,13 +58,6 @@ Subclass.ConfigManager = function()
          * @private
          */
         this._initialized = false;
-
-
-        // Registering and attaching events
-
-        module.getEventManager()
-            .registerEvent('onConfig')
-        ;
     }
 
     ConfigManager.prototype = {
@@ -111,7 +104,7 @@ Subclass.ConfigManager = function()
                     }
                     $this.createConfigs();
                     $this._initialized = true;
-                    eventManager.getEvent('onConfig').trigger($this.getConfigs());
+                    module.triggerOnConfig($this.getConfigs());
 
                 } else {
                     $this._initialized = true;
@@ -124,7 +117,6 @@ Subclass.ConfigManager = function()
                 var rootConfigManager = rootModule.getConfigManager();
                 var pluginConfigManager = pluginModule.getConfigManager();
                 var pluginServiceManager = pluginModule.getServiceManager();
-                var pluginEventManager = pluginModule.getEventManager();
                 var pluginConfigurators = pluginServiceManager.findByTag('config');
 
                 for (var i = 0; i < pluginConfigurators.length; i++) {
@@ -158,9 +150,9 @@ Subclass.ConfigManager = function()
                 rootConfigs.setConfigs(rootConfigs);
                 rootConfigs.createConfigs();
                 rootConfigs._initialized = true;
-
                 pluginConfigManager._initialized = true;
-                pluginEventManager.getEvent('onConfig').trigger(pluginConfigManager.getConfigs());
+
+                pluginModule.triggerOnConfig(pluginConfigManager.getConfigs());
             });
         },
 

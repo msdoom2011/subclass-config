@@ -86,6 +86,7 @@ Subclass.Property.Extension.ModuleExtension = function() {
         this.$parent.initialize.apply(this, arguments);
 
         var eventManager = module.getEventManager();
+            eventManager.registerEvent('onConfig');
 
         eventManager.getEvent('onInitialize').addListener(function(evt, module)
         {
@@ -152,6 +153,65 @@ Subclass.Property.Extension.ModuleExtension = function() {
     Module.prototype.getPropertyManager = function()
     {
         return this._propertyManager;
+    };
+
+    /**
+     * The same as the {@link Subclass.SettingsManager#setOnConfig}
+     *
+     * @method onConfig
+     * @memberOf Subclass.Module.prototype
+     *
+     * @param {Function} callback
+     *      The callback function
+     *
+     * @returns {Subclass.Module}
+     */
+    Module.prototype.onConfig = function(callback)
+    {
+        this.getSettingsManager().setOnConfig(callback);
+
+        return this;
+    };
+
+    /**
+     * Invokes registered onConfig callback functions forcibly.<br /><br />
+     *
+     * @method triggerOnConfig
+     * @memberOf Subclass.Module.prototype
+     *
+     * @param {Subclass.Class.Type.Config.Config} configs
+     *
+     * @returns {Subclass.Module}
+     */
+    Module.prototype.triggerOnConfig = function(configs)
+    {
+        if (
+            !configs
+            || typeof configs != 'object'
+            || !configs.getClassType
+            || configs.getClassType() != 'Config'
+        ) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the configs instance', false)
+                .expected('an instance of Subclass.Class.Type.Config.Config')
+                .received(configs)
+                .apply()
+            ;
+        }
+        this.getEventManager().getEvent('onConfig').trigger(configs);
+
+        return this;
+    };
+
+    /**
+     * The same as the {@link Subclass.ConfigManager#isInitialized}
+     *
+     * @method isConfigured
+     * @memberOf Subclass.ModuleAPI.prototype
+     */
+    Module.prototype.isConfigured = function()
+    {
+        return this.getConfigManager().isInitialized.apply(this.getConfigManager(), arguments);
     };
 
 
