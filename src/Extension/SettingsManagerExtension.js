@@ -11,6 +11,25 @@ Subclass.Property.Extension.SettingsManagerExtension = function() {
 
     SettingsManagerExtension.$parent = Subclass.Extension;
 
+    /**
+     * @inheritDoc
+     */
+    SettingsManagerExtension.initialize = function(settingsManager)
+    {
+        SettingsManagerExtension.$parent.initialize.apply(this, arguments);
+
+        settingsManager.getEvent('onInitialize').addListener(function() {
+
+            /**
+             * Module config values
+             *
+             * @type {Object}
+             * @private
+             */
+            this._configs = {};
+        });
+    };
+
 
     //=========================================================================
     //========================== ADDING NEW METHODS ===========================
@@ -19,7 +38,7 @@ Subclass.Property.Extension.SettingsManagerExtension = function() {
     var SettingsManager = Subclass.SettingsManager;
 
     /**
-     * Sets module configuration option values
+     * Sets module configuration default values
      *
      * @param {Object} configs
      */
@@ -28,19 +47,25 @@ Subclass.Property.Extension.SettingsManagerExtension = function() {
         if (!configs) {
             return;
         }
-        var configManager = this.getModule().getConfigManager();
-        configManager.setConfigs(configs);
+        if (!Subclass.Tools.isPlainObject(configs)) {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the module configuration values', false)
+                .expected('a plain object')
+                .received(configs)
+                .apply()
+            ;
+        }
+        this._configs = configs;
     };
 
     /**
-     * Returns module configuration
+     * Returns module configuration default values
      *
      * @returns {Object}
      */
     SettingsManager.prototype.getConfigs = function()
     {
-        var configManager = this.getModule().getConfigManager();
-        return configManager.getConfigs();
+        return this._configs;
     };
 
     /**

@@ -23,7 +23,12 @@ Subclass.registerPlugin(function() {
      */
     PropertyPlugin.getDependencies = function()
     {
-        return ['SubclassService'];
+        return [
+            'SubclassInstance',
+            'SubclassParser',
+            'SubclassParameter',
+            'SubclassService'
+        ];
     };
 
     return PropertyPlugin;

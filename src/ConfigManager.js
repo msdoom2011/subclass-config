@@ -1,12 +1,12 @@
 Subclass.ConfigManager = function()
 {
-    function ConfigManager(module)
+    function ConfigManager(moduleInstance)
     {
-        if (!module || !(module instanceof Subclass.Module)) {
+        if (!moduleInstance || !(moduleInstance instanceof Subclass.ModuleInstance)) {
             Subclass.Error.create('InvalidArgument')
-                .argument('the instance of subclass module', false)
-                .expected('an instance of class Subclass.Module')
-                .received(module)
+                .argument('the instance of module', false)
+                .expected('an instance of class "Subclass.ModuleInstance"')
+                .received(moduleInstance)
                 .apply()
             ;
         }
@@ -17,7 +17,7 @@ Subclass.ConfigManager = function()
          * @type {Subclass.Module}
          * @private
          */
-        this._module = module;
+        this._moduleInstance = moduleInstance;
 
         /**
          * Collection of registered module configurators
@@ -27,21 +27,21 @@ Subclass.ConfigManager = function()
          */
         this._configurators = [];
 
-        /**
-         * Module configuration option values
-         *
-         * @type {{}}
-         * @private
-         */
-        this._values = {};
-
-        /**
-         * App configuration
-         *
-         * @type {Object}
-         * @private
-         */
-        this._configs = null;
+        ///**
+        // * Module configuration option values
+        // *
+        // * @type {{}}
+        // * @private
+        // */
+        //this._defaults = {};
+        //
+        ///**
+        // * App configuration
+        // *
+        // * @type {Object}
+        // * @private
+        // */
+        //this._configs = null;
 
         /**
          * App configuration tree
@@ -50,14 +50,14 @@ Subclass.ConfigManager = function()
          * @private
          */
         this._tree = null;
-
-        /**
-         * Reports whether config manager is initialized
-         *
-         * @type {boolean}
-         * @private
-         */
-        this._initialized = false;
+        //
+        ///**
+        // * Reports whether config manager is initialized
+        // *
+        // * @type {boolean}
+        // * @private
+        // */
+        //this._initialized = false;
     }
 
     ConfigManager.prototype = {
@@ -67,125 +67,154 @@ Subclass.ConfigManager = function()
          *
          * @returns {Subclass.Module}
          */
-        getModule: function()
+        getModuleInstance: function()
         {
-            return this._module;
+            return this._moduleInstance;
         },
-
-        /**
-         * Initializes config manager
-         */
-        initialize: function()
-        {
-            var module = this.getModule();
-            var eventManager = module.getEventManager();
-            var $this = this;
-
-            eventManager.getEvent('onLoadingEnd').addListener(function()
-            {
-                if (module.isRoot()) {
-                    var serviceManager = module.getServiceManager();
-                    serviceManager.register('config_manager', $this);
-                }
-            });
-
-            // It should invoke only after services becomes normalized
-
-            eventManager.getEvent('onReadyBefore').addListener(-1000000, function()
-            {
-                if (module.isRoot()) {
-                    var serviceManager = module.getServiceManager();
-                    var configurators = serviceManager.findByTag('config');
-
-                    for (var i = 0; i < configurators.length; i++) {
-                        var configuratorInst = configurators[i].createInstance();
-                        configuratorInst.setConfigManager($this);
-                        $this.register(configuratorInst);
-                    }
-                    $this.createConfigs();
-                    $this._initialized = true;
-                    module.triggerOnConfig($this.getConfigs());
-
-                } else {
-                    $this._initialized = true;
-                }
-            });
-
-            eventManager.getEvent('onAddPlugin').addListener(function(evt, pluginModule)
-            {
-                var rootModule = pluginModule.getRoot();
-                var rootConfigManager = rootModule.getConfigManager();
-                var pluginConfigManager = pluginModule.getConfigManager();
-                var pluginServiceManager = pluginModule.getServiceManager();
-                var pluginConfigurators = pluginServiceManager.findByTag('config');
-
-                for (var i = 0; i < pluginConfigurators.length; i++) {
-                    var configuratorInst = pluginConfigurators[i].createInstance();
-
-                    if ($this.isset(configuratorInst.getName())) {
-                        continue;
-                    }
-                    configuratorInst.setConfigManager($this);
-                    $this.register(configuratorInst);
-                }
-
-                var rootConfigs = rootConfigManager.getConfigs();
-                var pluginConfigs = pluginConfigManager.getConfigs();
-
-                if (
-                    rootConfigs
-                    && typeof rootConfigs == 'object'
-                    && rootConfigs instanceof Subclass.Class.Type.Config.Config
-                ) {
-                    rootConfigs = rootConfigs.getData();
-                }
-
-                Subclass.Tools.extend(rootConfigs, pluginConfigs);
-
-                rootConfigs._tree = null;
-                rootConfigs._values = {};
-                rootConfigs._configs = null;
-                rootConfigs._initialized = false;
-
-                rootConfigs.setConfigs(rootConfigs);
-                rootConfigs.createConfigs();
-                rootConfigs._initialized = true;
-                pluginConfigManager._initialized = true;
-
-                pluginModule.triggerOnConfig(pluginConfigManager.getConfigs());
-            });
-        },
-
-        /**
-         * Checks whether config manager is initialized
-         *
-         * @returns {boolean}
-         */
-        isInitialized: function()
-        {
-            return this._initialized;
-        },
+        //
+        ///**
+        // * Initializes config manager
+        // */
+        //initialize: function()
+        //{
+        //    //var moduleInstance = this.getModuleInstance();
+        //    //var container = moduleInstance.getServiceContainer();
+        //    //var configurators = container.findByTag('config');
+        //    //
+        //    //for (var i = 0; i < configurators.length; i++) {
+        //    //    configurators[i].setConfigManager(this);
+        //    //    this.register(configurators[i]);
+        //    //}
+        //    //$this.createConfigs();
+        //    //module.triggerOnConfig($this.getConfigs());
+        //    //
+        //    //
+        //    //
+        //    //var eventManager = module.getEventManager();
+        //    //var $this = this;
+        //    //
+        //    //eventManager.getEvent('onLoadingEnd').addListener(function()
+        //    //{
+        //    //    if (module.isRoot()) {
+        //    //        var serviceManager = module.getServiceManager();
+        //    //        serviceManager.register('config_manager');
+        //    //    }
+        //    //});
+        //    //
+        //    ////It should invoke only after services becomes normalized
+        //    //
+        //    //eventManager.getEvent('onReadyBefore').addListener(-1000000, function()
+        //    //{
+        //    //    if (module.isRoot()) {
+        //    //        var serviceManager = module.getServiceManager();
+        //    //        var configurators = serviceManager.findByTag('config');
+        //    //
+        //    //        for (var i = 0; i < configurators.length; i++) {
+        //    //            var configuratorInst = configurators[i].createInstance();
+        //    //            configuratorInst.setConfigManager($this);
+        //    //            $this.register(configuratorInst);
+        //    //        }
+        //    //        $this.createConfigs();
+        //    //        $this._initialized = true;
+        //    //        module.triggerOnConfig($this.getConfigs());
+        //    //
+        //    //    } else {
+        //    //        $this._initialized = true;
+        //    //    }
+        //    //});
+        //    //
+        //    //eventManager.getEvent('onAddPlugin').addListener(function(evt, pluginModule)
+        //    //{
+        //    //    var rootModule = pluginModule.getRoot();
+        //    //    var rootConfigManager = rootModule.getConfigManager();
+        //    //    var pluginConfigManager = pluginModule.getConfigManager();
+        //    //    var pluginServiceManager = pluginModule.getServiceManager();
+        //    //    var pluginConfigurators = pluginServiceManager.findByTag('config');
+        //    //
+        //    //    for (var i = 0; i < pluginConfigurators.length; i++) {
+        //    //        var configuratorInst = pluginConfigurators[i].createInstance();
+        //    //
+        //    //        if ($this.isset(configuratorInst.getName())) {
+        //    //            continue;
+        //    //        }
+        //    //        configuratorInst.setConfigManager($this);
+        //    //        $this.register(configuratorInst);
+        //    //    }
+        //    //
+        //    //    var rootConfigs = rootConfigManager.getConfigs();
+        //    //    var pluginConfigs = pluginConfigManager.getConfigs();
+        //    //
+        //    //    if (
+        //    //        rootConfigs
+        //    //        && typeof rootConfigs == 'object'
+        //    //        && rootConfigs instanceof Subclass.Class.Type.Config.Config
+        //    //    ) {
+        //    //        rootConfigs = rootConfigs.getData();
+        //    //    }
+        //    //
+        //    //    Subclass.Tools.extend(rootConfigs, pluginConfigs);
+        //    //
+        //    //    rootConfigs._tree = null;
+        //    //    rootConfigs._values = {};
+        //    //    rootConfigs._configs = null;
+        //    //    rootConfigs._initialized = false;
+        //    //
+        //    //    rootConfigs.setConfigs(rootConfigs);
+        //    //    rootConfigs.createConfigs();
+        //    //    rootConfigs._initialized = true;
+        //    //    pluginConfigManager._initialized = true;
+        //    //
+        //    //    pluginModule.triggerOnConfig(pluginConfigManager.getConfigs());
+        //    //});
+        //},
+        //
+        ///**
+        // * Checks whether config manager is initialized
+        // *
+        // * @returns {boolean}
+        // */
+        //isInitialized: function()
+        //{
+        //    return this._initialized;
+        //},
 
         /**
          * Creates configs class
          *
-         * @returns {Subclass.Class.ClassBuilder}
+         * @returns {Subclass.Class.Type.Config.Config}
          */
         createConfigs: function()
         {
-            var module = this.getModule();
-            var configurators = this.getConfigurators();
+            var moduleInstance = this.getModuleInstance();
+            var module = moduleInstance.getModule();
+            var container = moduleInstance.getServiceContainer();
+            var configurators = container.findByTag('config');
+
+
+            // Registering configurators
+
+            for (var i = 0; i < configurators.length; i++) {
+                configurators[i].setConfigManager(this);
+                this.register(configurators[i]);
+            }
+
+            // Creating config class
+
             var configs = module.getClassManager().build('Config')
                 .setBody(this.createTree())
                 .create()
                 .createInstance()
             ;
 
+            // Setting config data
+
             var configsData = this.normalizeConfigs(this.getConfigs());
             configs.setData(configsData);
-            this._configs = configs;
 
-            for (var i = 0; i < configurators.length; i++) {
+
+            // Performing configs processing
+
+            for (i = 0; i < configurators.length; i++) {
                 var configuratorName = configurators[i].getName();
                 var configuratorConfigs = configs.issetProperty(configuratorName)
                     ? configs[configuratorName]
@@ -224,111 +253,107 @@ Subclass.ConfigManager = function()
 
             return configs;
         },
-
-        /**
-         * Sets module configuration option values
-         *
-         * @param {Object} configs
-         */
-        setConfigs: function(configs)
-        {
-            if (!configs || typeof configs != 'object') {
-                Subclass.Error.create('InvalidArgument')
-                    .argument('the module configuration values', false)
-                    .expected('a plain object')
-                    .received(configs)
-                    .apply()
-                ;
-            }
-
-            if (!this._configs) {
-                this._values = configs;
-
-            } else {
-                this._configs.setData(configs);
-                this._configs.setData(this.normalizeConfigs(this._configs.getData()));
-            }
-        },
-
         /**
          * Returns module configuration option values
          *
          * @returns {Object}
          */
-        getConfigs: function(privateOnly)
+        //getConfigs: function(privateOnly)
+        getDefaults: function(privateOnly)
         {
             var mainModule = this.getModule();
             var moduleStorage = mainModule.getModuleStorage();
 
-            if (this.isInitialized() && !mainModule.isRoot()) {
-                var rootModule = mainModule.getRoot();
-                return rootModule.getConfigManager().getConfigs();
+            //if (this.isInitialized() && !mainModule.isRoot()) {
+            //    var rootModule = mainModule.getRoot();
+            //    return rootModule.getConfigManager().getConfigs();
+            //
+            //} else if (this.isInitialized()) {
+            //    return this._configs;
+            //}
 
-            } else if (this.isInitialized()) {
-                return this._configs;
-            }
-
-            var configs = {};
-            //var configs = this._values;
+            var defaults = {};
             var $this = this;
 
             if (privateOnly !== true) {
                 privateOnly = false;
             }
             if (privateOnly) {
-                return this._values;
+                return mainModule.getSettingsManager().getConfigs();
             }
 
             moduleStorage.eachModule(function(module) {
                 if (module == mainModule) {
-                    Subclass.Tools.extendDeep(configs, $this._values);
+                    Subclass.Tools.extendDeep(defaults, mainModule.getSettingsManager().getConfigs());
                     return;
                 }
-                //if (module != mainModule) {
-                    var moduleConfigManager = module.getConfigManager();
-                    var moduleConfigs = moduleConfigManager.getConfigs();
+                var moduleSettingsManager = module.getSettingsManager();
+                var moduleDefaults = moduleSettingsManager.getConfigs();
 
-                    Subclass.Tools.extendDeep(configs, moduleConfigs);
-                //}
+                Subclass.Tools.extendDeep(defaults, moduleDefaults);
             });
 
-            //if (mainModule.getName() == 'app') {
-            //    console.log(configs);
-            //}
-
-            return configs;
+            return defaults;
         },
+
+        //
+        ///**
+        // * Sets module configuration option values
+        // *
+        // * @param {Object} configs
+        // */
+        //setConfigs: function(configs)
+        //{
+        //    if (!configs || typeof configs != 'object') {
+        //        Subclass.Error.create('InvalidArgument')
+        //            .argument('the module configuration values', false)
+        //            .expected('a plain object')
+        //            .received(configs)
+        //            .apply()
+        //        ;
+        //    }
+        //
+        //    if (!this._configs) {
+        //        this._values = configs;
+        //
+        //    } else {
+        //        this._configs.setData(configs);
+        //        this._configs.setData(this.normalizeConfigs(this._configs.getData()));
+        //    }
+        //},
 
         /**
          * Returns collection of registered configurators
          *
          * @returns {Array.<Subclass.ConfiguratorInterface>}
          */
-        getConfigurators: function(privateOnly)
+        getConfigurators: function() //privateOnly)
         {
-            var mainModule = this.getModule();
-            var moduleStorage = mainModule.getModuleStorage();
-            var configurators = [];
-            var $this = this;
+            return this._configurators;
 
-            if (privateOnly !== true) {
-                privateOnly = false;
-            }
-            if (privateOnly) {
-                return this._configurators;
-            }
-
-            moduleStorage.eachModule(function(module) {
-                if (module == mainModule) {
-                    configurators = configurators.concat($this._configurators);
-                    return;
-                }
-                var moduleConfigManager = module.getConfigManager();
-                var moduleConfigurators = moduleConfigManager.getConfigurators();
-                configurators = configurators.concat(moduleConfigurators);
-            });
-
-            return Subclass.Tools.unique(configurators);
+            //var mainModule = this.getModule();
+            //var moduleStorage = mainModule.getModuleStorage();
+            //var configurators = [];
+            //var $this = this;
+            //
+            //if (privateOnly !== true) {
+            //    privateOnly = false;
+            //}
+            //if (privateOnly) {
+            //    return this._configurators;
+            //}
+            //
+            //moduleStorage.eachModule(function(module) {
+            //    if (module == mainModule) {
+            //        configurators = configurators.concat($this._configurators);
+            //        return;
+            //    }
+            //    var moduleConfigManager = module.getConfigManager();
+            //    var moduleConfigurators = moduleConfigManager.getConfigurators();
+            //    configurators = configurators.concat(moduleConfigurators);
+            //});
+            //
+            //return Subclass.Tools.unique(configurators);
         },
 
         /**

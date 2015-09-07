@@ -90,16 +90,16 @@ Subclass.Property.Extension.ModuleExtension = function() {
 
         eventManager.getEvent('onInitialize').addListener(function(evt, module)
         {
-            /**
-             * Config manager instance
-             *
-             * @type {Subclass.ConfigManager}
-             * @private
-             */
-            this._configManager = Subclass.Tools.createClassInstance(
-                Subclass.ConfigManager,
-                this
-            );
+            ///**
+            // * Config manager instance
+            // *
+            // * @type {Subclass.ConfigManager}
+            // * @private
+            // */
+            //this._configManager = Subclass.Tools.createClassInstance(
+            //    Subclass.ConfigManager,
+            //    this
+            //);
 
             /**
              * Property manager instance
@@ -115,8 +115,16 @@ Subclass.Property.Extension.ModuleExtension = function() {
 
         eventManager.getEvent('onInitializeAfter').addListener(function(evt, module)
         {
-            this.getConfigManager().initialize();
+            //this.getConfigManager().initialize();
             this.getPropertyManager().initialize();
+        });
+
+        eventManager.getEvent('onLoadingEnd').addListener(function() {
+            if (module.isRoot()) {
+                var serviceManager = module.getServiceManager();
+                serviceManager.register('config_container');
+                serviceManager.register('config_manager');
+            }
         });
     };
 
@@ -126,20 +134,20 @@ Subclass.Property.Extension.ModuleExtension = function() {
     //=========================================================================
 
     var Module = Subclass.Module;
-
-    /**
-     * Returns instance of config manager which contains configuration
-     * of your application
-     *
-     * @method getConfigManager
-     * @memberOf Subclass.Module.prototype
-     *
-     * @returns {Subclass.ConfigManager}
-     */
-    Module.prototype.getConfigManager = function()
-    {
-        return this._configManager;
-    };
+    //
+    ///**
+    // * Returns instance of config manager which contains configuration
+    // * of your application
+    // *
+    // * @method getConfigManager
+    // * @memberOf Subclass.Module.prototype
+    // *
+    // * @returns {Subclass.ConfigManager}
+    // */
+    //Module.prototype.getConfigManager = function()
+    //{
+    //    return this._configManager;
+    //};
 
     /**
      * Returns instance of property manager which allows to register
