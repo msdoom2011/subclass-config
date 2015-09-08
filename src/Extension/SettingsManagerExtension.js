@@ -61,11 +61,36 @@ Subclass.Property.Extension.SettingsManagerExtension = function() {
     /**
      * Returns module configuration default values
      *
+     * @param {boolean} privateOnly
+     *
      * @returns {Object}
      */
-    SettingsManager.prototype.getConfigs = function()
+    SettingsManager.prototype.getConfigs = function(privateOnly)
     {
-        return this._configs;
+        var mainModule = this.getModule();
+        var moduleStorage = mainModule.getModuleStorage();
+        var defaults = {};
+        var $this = this;
+
+        if (privateOnly !== true) {
+            privateOnly = false;
+        }
+        if (privateOnly || !moduleStorage) {
+            return this._configs;
+        }
+
+        moduleStorage.eachModule(function(module) {
+            if (module == mainModule) {
+                Subclass.Tools.extendDeep(defaults, $this.getConfigs(true));
+                return;
+            }
+            var moduleSettingsManager = module.getSettingsManager();
+            var moduleDefaults = moduleSettingsManager.getConfigs();
+
+            Subclass.Tools.extendDeep(defaults, moduleDefaults);
+        });
+
+        return defaults;
     };
 
     /**

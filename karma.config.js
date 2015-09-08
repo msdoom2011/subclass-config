@@ -18,6 +18,8 @@ module.exports = function(config) {
 
       // Src Files
       "vendors/subclass.js",
+      "vendors/subclass-instance.js",
+      "vendors/subclass-parser.js",
       "vendors/subclass-service.js",
       "vendors/subclass-parameter.js",
       "src/Class/Type/Config/Config.js",

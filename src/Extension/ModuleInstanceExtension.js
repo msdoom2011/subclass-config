@@ -29,6 +29,11 @@ Subclass.Property.Extension.ModuleInstanceExtension = function() {
              * @private
              */
             this._configContainer = Subclass.Tools.createClassInstance(Subclass.Property.ConfigContainer, this);
+
+
+            // Initializing
+
+            this._configContainer.initialize();
         });
     };
 

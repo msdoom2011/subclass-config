@@ -20,10 +20,10 @@ Subclass.ClassManager.register('AbstractClass', 'Subclass/ConfiguratorAbstract',
      */
     setConfigManager: function(configManager)
     {
-        if (!configManager || !(configManager instanceof Subclass.ConfigManager)) {
+        if (!configManager || !(configManager instanceof Subclass.Property.ConfigManager)) {
             Subclass.Error.create('InvalidArgument')
                 .argument('the instance of subclass config manager', false)
-                .expected('an instance of class "Subclass.ConfigManager"')
+                .expected('an instance of class "Subclass.Property.ConfigManager"')
                 .received(configManager)
                 .apply()
             ;

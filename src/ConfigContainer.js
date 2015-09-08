@@ -45,7 +45,7 @@ Subclass.Property.ConfigContainer = function()
          * @type {Subclass.Class.Type.Config.Config}
          * @private
          */
-        this._configs = this._configManager.createConfigs();
+        this._configs = null;
 
         /**
          * Indicates whether or not current config container is initialized
@@ -54,11 +54,6 @@ Subclass.Property.ConfigContainer = function()
          * @private
          */
         this._initialized = false;
-
-
-        // Initializing
-
-        this.initialize();
     }
 
     ConfigContainer.prototype = {
@@ -72,19 +67,15 @@ Subclass.Property.ConfigContainer = function()
                 Subclass.Error.create('The config container is already initialized!');
             }
 
-            this.getModule().triggerOnConfig(this.getConfigs());
+            var moduleInstance = this.getModuleInstance();
+            var serviceContainer = moduleInstance.getServiceContainer();
 
-            //var module = moduleInstance.getModule();
-            //var container = moduleInstance.getContainer();
-            //var configurators = container.findByTag('configs');
-            //var configManager = module.getConfigManager();
-            //
-            //for (var i = 0; i < configurators.length; i++) {
-            //    configurators[i].setConfigManager(configManager);
-            //    configManager.register(configurators[i]);
-            //}
-            //$this.createConfigs();
-            //module.triggerOnConfig($this.getConfigs());
+            serviceContainer.setServiceInstance('config_container', this);
+            serviceContainer.setServiceInstance('config_manager', this.getConfigManager());
+            serviceContainer.setServiceInstance('property_manager', this.getModule().getPropertyManager());
+
+            this._configs = this.getConfigManager().createConfigs();
+            this.getModule().getModule().triggerOnConfig(this.getConfigs());
         },
 
         /**

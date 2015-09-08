@@ -82,6 +82,8 @@ module.exports = function(grunt) {
                 files: [{
                     src: [
                         "vendors/subclass.js",
+                        "vendors/subclass-instance.js",
+                        "vendors/subclass-parser.js",
                         "vendors/subclass-service.js",
                         "vendors/subclass-parameter.js",
                         "release/subclass-config.min.js",

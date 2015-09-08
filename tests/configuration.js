@@ -1,6 +1,8 @@
 describe("Checking configuration", function() {
     it ("of application", function() {
-        var configs = app.getConfigManager().getConfigs();
+
+        var inst = app.createInstance();
+        var configs = inst.getConfigContainer().getConfigs();
 
         expect(configs.common.width).toBe(100);
         expect(configs.common.height).toBe(100);

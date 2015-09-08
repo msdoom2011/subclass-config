@@ -27,10 +27,13 @@ Subclass.Parser.ConfigParser = function()
         parse: function(string)
         {
             if (typeof string == 'string' && string.match(/\$.+\$/i)) {
-                var configManager = this.getModule().getConfigManager();
+                var parserManager = this.getParserManager();
+                var moduleInstance = parserManager.getModuleInstance();
+                var configContainer = moduleInstance.getConfigContainer();
+                var configManager = configContainer.getConfigManager();
                 var regExpStr = "\\$([^\\$]+)\\$";
                 var regExp = new RegExp(regExpStr, "i");
-                var configs = configManager.getConfigs();
+                var configs = configContainer.getConfigs() || configManager.getDefaults();
                 var configName, configValue;
 
                 if (!(new RegExp("^" + regExpStr + "$", "i")).test(string)) {
