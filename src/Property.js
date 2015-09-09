@@ -284,7 +284,7 @@ Subclass.Property.Property = function()
         }
         var context = this.getContext();
 
-        if (context.getContextType() == 'property') {
+        if (context && context.getContextType() == 'property') {
             var parentProperty = context.getProperty();
             return parentProperty.isLocked() || false;
 

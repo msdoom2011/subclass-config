@@ -67,6 +67,7 @@ Subclass.Property.ConfigContainer = function()
                 Subclass.Error.create('The config container is already initialized!');
             }
 
+            var module = this.getModule().getModule();
             var moduleInstance = this.getModuleInstance();
             var serviceContainer = moduleInstance.getServiceContainer();
 
@@ -75,7 +76,7 @@ Subclass.Property.ConfigContainer = function()
             serviceContainer.setServiceInstance('property_manager', this.getModule().getPropertyManager());
 
             this._configs = this.getConfigManager().createConfigs();
-            this.getModule().getModule().triggerOnConfig(this.getConfigs());
+            module.triggerOnConfig(this.getConfigs(), moduleInstance);
         },
 
         /**

@@ -90,6 +90,7 @@ Subclass.Property.ConfigManager = function()
 
             var configsData = this.normalizeConfigs(this.getDefaults());
             configs.setData(configsData);
+            configs.setDefaults(configsData);
 
 
             // Performing configs processing
