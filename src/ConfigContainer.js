@@ -71,11 +71,13 @@ Subclass.Property.ConfigContainer = function()
             var moduleInstance = this.getModuleInstance();
             var serviceContainer = moduleInstance.getServiceContainer();
 
+            this._configs = this.getConfigManager().createConfigs();
+
+            serviceContainer.setServiceInstance('configs', this._configs);
             serviceContainer.setServiceInstance('config_container', this);
             serviceContainer.setServiceInstance('config_manager', this.getConfigManager());
             serviceContainer.setServiceInstance('property_manager', this.getModule().getPropertyManager());
 
-            this._configs = this.getConfigManager().createConfigs();
             module.triggerOnConfig(this.getConfigs(), moduleInstance);
         },
 

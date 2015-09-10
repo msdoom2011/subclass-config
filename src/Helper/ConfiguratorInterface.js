@@ -35,10 +35,25 @@ Subclass.ClassManager.register('Interface', 'Subclass/ConfiguratorInterface',
     isPrivate: function() {},
 
     /**
-     * Returns object containing definitions of typed properties.
-     * Each declared property is your configuration option.
+     * If returns true then all returned properties by getTree methods
+     * will be added in the root scope of the module configuration
+     *
+     * @returns {boolean}
+     */
+    isExpanded: function() {},
+
+    /**
+     * Returns object which contains definitions of typed properties.
+     * Each declared property is option in your module configuration object.
+     *
+     * If method isExpanded returns true, then current method
+     * should return collection of property definitionS.
+     *
+     * And vise versa, should return definition of ONE property
+     * if isExpanded method returns false (by default).
      *
      * @returns {Object}
+     *      Returns definition of the property
      */
     getTree: function() {},
 

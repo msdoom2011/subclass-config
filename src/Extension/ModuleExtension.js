@@ -100,6 +100,14 @@ Subclass.Property.Extension.ModuleExtension = function() {
                 Subclass.Property.PropertyManager,
                 this
             );
+
+            /**
+             * Name of module configuration class
+             *
+             * @type {string}
+             * @private
+             */
+            this._configsClassName = null;
         });
 
         eventManager.getEvent('onInitializeAfter').addListener(function(evt, module)
@@ -110,9 +118,8 @@ Subclass.Property.Extension.ModuleExtension = function() {
         eventManager.getEvent('onLoadingEnd').addListener(function() {
             if (module.isRoot()) {
                 var serviceManager = module.getServiceManager();
+                serviceManager.register('configs');
                 serviceManager.register('config_container');
-                serviceManager.register('config_manager');
-                serviceManager.register('property_manager');
             }
         });
     };
@@ -176,7 +183,7 @@ Subclass.Property.Extension.ModuleExtension = function() {
         ) {
             Subclass.Error.create('InvalidArgument')
                 .argument('the configs instance', false)
-                .expected('an instance of Subclass.Class.Type.Config.Config')
+                .expected('an instance of Config class type')
                 .received(configs)
                 .apply()
             ;
@@ -187,14 +194,59 @@ Subclass.Property.Extension.ModuleExtension = function() {
     };
 
     /**
-     * The same as the {@link Subclass.ConfigManager#isInitialized}
+     * Sets module configuration class
      *
-     * @method isConfigured
-     * @memberOf Subclass.ModuleAPI.prototype
+     * @method setConfigsClass
+     * @memberOf Subclass.Module.prototype
+     *
+     * @param {string} configsClassName
      */
-    Module.prototype.isConfigured = function()
+    Module.prototype.setConfigsClass = function(configsClassName)
     {
-        return this.getConfigManager().isInitialized.apply(this.getConfigManager(), arguments);
+        if (
+            !configsClassName
+            || typeof configsClassName != 'string'
+            || !this.getClassManager().isset(configsClassName)
+        ) {
+            Subclass.Error.create('InvalidError')
+                .argument('the name of module configuration class', false)
+                .expected('a string')
+                .received(configsClassName)
+                .apply()
+            ;
+        }
+        this._configsClassName = configsClassName;
+    };
+
+    /**
+     * Returns module configuration class
+     *
+     * @method getConfigsClass
+     * @memberOf Subclass.Module.prototype
+     *
+     * @returns {Subclass.Class.Type.Config.Config}
+     */
+    Module.prototype.getConfigsClass = function()
+    {
+        var configsClassName = this._configsClassName;
+
+        if (!configsClassName) {
+            Subclass.Error.create('Trying to get configs class before it was defined.');
+        }
+        return this.getClassManager().get(configsClassName);
+    };
+
+    /**
+     * Checks whether or not module configuration class was set
+     *
+     * @method issetConfigsClass
+     * @memberOf Subclass.Module.prototype
+     *
+     * @returns {boolean}
+     */
+    Module.prototype.issetConfigsClass = function()
+    {
+        return !!this._configsClassName;
     };
 
 

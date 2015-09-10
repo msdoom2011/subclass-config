@@ -149,6 +149,45 @@ Subclass.Class.Type.Config.ConfigBuilder = (function()
         return this.getDefinition().$_includes || [];
     };
 
+    /**
+     * Makes class either final or not
+     *
+     * @method setFinal
+     * @memberOf Subclass.Class.Type.Class.ClassBuilder.prototype
+     *
+     * @throws {Error}
+     *      Throws error if specified invalid definition of final option
+     *
+     * @param {boolean} isFinal
+     */
+    ConfigBuilder.prototype.setFinal = function(isFinal)
+    {
+        if (typeof isFinal != 'boolean') {
+            Subclass.Error.create('InvalidArgument')
+                .argument('is final option value', false)
+                .expected('a boolean')
+                .received(isFinal)
+                .apply()
+            ;
+        }
+        this.getDefinition().$_final = isFinal;
+
+        return this;
+    };
+
+    /**
+     * Returns $_final option value
+     *
+     * @method getFinal
+     * @memberOf Subclass.Class.Type.Class.ClassBuilder.prototype
+     *
+     * @returns {boolean}
+     */
+    ConfigBuilder.prototype.getFinal = function()
+    {
+        return this.getDefinition().$_final;
+    };
+
     return ConfigBuilder;
 
 })();

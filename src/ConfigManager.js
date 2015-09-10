@@ -59,6 +59,30 @@ Subclass.Property.ConfigManager = function()
         },
 
         /**
+         * Returns module configuration class if it was created early
+         * or creates and register configs class id it wasn't.
+         *
+         * @returns {Subclass.Class.Type.Config.Config}
+         */
+        getConfigsClass: function()
+        {
+            var module = this.getModuleInstance().getModule();
+
+            if (module.issetConfigsClass()) {
+                return module.getConfigsClass();
+            }
+            var configsClass = module.getClassManager().build('Config')
+                .setName('ModuleConfig_' + (Math.round(Math.random() * (new Date().valueOf() / 100000))))
+                .setBody(this.createTree())
+                .setFinal(true)
+                .save()
+            ;
+            module.setConfigsClass(configsClass.getName());
+
+            return configsClass;
+        },
+
+        /**
          * Creates configs class
          *
          * @returns {Subclass.Class.Type.Config.Config}
@@ -66,7 +90,6 @@ Subclass.Property.ConfigManager = function()
         createConfigs: function()
         {
             var moduleInstance = this.getModuleInstance();
-            var module = moduleInstance.getModule();
             var container = moduleInstance.getServiceContainer();
             var configurators = container.findByTag('config');
 
@@ -78,13 +101,10 @@ Subclass.Property.ConfigManager = function()
                 this.register(configurators[i]);
             }
 
-            // Creating config class
+            // Creating config class instance
 
-            var configs = module.getClassManager().build('Config')
-                .setBody(this.createTree())
-                .create()
-                .createInstance()
-            ;
+            var configs = this.getConfigsClass().createInstance();
+
 
             // Setting config data
 
@@ -277,7 +297,17 @@ Subclass.Property.ConfigManager = function()
 
             for (var i = 0; i < configurators.length; i++) {
                 if (!configurators[i].isPrivate()) {
-                    tree[configurators[i].getName()] = configurators[i].getTree();
+                    if (configurators[i].isExpanded()) {
+                        var configuratorTree = configurators[i].getTree();
+
+                        for (var optName in configuratorTree) {
+                            if (configuratorTree.hasOwnProperty(optName)) {
+                                tree[optName] = Subclass.Tools.copy(configuratorTree[optName]);
+                            }
+                        }
+                    } else {
+                        tree[configurators[i].getName()] = configurators[i].getTree();
+                    }
                 }
             }
 

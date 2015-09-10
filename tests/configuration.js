@@ -4,6 +4,9 @@ describe("Checking configuration", function() {
         var inst = app.createInstance();
         var configs = inst.getConfigContainer().getConfigs();
 
+        expect(configs.exp1).toBe("100");
+        expect(configs.exp2).toBe(200);
+
         expect(configs.common.width).toBe(100);
         expect(configs.common.height).toBe(100);
         expect(configs.common.border).toBe(false);

@@ -50,6 +50,14 @@ Subclass.ClassManager.register('AbstractClass', 'Subclass/ConfiguratorAbstract',
     /**
      * @inheritDoc
      */
+    isExpanded: function()
+    {
+        return false;
+    },
+
+    /**
+     * @inheritDoc
+     */
     getTree: function()
     {
         return {

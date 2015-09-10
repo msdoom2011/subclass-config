@@ -55,15 +55,38 @@ Subclass.Property.Extension.ModuleAPIExtension = function() {
     };
 
     /**
-     * The same as the {@link Subclass.Module#isConfigured}
+     * The same as the {@link Subclass.Module#setConfigsClass}
      *
-     * @method isConfigured
+     * @method setConfigsClass
      * @memberOf Subclass.ModuleAPI.prototype
      */
-    ModuleAPI.prototype.isConfigured = function()
+    ModuleAPI.prototype.setConfigsClass = function()
     {
-        return this.getModule().isConfigured.apply(this.getModule(), arguments);
+        return this.getModule().setConfigsClass.apply(this.getModule(), arguments);
     };
+
+    /**
+     * The same as the {@link Subclass.Module#getConfigsClass}
+     *
+     * @method getConfigsClass
+     * @memberOf Subclass.ModuleAPI.prototype
+     */
+    ModuleAPI.prototype.getConfigsClass = function()
+    {
+        return this.getModule().getConfigsClass.apply(this.getModule(), arguments);
+    };
+
+    /**
+     * The same as the {@link Subclass.Module#issetConfigsClass}
+     *
+     * @method issetConfigsClass
+     * @memberOf Subclass.ModuleAPI.prototype
+     */
+    ModuleAPI.prototype.issetConfigsClass = function()
+    {
+        return this.getModule().issetConfigsClass.apply(this.getModule(), arguments);
+    };
+
 
 
     //=========================================================================

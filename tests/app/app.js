@@ -18,6 +18,10 @@ var app = Subclass.createModule('app', ['appFirstPlugin'], {
             className: "App/SpecialConfigurator",
             tags: ['config']
         },
+        expanded_configurator: {
+            className: "App/ExpandedConfigurator",
+            tags: ['config']
+        },
         test_service: {
             className: "App/TestConfigService",
             arguments: ["$common.width$", "$common.height$"]
