@@ -42,6 +42,17 @@ Subclass.ClassManager.register('AbstractClass', 'Subclass/ConfiguratorAbstract',
     /**
      * @inheritDoc
      */
+    getModuleInstance: function()
+    {
+        var configManager = this.getConfigManager();
+        var configContainer = configManager.getConfigContainer();
+
+        return configContainer.getModuleInstance();
+    },
+
+    /**
+     * @inheritDoc
+     */
     isPrivate: function()
     {
         return false;

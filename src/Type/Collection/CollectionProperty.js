@@ -61,6 +61,7 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 );
             }
             var collection = this.getValue();
+            var valueChanged;
             var parents = [];
 
             if (markAsModified) {
@@ -68,10 +69,12 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
                 var newValue = value;
                 var event = this._createWatcherEvent(newValue, oldValue);
 
+                valueChanged = typeof newValue == 'function' || !Subclass.Tools.isEqual(oldValue, newValue);
+
                 if (invokeParentWatchers) {
                     parents = this._getParentWatcherValues(this, newValue);
                 }
-                if (!Subclass.Tools.isEqual(oldValue, newValue)) {
+                if (valueChanged) {
                     this.modify();
                 }
             }
@@ -95,7 +98,7 @@ Subclass.Property.Type.Collection.CollectionProperty = function()
 
             // Invoking watchers
 
-            if (markAsModified) {
+            if (valueChanged) {
                 this.invokeWatchers(event);
 
                 if (invokeParentWatchers) {

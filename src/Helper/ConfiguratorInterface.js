@@ -20,6 +20,13 @@ Subclass.ClassManager.register('Interface', 'Subclass/ConfiguratorInterface',
     getConfigManager: function() {},
 
     /**
+     * Returns instance of module
+     *
+     * @returns {Subclass.ModuleInstance}
+     */
+    getModuleInstance: function() {},
+
+    /**
      * Returns name of configuration tree
      *
      * @returns {string}
