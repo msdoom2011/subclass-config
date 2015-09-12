@@ -23,6 +23,20 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
      */
     ObjectCollection.prototype.add = function(key, value, normalize)
     {
+        if (!key || typeof key != 'string') {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the key of object collection item', false)
+                .expected('a string')
+                .received(key)
+                .apply()
+            ;
+        }
+        if (arguments.length < 2) {
+            Subclass.Error.create(
+                'Method Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection#add ' +
+                'requires at least two arguments.'
+            );
+        }
         if (ObjectCollection.$parent.prototype.add.apply(this, arguments) === false) {
             return false;
         }
