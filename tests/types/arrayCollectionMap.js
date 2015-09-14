@@ -300,6 +300,22 @@ describe("Testing array collection property type with its", function() {
         filterResult[0].propMapNumber = 100;
         expect(function() { filterResult[0].propMapNumber = "100"; }).toThrow();
 
+
+        // find method
+
+        var searchResult = prop.find({
+            propMapNumber: 100
+        });
+        expect(searchResult.length).toBe(1);
+        expect(searchResult[0].propMapNumber).toBe(100);
+
+        searchResult = prop.find({
+            propMapNumber: 100,
+            propMapString: "psix"
+        });
+        expect(searchResult.length).toBe(0);
+
+
         // getting data
         var propData = prop.getData();
         expect(propData.length).toBe(3);

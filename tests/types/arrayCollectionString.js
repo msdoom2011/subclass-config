@@ -220,6 +220,11 @@ describe("Testing array collection property type with its", function() {
         expect(filterResult).toContain('item2');
         expect(filterResult).toContain('item3');
 
+        // find method
+        var searchResult = prop.find('item2');
+        expect(searchResult.length).toBe(1);
+        expect(searchResult).toContain('item2');
+
         // getting data
         var propData = prop.getData();
         expect(propData.length).toBe(3);

@@ -263,7 +263,6 @@ describe("Testing array collection property type with its", function() {
 
 
 
-
         // getting data
 
         var data = value.getData();

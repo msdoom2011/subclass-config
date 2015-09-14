@@ -348,10 +348,14 @@ Subclass.Property.Type.Collection.Collection = function()
     };
 
     /**
-     * Filters collection using passed callback function
+     * Filters collection using passed callback function.
      *
-     * @param testCallback
-     * @returns {(Array|Object)}
+     * @param {function} testCallback
+     *      The callback function. The first argument is item value.
+     *      The second is item key. If this callback function will
+     *      return TRUE then current item will put into filter result.
+     *
+     * @returns {Object}
      */
     Collection.prototype.filter = function(testCallback)
     {
@@ -372,6 +376,51 @@ Subclass.Property.Type.Collection.Collection = function()
         });
 
         return items;
+    };
+
+    /**
+     * Searches collection items by specified options
+     *
+     * @param {*} options
+     *      It can be a whole value or just a part of value.
+     *
+     *      For example, if this is collection of strings
+     *      then you can specify some string value
+     *      which is contained in this collection.
+     *
+     *      Example:
+     *      var result = stringCollection.find('str1');
+     *
+     *      If this is, for example, collection of map objects
+     *      then you can specify a plain object with
+     *      allowed by map property keys and its values what you
+     *      searching for, something like this:
+     *
+     *      var result = mapCollection.find({ opt1: val1, opt2: val2 });
+     *
+     * @returns {Object}
+     */
+    Collection.prototype.find = function(options)
+    {
+        var items = this._items;
+
+        return this.filter(function(value, key) {
+            if (Subclass.Tools.isPlainObject(options)) {
+                for (var optionName in options) {
+                    if (
+                        !options.hasOwnProperty(optionName)
+                        || items.get(key).getData()[optionName] != options[optionName]
+                    ) {
+                        return false;
+                    }
+                }
+                return true;
+
+            } else if (Subclass.Tools.isEqual(items.get(key).getData(), options)) {
+                return true;
+            }
+            return false;
+        });
     };
 
     /**

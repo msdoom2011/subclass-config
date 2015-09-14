@@ -154,6 +154,11 @@ describe("Testing array collection property type with its", function() {
         expect(filterResult["item2"]).toBe('item2');
         expect(filterResult["item3"]).toBe('item3');
 
+        // find method
+        var searchResult = value.find('item2');
+        expect(Object.keys(searchResult).length).toBe(1);
+        expect(searchResult.hasOwnProperty('item2')).toBe(true);
+
         // getting data
         var valueData = value.getData();
         expect(Object.keys(valueData).length).toBe(3);
