@@ -67,14 +67,14 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 .validateValue(value)
             ;
         }
-        this._items.attach(
-            String(this.getLength()),
-            value
-        );
+        var key = String(this.getLength());
+        this._items.attach(key, value);
 
         if (this.isAllowsModifying()) {
             this._property.modify();
         }
+
+        return this._items.get(key);
     };
 
     /**

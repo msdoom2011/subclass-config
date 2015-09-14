@@ -23,6 +23,8 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
      */
     ObjectCollection.prototype.add = function(key, value, normalize)
     {
+        var result;
+
         if (!key || typeof key != 'string') {
             Subclass.Error.create('InvalidArgument')
                 .argument('the key of object collection item', false)
@@ -37,12 +39,14 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
                 'requires at least two arguments.'
             );
         }
-        if (ObjectCollection.$parent.prototype.add.apply(this, arguments) === false) {
+        if ((result = ObjectCollection.$parent.prototype.add.apply(this, arguments)) === false) {
             return false;
         }
         if (normalize !== false) {
             this.normalize(key);
         }
+
+        return result;
     };
 
     /**

@@ -84,6 +84,25 @@ Subclass.Property.Type.Map.Map = function()
     };
 
     /**
+     * Sets map property value
+     *
+     * @param {*} value
+     * @returns {*}
+     */
+    Map.prototype.setValue = function(value)
+    {
+        return this.getProperty().setValue(value);
+    };
+
+    /**
+     * Returns itself
+     */
+    Map.prototype.getValue = function()
+    {
+        return this;
+    };
+
+    /**
      * Returns data of map property
      *
      * @returns {Object}
