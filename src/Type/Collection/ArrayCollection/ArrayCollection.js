@@ -119,7 +119,7 @@ Subclass.Property.Type.Collection.ArrayCollection.ArrayCollection = (function()
                 this.add();
             }
         }
-        ArrayCollection.$parent.prototype.set.call(
+        return ArrayCollection.$parent.prototype.set.call(
             this, String(key), value
         );
     };

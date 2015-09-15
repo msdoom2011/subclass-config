@@ -79,6 +79,7 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
         if (normalize !== false) {
             this.normalize(key);
         }
+        return this._items.get(key);
     };
 
     /**

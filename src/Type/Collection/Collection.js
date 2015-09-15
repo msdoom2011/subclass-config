@@ -184,6 +184,8 @@ Subclass.Property.Type.Collection.Collection = function()
         if (this.isAllowsModifying()) {
             this._property.modify();
         }
+
+        return this._items.get(key);
     };
 
     /**
