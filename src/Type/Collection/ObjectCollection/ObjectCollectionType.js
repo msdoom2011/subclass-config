@@ -93,6 +93,11 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollectionType = (funct
                     nullable: true
                 };
             }
+            if (!proto.schema.priority) {
+                proto.schema.priority = {
+                    type: "number"
+                };
+            }
         }
         ObjectCollectionType.$parent.prototype.processData.call(this);
     };

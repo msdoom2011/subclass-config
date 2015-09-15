@@ -182,6 +182,66 @@ Subclass.Property.Type.Collection.ObjectCollection.ObjectCollection = (function(
     };
 
     /**
+     * Sorts out all collection items using passed callback function
+     *
+     * @param {Function} callback
+     *      Function that will perform each collection item
+     */
+    ObjectCollection.prototype.forEach = function(callback)
+    {
+        if (this._property.getDefinition().getProto().type != 'map') {
+            return ObjectCollection.$parent.prototype.forEach.apply(this, arguments);
+        }
+        if (arguments.length == 2 && typeof arguments[1] == 'function') {
+            callback = arguments[1];
+        }
+        if (typeof callback != 'function') {
+            Subclass.Error.create('InvalidArgument')
+                .argument('the callback', false)
+                .received(callback)
+                .expected('a function')
+                .apply()
+            ;
+        }
+        var items = this._items.getItems();
+        var priorities = [];
+        var $this = this;
+
+        for (var itemName in items) {
+            if (items.hasOwnProperty(itemName)) {
+                var itemProperty = items[itemName];
+                priorities.push(itemProperty.getValue().priority);
+            }
+        }
+
+        priorities = priorities.sort(function(a, b) {
+            a = parseInt(a);
+            b = parseInt(b);
+
+            if (a > b) return -1;
+            if (a < b) return 1;
+
+            return 0;
+        });
+
+        for (var i = 0; i < priorities.length; i++) {
+            for (itemName in items) {
+                if (!items.hasOwnProperty(itemName)) {
+                    continue;
+                }
+                itemProperty = items[itemName];
+                var itemValue = itemProperty.getValue();
+
+                if (itemValue.priority == priorities[i]) {
+                    if (callback.call($this, itemValue, itemName) === false) {
+                        return false;
+                    }
+                }
+            }
+        }
+    };
+
+    /**
      * @inheritDoc
      */
     ObjectCollection.prototype.getData = function()

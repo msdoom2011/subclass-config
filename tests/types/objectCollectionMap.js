@@ -225,6 +225,18 @@ describe("Testing array collection property type with its", function() {
                     break;
             }
         });
+        value.get('item1').priority = 0;
+        value.get('item2').priority = 2;
+        value.get('item3').priority = 1;
+        var forEachOrder = [];
+
+        value.forEach(function(value, key) {
+            forEachOrder.push(key);
+        });
+        expect(forEachOrder[0]).toBe('item2');
+        expect(forEachOrder[1]).toBe('item3');
+        expect(forEachOrder[2]).toBe('item1');
+
 
         // indexOf method
         expect(value.indexOf('unexistent')).toBe(null);
