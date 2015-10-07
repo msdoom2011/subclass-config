@@ -1,14 +1,14 @@
 {
-  "name": "SubclassConfig",
+  "name": "subclass-config",
   "version": "0.1.0",
-  "homepage": "https://github.com/msdoom2011/subclassjs",
-  "repository": "git@github.com:msdoom2011/subclassjs.git",
+  "homepage": "https://github.com/msdoom2011/subclass-config",
+  "repository": "git@github.com:msdoom2011/subclass-config.git",
   "description": "The plugin for SubclassJS framework which brings ability to define strict typed properties in your classes, automatically generates accessors for them if needed and provides the new class type Config which is convenient use for configuration of your SubclassJS project.",
   "author": {
-    "name": "Dmitriy Osipishin",
+    "name": "Dmitry Osipishin",
     "email": "msdoom2011@gmail.com"
   },
-  "main": "Gruntfile.js",
+  "main": "release/subclass-config.js",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",

@@ -17,11 +17,11 @@ module.exports = function(config) {
     files: [
 
       // Src Files
-      "vendors/subclass.js",
-      "vendors/subclass-instance.js",
-      "vendors/subclass-parser.js",
-      "vendors/subclass-service.js",
-      "vendors/subclass-parameter.js",
+      "vendors/subclass-framework/release/subclass.js",
+      "vendors/subclass-instance/release/subclass-instance.js",
+      "vendors/subclass-parser/release/subclass-parser.js",
+      "vendors/subclass-parameter/release/subclass-parameter.js",
+      "vendors/subclass-service/release/subclass-service.js",
       "src/Class/Type/Config/Config.js",
       "src/Class/Type/Config/**/*",
       "src/Parser/**/*",
